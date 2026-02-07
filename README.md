@@ -1,16 +1,17 @@
-# React + Vite
+# My Learning Journey
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Date | Topic | Full Notes |
+|------|-------|------------|
+| 5.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1r2jeuQqOoQALMwHNmY06OX3omDkoUU0q9F6y8VycbtY/edit?tab=t.0) |
+| 3.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1EPxxjNT79KgjMEL7X8mJ8VKTBNcCIPU78kpFX2ulB7I/edit?tab=t.0) |
+| 6.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1axmcRKHJ7zJ25dwte4qA7iSe8vzyPQ1-fvEG1tiUU8M/edit?tab=t.0) |
+| 12.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1CMN0nQfJ3fsslD61LxlcgcyCgIWnesg50NfX5MThWzc/edit?usp=sharing) |
+| 21.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/12jpDat7C8_F3Zvqz-UeCopDTS16mnr7XqDHR3QY6N2A/edit?usp=sharing) |
+| 22.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1DapOMDYLZ37C_yFqtDAtrK-7KmMCeQEiVOxivaVir1k/edit?usp=sharing) |
+| 28.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1DapOMDYLZ37C_yFqtDAtrK-7KmMCeQEiVOxivaVir1k/edit?usp=sharing) |
+| 1.2.2026 | React Project  & NodeJS| [📄 Full Notes](https://docs.google.com/document/d/1a5QSsqWTvonkMRGVHqI7RtRbSnN0WfFrLeFzOsezi1I/edit?usp=sharing) |
+| 2.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1C9kISCt-fjA6n23jRivgMfMH0Roi5g7cK4iZnz_xog0/edit?usp=sharing) |
+| 3.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1ViS5Axx_29gaZhZ9XPOCrZKc2OEo8hkGlX-Q09I-yCg/edit?usp=sharing) |
+| 4.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/11748Piom4lZflqjzFyFEXdwHQa2I289UBzjrd6bcWGg/edit?usp=sharing) |
+| 5.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/12iNBqNbOzp6984c4nN5FxRqiPJ8kXeoeh8TiyaBQRhs/edit?usp=sharing) |
+| 6.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1C29j3xdf0Fhxn8T_uR0socKRjYzYQFDRKtbEMkcjw5Y/edit?usp=sharing) |
