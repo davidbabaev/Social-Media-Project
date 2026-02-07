@@ -28,7 +28,7 @@ export default function NavBar() {
         <nav>
             <Link style={mystyle} to={'/'}>Home</Link>
             <Link style={mystyle} to={'/login'}>login</Link>
-            <Link style={mystyle} to={'/dashboard'}>user dashboard</Link>
+            <Link style={mystyle} to={'/dashboard/myprofile'}>user dashboard</Link>
             <Link style={mystyle} to={'/registered'}>register</Link>
             <Link style={mystyle} to={'/allusers'}>all users</Link>
             <Link style={mystyle} to={'/createnewcard'}>create card</Link>

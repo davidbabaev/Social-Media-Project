@@ -24,7 +24,7 @@ export function AuthProvider({children}) {
     
     useEffect(() => {
         if(!isRegistredLoaded) return;
-        console.log("Effect B saving: ", registeredUsers);
+        // console.log("Effect B saving: ", registeredUsers);
         
         localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers))
     }, [registeredUsers, isRegistredLoaded]) 

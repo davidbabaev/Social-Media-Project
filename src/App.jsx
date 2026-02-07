@@ -14,6 +14,7 @@ import DisplayUsers from './components/DisplayUsers'
 import RegisteredPage from './pages/RegisteredPage'
 import AllCardsPage from './pages/AllCardsPage'
 import UserProfile from './pages/UserProfile'
+import DashboardLayout from './pages/user dashboard/DashboardLayout'
 
 
 export default function App(){
@@ -25,9 +26,9 @@ export default function App(){
             <Routes>
               <Route path='/' element={<HomePage/>}/>
               <Route path='/login' element={<LoginPage/>}/>
-              <Route path='/dashboard' element={
+              <Route path='/dashboard/*' element={
                 <ProtectedRoute>
-                  <UserDashboard/>
+                  <DashboardLayout/>
                 </ProtectedRoute>
               }/>
               <Route path='/createnewcard' element={
@@ -35,7 +36,6 @@ export default function App(){
                   <CardsRegisterPage/>
                 </ProtectedRoute>
               }/>
-              <Route path='/selectedpage' element ={<SelectedPage/>}/>
               <Route path='/allusers' element ={<DisplayUsers/>}/>
               <Route path='/registered' element ={<RegisteredPage/>}/>
               <Route path='/allcards' element ={<AllCardsPage/>}/>

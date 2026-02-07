@@ -8,7 +8,7 @@ import useCountries from '../hooks/useCountries';
 export default function UserDashboard() {
 
     const {registeredCards, handleDeleteCard, handleEditCard} = useCardsProvider()
-    const {user, editUser, setUser} = useAuth();
+    const {user, editUser} = useAuth();
     const {allUsers} = useAllUsers();
     const [editingCardId, setEditingCardId] = useState(null);
     const {apiCountriesList} = useCountries(); 
@@ -18,9 +18,8 @@ export default function UserDashboard() {
     const [editText, setEditText] = useState('');
     const [editImg, setEditImg] = useState('');
     const [editCategory, setEditCategory] = useState('');
-    const [editUserName, setEditUsername] = useState('');
   
-    const myCards = registeredCards.filter(card => card.userId === user.userId)
+    const myCards = registeredCards.filter(card => card.userId === user.userId);
     
     // edit logged-in user values states:
     const [editName, setEditName] = useState('');
@@ -37,7 +36,6 @@ export default function UserDashboard() {
     
     const currentUser = useMemo(() => {
       const currentUser = allUsers.find(logedUser => logedUser.userId === user.userId);
-      console.log(currentUser)
       return currentUser;
     }, [allUsers]) 
 

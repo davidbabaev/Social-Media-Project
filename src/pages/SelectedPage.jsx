@@ -23,7 +23,7 @@ export default function SelectedPage() {
                     <img style={{borderRadius: '50%', width: '100px'}} src={selected.photo}/>
                     <p>{selected.name}</p>
                     <button onClick={() => handleRemoveUser(selected)}>Remove</button>
-                    <button onClick={() => navigate(`/appusers/userprofile/${selected.userId}`)}>to the user page</button>
+                    <button onClick={() => navigate(`/userprofile/${selected.userId}`)}>to the user page</button>
                     <hr />
                 </div>
             ))}

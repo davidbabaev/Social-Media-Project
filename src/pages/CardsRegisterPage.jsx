@@ -45,10 +45,19 @@ export default function CardsRegisterPage() {
     }
 
   return (
-    <div>
-        <h1>Create New Card</h1>
+      <div>
+        <h2>Create New Card</h2>
+        <div 
+            style={{
+            border: 'solid black 1px', 
+            padding: '20px', 
+            borderRadius: '20px', 
+            margin: '20px 0px'
+            }}
+        >
+
         <form onSubmit={handleSubmitNewCard}>
-            <div>
+            <div >
                 <label>Title</label>
                 <br />
                 <input 
@@ -97,6 +106,7 @@ export default function CardsRegisterPage() {
             <br />
             <button type='submit'>Post Your Card</button>
         </form>
+        </div>
     </div>
   )
 }
