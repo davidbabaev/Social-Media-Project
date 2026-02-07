@@ -172,7 +172,7 @@ function UsersPage({value}) {
                     <button onClick={() => selectHandleUser(user)}>Select User</button>
                 )}
 
-                <button onClick={() => navigateToUser(`/appusers/userprofile/${user.userId}`)}>To The User</button>
+                <button onClick={() => navigateToUser(`/userprofile/${user.userId}`)}>To The User</button>
                 <hr />
             </div>
         ))}

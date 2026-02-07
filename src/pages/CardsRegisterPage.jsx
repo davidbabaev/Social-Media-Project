@@ -41,7 +41,7 @@ export default function CardsRegisterPage() {
             return;
         }
 
-        navigate('/appusers/allcards')
+        navigate('/dashboard/mycards')
     }
 
   return (

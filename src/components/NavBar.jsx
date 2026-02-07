@@ -33,7 +33,7 @@ export default function NavBar() {
             <Link style={mystyle} to={'/allusers'}>all users</Link>
             <Link style={mystyle} to={'/createnewcard'}>create card</Link>
             <Link style={mystyle} to={'/allcards'}>all cards</Link>
-            <button onClick={() => navigate('/selectedpage')}>Selected</button>
+            <button onClick={() => navigate('/dashboard/myfavorites')}>Selected</button>
         </nav>
     </div>
   )
