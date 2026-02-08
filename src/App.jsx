@@ -14,7 +14,7 @@ import DisplayUsers from './components/DisplayUsers'
 import RegisteredPage from './pages/RegisteredPage'
 import AllCardsPage from './pages/AllCardsPage'
 import UserProfile from './pages/UserProfile'
-import DashboardLayout from './pages/user dashboard/DashboardLayout'
+import DashboardLayout from './pages/dashboard/DashboardLayout'
 
 
 export default function App(){

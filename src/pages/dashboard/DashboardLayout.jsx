@@ -19,7 +19,7 @@ export default function DashboardLayout() {
                 <Link style={mystyle} to={'/dashboard/myprofile'} >Profile</Link>
                 <Link style={mystyle} to={'/dashboard/mycards'} >My Cards</Link>
                 <Link style={mystyle} to={'/dashboard/myfavorites'} >Favorites</Link>
-                <Link style={mystyle} to={'/dashboard//createnewcard'} >Create Card</Link>
+                <Link style={mystyle} to={'/dashboard/createnewcard'} >Create Card</Link>
             </nav>
 
             <Routes>
