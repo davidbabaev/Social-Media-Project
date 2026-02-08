@@ -4,6 +4,7 @@ import useAllUsers from '../hooks/useAllUsers';
 import useDebounce from '../hooks/useDebounce';
 import useFavoriteCards from '../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
+import { useNavigate } from 'react-router-dom';
 
 export default function AllCardsPage() {
 
@@ -23,6 +24,8 @@ export default function AllCardsPage() {
 
     // card categories/ tags
     const [categoryFilter, setCategoryFilter] = useState('');
+
+    const navigate = useNavigate();
 
 
     const {registeredCards} = useCardsProvider([]);
@@ -154,8 +157,25 @@ export default function AllCardsPage() {
                         flexDirection: 'row', 
                         gap: '10px'
                     }}>
-                        <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={creator?.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}/>
-                        <p>{creator?.name}</p>
+                        <img 
+                            style={{
+                                width: '6%', 
+                                height: '6%', 
+                                borderRadius: '50%', 
+                                marginTop: '4px',
+                                cursor: 'pointer'
+                            }} 
+                                src={creator?.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}
+                            onClick={() => navigate(`/userprofile/${creator.userId}`)}    
+                        />
+                        <p>
+                            <span
+                                style={{cursor: 'pointer'}}
+                                onClick={() => navigate(`/userprofile/${creator.userId}`)}
+                            >
+                                {creator?.name}
+                            </span>
+                        </p>
                         <p>|</p>
                         <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
                         <p>|</p>

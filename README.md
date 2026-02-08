@@ -1,5 +1,10 @@
 # My Learning Journey
 
+**Project Plan:**
+[📄 Full Notes](https://docs.google.com/document/d/1bDIF-NWSzuyhGD6-c_riUkqU0Efkn_jIm6Pz-HnF9Lk/edit?usp=sharing)
+
+---
+
 | Date | Topic | Full Notes |
 |------|-------|------------|
 | 5.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1r2jeuQqOoQALMwHNmY06OX3omDkoUU0q9F6y8VycbtY/edit?tab=t.0) |
@@ -15,3 +20,5 @@
 | 4.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/11748Piom4lZflqjzFyFEXdwHQa2I289UBzjrd6bcWGg/edit?usp=sharing) |
 | 5.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/12iNBqNbOzp6984c4nN5FxRqiPJ8kXeoeh8TiyaBQRhs/edit?usp=sharing) |
 | 6.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1C29j3xdf0Fhxn8T_uR0socKRjYzYQFDRKtbEMkcjw5Y/edit?usp=sharing) |
+| 7.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1_xqzOIX6cnRng9pqMxtDMthB2nFt3A5RzqyEfvlcu8Y/edit?usp=sharing) |
+| 8.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1G7nZcK5M_OClhyMrUyG5sKv7q6v15nSfkIieoQc1jo0/edit?usp=sharing) |
