@@ -34,7 +34,7 @@ export default function LoginPage() {
       return;
     }
 
-    navigate('/appusers/dashboard');
+    navigate('/dashboard/myprofile');
   }
 
   return (

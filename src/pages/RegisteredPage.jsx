@@ -11,7 +11,6 @@ export default function RegisteredPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [country, setCountry] = useState('');
-    // const [photo, setPhoto] = useState('');
     const [age, setAge] = useState('');
     const [gender, setGender] = useState('');
     const [phone, setPhone] = useState('');
@@ -65,7 +64,7 @@ export default function RegisteredPage() {
         }
 
         // success! go to dashboard
-        navigate('/appusers/dashboard')
+        navigate('/dashboard/myprofile')
     }
 
 
@@ -167,7 +166,7 @@ export default function RegisteredPage() {
         <br />
         <hr />
         <h2>already user?</h2>
-        <button onClick={() => navigate('/appusers/login')}>login to your account</button>
+        <button onClick={() => navigate('/dashboard/myprofile')}>login to your account</button>
     </div>
   )
 }

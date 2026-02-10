@@ -23,10 +23,11 @@ export default function ProfileSection() {
     // import edit function that we need to initial in the AuthProvider page
     
     const currentUser = useMemo(() => {
-      const currentUser = allUsers.find(logedUser => logedUser.userId === user.userId);
+      const currentUser = allUsers.find(loggedUser => loggedUser.userId === user.userId);
       return currentUser;
     }, [allUsers]) 
 
+    if(!currentUser) return <p>Loading...</p>
 return (
 <div>
     <h2>My Profile</h2>

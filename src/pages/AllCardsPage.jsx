@@ -5,6 +5,7 @@ import useDebounce from '../hooks/useDebounce';
 import useFavoriteCards from '../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
 import { useNavigate } from 'react-router-dom';
+import useLikedCards from '../hooks/useLikedCards';
 
 export default function AllCardsPage() {
 
@@ -32,6 +33,12 @@ export default function AllCardsPage() {
     const [count, setCount] = useState(2);
     const {allUsers} = useAllUsers(); 
     const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
+    const {
+        handleUserLikeCard, 
+        handleUserUnlikeCard, 
+        handleCardLikeByUser,
+        handleCardUnlikeByUser
+    } = useLikedCards();
 
     const filteredCards = useMemo(() => {
 
@@ -186,6 +193,9 @@ export default function AllCardsPage() {
                         ) : (
                             <button onClick={() => handleFavoriteCards(card)}>Add To Favorites</button>
                         )}
+                        
+                        <button onClick={() => handleUserLikeCard(card)}>Like</button>
+                        
                     </div>
                 </div>
             )
