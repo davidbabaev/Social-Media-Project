@@ -1,7 +1,19 @@
-
+import { useAuth } from "../providers/AuthProvider";
+import { useCardsProvider } from "../providers/CardsProvider";
 
 function useLikedCards() {
 
+    const {user} = useAuth();
+    const {registeredCards, handleToggleLike} = useCardsProvider();
+
+    const toggleLike = (cardId) => {
+        handleToggleLike(cardId, user.userId)
+    }
+
+    const isLikedByMe = (cardId) => {
+        const card = registeredCards.find(c => c.cardId === cardId);
+        return (card?.likedUsers || []).includes(user.userId)
+    }
 
 }
 

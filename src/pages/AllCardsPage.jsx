@@ -6,6 +6,7 @@ import useFavoriteCards from '../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
 import { useNavigate } from 'react-router-dom';
 import useLikedCards from '../hooks/useLikedCards';
+import { useAuth } from '../providers/AuthProvider';
 
 export default function AllCardsPage() {
 
@@ -29,11 +30,11 @@ export default function AllCardsPage() {
     const navigate = useNavigate();
 
 
-    const {registeredCards} = useCardsProvider([]);
+    const {registeredCards, handleToggleLike} = useCardsProvider();
+    const {user} = useAuth();
     const [count, setCount] = useState(2);
     const {allUsers} = useAllUsers(); 
     const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
-
 
     const filteredCards = useMemo(() => {
 
@@ -136,8 +137,22 @@ export default function AllCardsPage() {
             flexDirection: 'column'
             }}>
         {countedRegisterCards.map((card) => {
+            // if(!user) return;
 
             const creator = allUsers.find(user => user.userId === card.userId);
+
+            // question 1: how many likes?
+            // card.likedUsers might not exist on old cards, so protect with ->... || []
+            const likes = card.likedUsers || [];
+            const likeCount = likes.length;
+            // if likedUsers is ["ddd","bbb"] -> length is 2
+
+            // question 2: did i (the logged-in user) like this card?
+            const didILikeIt = likes.includes(user.userId);
+            // if user.userId is "david_id" and likes is ["sarah_id", "david_id"]
+            // -> includes ("david_id") -> true
+            // if user.userId is "jhon_id"
+            // -> includes("john_id") -> false
 
             return(
                 <div style={{
@@ -182,6 +197,12 @@ export default function AllCardsPage() {
                         <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
                         <p>|</p>
                         {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {card.category}</p>)}
+                        <p>|</p>
+                        {user && (
+                            <button onClick={() => handleToggleLike(card.cardId)}>
+                                {didILikeIt(card.cardId) ? 'Unlike' : 'Like'}
+                            </button>
+                        )}
                         
                         {favoriteCards.some(c => c.cardId === card.cardId) ? (
                             <button onClick={() => handleFavoriteCards(card)}>Remove From Favorite</button>
