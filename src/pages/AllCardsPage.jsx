@@ -33,12 +33,7 @@ export default function AllCardsPage() {
     const [count, setCount] = useState(2);
     const {allUsers} = useAllUsers(); 
     const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
-    const {
-        handleUserLikeCard, 
-        handleUserUnlikeCard, 
-        handleCardLikeByUser,
-        handleCardUnlikeByUser
-    } = useLikedCards();
+
 
     const filteredCards = useMemo(() => {
 
@@ -194,7 +189,6 @@ export default function AllCardsPage() {
                             <button onClick={() => handleFavoriteCards(card)}>Add To Favorites</button>
                         )}
                         
-                        <button onClick={() => handleUserLikeCard(card)}>Like</button>
                         
                     </div>
                 </div>

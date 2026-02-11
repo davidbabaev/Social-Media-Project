@@ -1,9 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
-import { useAuth } from "../providers/AuthProvider";
-import { useCardsProvider } from "../providers/CardsProvider";
+
 
 function useLikedCards() {
 
+
+}
+
+export default useLikedCards;
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+/* 
     const [userWithLikedCards, setUserWithLikedCards] = useState([]);
     const [cardWithLikedUsers, setCardWithLikedUsers] = useState([]);
     const {user} = useAuth();
@@ -13,16 +30,13 @@ function useLikedCards() {
     // handle user object, 
     // cards get into the array of his liked cards 
     const handleUserLikeCard = useCallback((likedCard) => {
-
         setUserWithLikedCards((prev) => {
             const include = prev.some(cardL => cardL.userId === likedCard.userId)
 
             if(!include){
                 return [...prev, likedCard]
             }
-            else{
-                return prev.filter(likedC => likedC.cardId !== prev.cardId)
-            }
+            return prev.filter(likedC => likedC.cardId !== likedCard.cardId)
         })
     }, [])
     console.log(userWithLikedCards);
@@ -30,8 +44,15 @@ function useLikedCards() {
     
     // handle user object, 
     // cards filtered out of the array of his liked cards 
-    const handleUserUnlikeCard = useCallback((user) => {
+    const handleUserUnlikeCard = useCallback((likedCard) => {
+        setUserWithLikedCards((prev) => {
+            const include = prev.some(cardL => cardL.cardId === likedCard.cardId)
 
+            if(include){
+                return prev.filter(cardL => cardL.cardId !== likedCard.cardId)
+            }
+            return prev;
+        })
     }, [])
 
     // handle card that save user that liked that card
@@ -68,8 +89,7 @@ function useLikedCards() {
         handleUserLikeCard, 
         handleUserUnlikeCard, 
         handleCardLikeByUser,
-        handleCardUnlikeByUser
-    };
-}
+        handleCardUnlikeByUser,
+        userWithLikedCards
+    }; */
 
-export default useLikedCards;

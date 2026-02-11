@@ -28,7 +28,7 @@ useEffect(() => {
     localStorage.setItem('registeredCards', JSON.stringify(registeredCards))
 }, [registeredCards])
 
-const handleCardRegister = useCallback((title, text, img, category) => {
+const handleCardRegister = useCallback((title, text, img, category, like) => {
     // no dulicates check needed - genrateID() is always unique
 
     const newCard = {
@@ -39,6 +39,7 @@ const handleCardRegister = useCallback((title, text, img, category) => {
         category: category,
         userId: user.userId,
         userName: user.name,
+        likedUsers: [],
         createdAt: new Date().toISOString()
     };
 
@@ -73,8 +74,40 @@ const handleCardRegister = useCallback((title, text, img, category) => {
         }))
     }
 
+
+    const handleToggleLike = (cardId, userId) => {
+        setRegisteredCards(registeredCards.map((card) => {
+            if(card.cardId === cardId){
+                // protect against old cards that don't have likedUsers yet
+                const currentLikes = card.likedUsers || [];
+    
+                // Handle Unlike:
+                if(currentLikes.includes(userId)){
+                    // userId is in the array -> remove it (unlike)
+                    const updatedLikes = currentLikes.filter(id => id !== userId);
+                    return {
+                        ...card,
+                        likedUsers: updatedLikes
+                    };
+                }
+                // Handle Like:
+                else{
+                    // userId os NOT in the array -> add it (like)
+                    const updatedLikes = [...currentLikes, userId];
+                    return{
+                        ...card,
+                        likedUsers: updatedLikes
+                    };
+                }
+            }
+            else{
+                return card;
+            }
+        }))
+    }
+    
   return (
-    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard}}>
+    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike}}>
         {children}
     </CardsContext.Provider>
   )
