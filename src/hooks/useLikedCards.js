@@ -2,18 +2,22 @@ import { useAuth } from "../providers/AuthProvider";
 import { useCardsProvider } from "../providers/CardsProvider";
 
 function useLikedCards() {
-
     const {user} = useAuth();
     const {registeredCards, handleToggleLike} = useCardsProvider();
+
+    // write the three functions. start with the simplest one -> toggleLike
+    // all it does is call handleToggleLike but passes user.userId automatically so the page doesn't have to.
 
     const toggleLike = (cardId) => {
         handleToggleLike(cardId, user.userId)
     }
 
-    const isLikedByMe = (cardId) => {
-        const card = registeredCards.find(c => c.cardId === cardId);
-        return (card?.likedUsers || []).includes(user.userId)
+    const isLikeByMe = (cardId) => {
+        const card = registeredCards.find(card => card.cardId === cardId);
+        return card.likedUsers.includes(user.userId);
     }
+
+    
 
 }
 

@@ -77,6 +77,30 @@ const handleCardRegister = useCallback((title, text, img, category, like) => {
 
     const handleToggleLike = (cardId, userId) => {
         setRegisteredCards(registeredCards.map((card) => {
+            const likedUsers = card.likedUsers || []
+            if(card.cardId === cardId){
+                if(likedUsers.includes(userId)){
+                    return{
+                        ...card,
+                        likedUsers: likedUsers.filter(id => id !== userId)
+                    }
+                }
+                else{
+                    return{
+                        ...card,
+                        likedUsers: [...likedUsers, userId]
+                    }
+                }
+            }
+            else{
+                return card;
+            }
+        }))
+    }
+
+
+    /* const handleToggleLike = (cardId, userId) => {
+        setRegisteredCards(registeredCards.map((card) => {
             if(card.cardId === cardId){
                 // protect against old cards that don't have likedUsers yet
                 const currentLikes = card.likedUsers || [];
@@ -104,8 +128,9 @@ const handleCardRegister = useCallback((title, text, img, category, like) => {
                 return card;
             }
         }))
-    }
+    } */
     
+
   return (
     <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike}}>
         {children}

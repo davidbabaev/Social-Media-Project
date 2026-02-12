@@ -5,7 +5,6 @@ import useDebounce from '../hooks/useDebounce';
 import useFavoriteCards from '../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
 import { useNavigate } from 'react-router-dom';
-import useLikedCards from '../hooks/useLikedCards';
 import { useAuth } from '../providers/AuthProvider';
 
 export default function AllCardsPage() {
@@ -137,22 +136,13 @@ export default function AllCardsPage() {
             flexDirection: 'column'
             }}>
         {countedRegisterCards.map((card) => {
-            // if(!user) return;
 
             const creator = allUsers.find(user => user.userId === card.userId);
 
-            // question 1: how many likes?
-            // card.likedUsers might not exist on old cards, so protect with ->... || []
-            const likes = card.likedUsers || [];
-            const likeCount = likes.length;
-            // if likedUsers is ["ddd","bbb"] -> length is 2
-
-            // question 2: did i (the logged-in user) like this card?
-            const didILikeIt = likes.includes(user.userId);
-            // if user.userId is "david_id" and likes is ["sarah_id", "david_id"]
-            // -> includes ("david_id") -> true
-            // if user.userId is "jhon_id"
-            // -> includes("john_id") -> false
+            // likes count
+            const likesCount = card.likedUsers.length;
+            // did i like it
+            const didILikeIt = card.likedUsers.some(id => id === user.userId)
 
             return(
                 <div style={{
@@ -198,10 +188,10 @@ export default function AllCardsPage() {
                         <p>|</p>
                         {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {card.category}</p>)}
                         <p>|</p>
+                        <p>{likesCount}</p>
+                        <p>|</p>
                         {user && (
-                            <button onClick={() => handleToggleLike(card.cardId)}>
-                                {didILikeIt(card.cardId) ? 'Unlike' : 'Like'}
-                            </button>
+                                <button onClick={() => handleToggleLike(card.cardId ,user.userId)}>{didILikeIt ? "unlike" : "like"}</button>
                         )}
                         
                         {favoriteCards.some(c => c.cardId === card.cardId) ? (
