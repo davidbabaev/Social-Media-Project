@@ -40,7 +40,7 @@ return (
             margin: '20px 0px'
             }}
             >
-            <img style={{width: '100px', borderRadius: '50%'}} src={currentUser.photo}/>
+            <img style={{width: '20%', borderRadius: '10%'}} src={currentUser.photo}/>
             <h3>{currentUser.name}</h3>
             <p>Email: {currentUser.email}</p>
             <p>Country: {currentUser.country}</p>

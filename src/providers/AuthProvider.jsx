@@ -122,7 +122,6 @@ export function AuthProvider({children}) {
         setUser(null)
     }
 
-
     const editUser = (userId ,newName, newEmail, newCountry, newPhoto, newAge, newGender, newPhone) => {
 
         setRegisteredUsers(registeredUsers.map(user => {

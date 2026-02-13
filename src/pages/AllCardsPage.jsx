@@ -6,6 +6,7 @@ import useFavoriteCards from '../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/AuthProvider';
+import useLikedCards from '../hooks/useLikedCards';
 
 export default function AllCardsPage() {
 
@@ -30,6 +31,7 @@ export default function AllCardsPage() {
 
 
     const {registeredCards, handleToggleLike} = useCardsProvider();
+    const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
     const {user} = useAuth();
     const [count, setCount] = useState(2);
     const {allUsers} = useAllUsers(); 
@@ -136,14 +138,7 @@ export default function AllCardsPage() {
             flexDirection: 'column'
             }}>
         {countedRegisterCards.map((card) => {
-
             const creator = allUsers.find(user => user.userId === card.userId);
-
-            // likes count
-            const likesCount = card.likedUsers.length;
-            // did i like it
-            const didILikeIt = card.likedUsers.some(id => id === user.userId)
-
             return(
                 <div style={{
                     border: 'solid black 1px', 
@@ -188,10 +183,12 @@ export default function AllCardsPage() {
                         <p>|</p>
                         {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {card.category}</p>)}
                         <p>|</p>
-                        <p>{likesCount}</p>
+                        <p>{getLikeCount(card.cardId)}</p>
                         <p>|</p>
                         {user && (
-                                <button onClick={() => handleToggleLike(card.cardId ,user.userId)}>{didILikeIt ? "unlike" : "like"}</button>
+                            <button onClick={() => toggleLike(card.cardId)}>
+                                {isLikeByMe(card.cardId) ? "Unlike" : "Like"}
+                            </button>
                         )}
                         
                         {favoriteCards.some(c => c.cardId === card.cardId) ? (
