@@ -96,6 +96,10 @@ const handleCardRegister = useCallback((title, text, img, category, like) => {
             }
         }))
     }
+
+    const handleAddComment = (cardId, userId, commentText) => {
+
+    }
     
   return (
     <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike}}>
