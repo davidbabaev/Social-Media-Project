@@ -7,6 +7,7 @@ import { CARD_CATEGORIES } from '../constants/cardsCategories';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/AuthProvider';
 import useLikedCards from '../hooks/useLikedCards';
+import LoginPopup from '../components/LoginPopup';
 
 export default function AllCardsPage() {
 
@@ -27,9 +28,14 @@ export default function AllCardsPage() {
     // card categories/ tags
     const [categoryFilter, setCategoryFilter] = useState('');
 
+
+    const [isOpen, setIsOpen] = useState(false);
+    function handleClose(){
+        setIsOpen(false);
+    }
+
     const navigate = useNavigate();
-
-
+    
     const {registeredCards, handleToggleLike} = useCardsProvider();
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
     const {user} = useAuth();
@@ -67,11 +73,7 @@ export default function AllCardsPage() {
         return result;
     }, [creatorId, registeredCards, debounceSearchCard, dateSort, categoryFilter, favorites])
     
-    const countedRegisterCards = filteredCards.slice(0, count)
-
-
-    // console.log('User IDs: ', allUsers.map(u => u.userId));
-    
+    const countedRegisterCards = filteredCards.slice(0, count)    
 
   return (
     <div>
@@ -185,23 +187,37 @@ export default function AllCardsPage() {
                         <p>|</p>
                         <p>{getLikeCount(card.cardId)}</p>
                         <p>|</p>
-                        {user && (
+                        {user ? (
                             <button onClick={() => toggleLike(card.cardId)}>
                                 {isLikeByMe(card.cardId) ? "Unlike" : "Like"}
                             </button>
-                        )}
-                        
-                        {favoriteCards.some(c => c.cardId === card.cardId) ? (
-                            <button onClick={() => handleFavoriteCards(card)}>Remove From Favorite</button>
                         ) : (
-                            <button onClick={() => handleFavoriteCards(card)}>Add To Favorites</button>
+                            <button onClick={() => {
+                                setIsOpen(true)
+                            }}>
+                                Like
+                            </button>
                         )}
                         
-                        
+                        {user ? (
+                            <div>
+                                {favoriteCards.some(c => c.cardId === card.cardId) ? (
+                                    <button onClick={() => handleFavoriteCards(card)}>Remove From Favorite</button>
+                                ) : (
+                                    <button onClick={() => handleFavoriteCards(card)}>Add To Favorites</button>
+                                )}
+                            </div>
+                            
+                        ) : (
+                            <button onClick={() => setIsOpen(true)}>Add To Favorites</button>
+                        )}
                     </div>
                 </div>
             )
         })}
+        { isOpen && (
+            <LoginPopup isOpen={isOpen} onClose={handleClose}/>
+        )}
         </div>
         {count >= filteredCards.length ? (<p>No More Cards</p>) : (
             <button onClick={() => setCount(count + 2)}>Read more</button>
