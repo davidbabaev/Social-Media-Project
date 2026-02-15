@@ -24,7 +24,7 @@ export default function LoginPopup({isOpen, onClose}) {
         <div
             style={{backgroundColor: 'white', width: '20%', height: '20%', borderRadius: '20px', alignContent: 'center', textAlign: 'center'}}
         >
-            { isOpen && (
+            
                 <div>
                     <h3>Login For Use Features</h3>
                     <button onClick={() => navigate('/login')}>login</button>
@@ -32,8 +32,13 @@ export default function LoginPopup({isOpen, onClose}) {
                     <br />
                     <button onClick={onClose}>close</button>
                 </div>
-            )}
+            
         </div>
     </div>
   )
 }
+
+  
+
+
+

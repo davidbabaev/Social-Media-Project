@@ -10,6 +10,7 @@ function useLikedCards() {
 
     // handling add/ filer likes and unlikes with card object, likedUsers array.
     const toggleLike = (cardId) => {
+        if(!user) return;
         handleToggleLike(cardId, user.userId)
     }
 
@@ -17,7 +18,7 @@ function useLikedCards() {
     const isLikeByMe = (cardId) => {
         const card = registeredCards.find(card => card.cardId === cardId);
         if(!card && !user) return false;
-        return (card.likedUsers || []).includes(user.userId);
+        return (card?.likedUsers || []).includes(user?.userId);
     }
 
     const getLikeCount = (cardId) => {

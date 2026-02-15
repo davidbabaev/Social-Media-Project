@@ -28,7 +28,7 @@ useEffect(() => {
     localStorage.setItem('registeredCards', JSON.stringify(registeredCards))
 }, [registeredCards])
 
-const handleCardRegister = useCallback((title, text, img, category, like) => {
+const handleCardRegister = useCallback((title, text, img, category) => {
     // no dulicates check needed - genrateID() is always unique
 
     const newCard = {
@@ -40,6 +40,7 @@ const handleCardRegister = useCallback((title, text, img, category, like) => {
         userId: user.userId,
         userName: user.name,
         likedUsers: [],
+        comments: [],
         createdAt: new Date().toISOString()
     };
 
@@ -98,11 +99,30 @@ const handleCardRegister = useCallback((title, text, img, category, like) => {
     }
 
     const handleAddComment = (cardId, userId, commentText) => {
-
+        setRegisteredCards(registeredCards.map((card) => {
+            const comments = card.comments || [];
+            if(card.cardId === cardId){
+                    return {
+                        ...card,
+                        comments: [
+                            ...comments, 
+                            {
+                                userId: userId, 
+                                commentText: commentText,
+                                createdAt: new Date().toISOString(),
+                                commentId: generateID(),
+                            }
+                        ],
+                    };
+                }
+            else{
+                return card;
+            }
+        }))
     }
     
   return (
-    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike}}>
+    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike, handleAddComment}}>
         {children}
     </CardsContext.Provider>
   )
