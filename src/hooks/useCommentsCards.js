@@ -3,7 +3,42 @@ import { useCardsProvider } from "../providers/CardsProvider";
 
 function useCommentsCards() {
 
-  const {user} = useAuth();
+const {registeredCards ,handleAddComment} = useCardsProvider();
+const {user} = useAuth();
+
+
+const addComment = (commentText, cardId) => {
+  if(!user) return;
+  return handleAddComment(cardId, user.userId, commentText)
+}
+
+const countComments = (cardId) => {
+  const card = registeredCards.find(c => c.cardId === cardId)
+  const count = (card?.comments || []).length
+  return count
+}
+
+  return {addComment, countComments}
+}
+
+export default useCommentsCards;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*   const {user} = useAuth();
   const {registeredCards, handleAddComment} = useCardsProvider();
     
   const addComment = (cardId, commentText) => {
@@ -20,7 +55,4 @@ function useCommentsCards() {
     return commentsCount;
   }
 
-  return{addComment, countComments}
-}
-
-export default useCommentsCards;
+  return{addComment, countComments} */

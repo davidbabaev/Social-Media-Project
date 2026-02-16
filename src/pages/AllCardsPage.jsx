@@ -31,22 +31,16 @@ export default function AllCardsPage() {
     const [categoryFilter, setCategoryFilter] = useState('');
 
     const [isOpen, setIsOpen] = useState(false);
-
     function onClose(){
         setIsOpen(false)
     }
 
     const [isCommentOpen, setIsCommentOpen] = useState(false);
-
-    function onCommentClose(){
-        setIsCommentOpen(false)
-    }
-
     const {addComment, countComments} = useCommentsCards();
 
     const navigate = useNavigate();
     
-    const {registeredCards, handleToggleLike} = useCardsProvider();
+    const {registeredCards} = useCardsProvider();
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
     const {user} = useAuth();
     const [count, setCount] = useState(2);
@@ -157,7 +151,7 @@ export default function AllCardsPage() {
                     padding: '20px', 
                     borderRadius: '20px', 
                     margin: '20px 0px'
-                }} key={card.cardId}>
+                    }} key={card.cardId}>
 
                     <h2>{card.title}</h2>
                     <p>{card.text}</p>
@@ -227,13 +221,16 @@ export default function AllCardsPage() {
                               
                             </div>
                     </div>
-                        { isCommentOpen && (
+                    <div>
+                        {
+                        isCommentOpen &&(  
                             <CardsComments
                                 card = {card}
-                                addComment = {addComment}
-                                allUsers = {allUsers}
+                                allUsers={allUsers}
+                                addComment={addComment}
                             />
                         )}
+                    </div>
                         
                 </div>
             )

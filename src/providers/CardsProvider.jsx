@@ -120,6 +120,22 @@ const handleCardRegister = useCallback((title, text, img, category) => {
             }
         }))
     }
+
+    const handleRemoveComment = (cardId, userId) => {
+        setRegisteredCards(registeredCards.map((card) => {
+            const comments = card.comments || []
+
+            if(card.cardId === cardId){
+                return{
+                    ...card,
+                    comments: comments.filter((c) => c.cardId !== cardId) 
+                }
+            }
+            else{
+                return card;
+            }
+        }))
+    }
     
   return (
     <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike, handleAddComment}}>

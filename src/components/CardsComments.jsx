@@ -1,32 +1,42 @@
 import React, { useState } from 'react'
 
-export default function CardsComments({card, addComment, allUsers}) {
+export default function CardsComments({card, allUsers, addComment, removeComment}) {
 
-    const [commentText, setCommentText] = useState('')
+    const [commentText, setCommentText] = useState('');
 
-    const onSubmit = (e) => {
-        e.peventDefault();
-        if(!commentText.trim()) return;
 
-        addComment(card.cardId, comment)
-        setCommentText('')
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        addComment(commentText, card.cardId)
+        setCommentText('');
     }
-
-    const comments = card.comments || [];
 
   return (
     <div>
-        {/* job 1: display existing comments */}
-        {comments.map((comment) => {
-            const commentUser = allUsers.find((u) => u.userId === comment.userId)
+        <hr />
+        <form onSubmit={handleSubmit}>
+            <input 
+                type="text" 
+                placeholder='Write your comment...'
+                onChange={(e) => setCommentText(e.target.value)}
+                value={commentText}
+            />
+            <button type='submit'>Send</button>
+        </form>
 
-            return(
-                <div key={comment.commentId}>
-                    <strong>{commentUser ? commentUser.name : "Unknown User"}</strong>
-                    <p>{comment.commentText}</p>
-                </div>
-            )
-        })}
+        {
+            (card?.comments || []).map((comment) => {
+                const user = allUsers.find(u => u.userId === comment.userId);
+                return(
+                    <div key= {comment.commentId}>
+                        <p>{user.name}</p>
+                        <p>{comment.commentText}</p>
+                        <button>X</button>
+                    </div>
+                )
+            })
+        }
+
     </div>
   )
 }
