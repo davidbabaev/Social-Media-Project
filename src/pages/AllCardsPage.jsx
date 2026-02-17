@@ -37,7 +37,7 @@ export default function AllCardsPage() {
 
     const [isCommentOpen, setIsCommentOpen] = useState(null);
 
-    const {addComment, countComments} = useCommentsCards();
+    const {addComment, countComments, removeComment} = useCommentsCards();
 
     const navigate = useNavigate();
     
@@ -192,7 +192,9 @@ export default function AllCardsPage() {
                         <p>|</p>
                         {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {card.category}</p>)}
                         <p>|</p>
-                        <p>{getLikeCount(card.cardId)}</p>
+                        <p>{getLikeCount(card.cardId)} likes</p>
+                        <p>|</p>
+                        <p>{countComments(card.cardId)} comments</p>
                         <p>|</p>
 
                             <div>
@@ -237,6 +239,7 @@ export default function AllCardsPage() {
                                 card = {card}
                                 allUsers={allUsers}
                                 addComment={addComment}
+                                removeComment = {removeComment}
                             />
                         )}
                     </div>

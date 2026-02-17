@@ -31,7 +31,7 @@ export default function CardsComments({card, allUsers, addComment, removeComment
                     <div key= {comment.commentId}>
                         <p>{user.name}</p>
                         <p>{comment.commentText}</p>
-                        <button>X</button>
+                        <button onClick={() => removeComment(card.cardId, comment.commentId)}>X</button>
                     </div>
                 )
             })

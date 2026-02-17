@@ -12,9 +12,9 @@ const addComment = (commentText, cardId) => {
   return handleAddComment(cardId, user.userId, commentText)
 }
 
-const removeComment = () => {
+const removeComment = (cardId, commentId) => {
   if(!user) return;
-  return handleRemoveComment()
+  return handleRemoveComment(cardId, commentId)
 }
 
 const countComments = (cardId) => {
@@ -23,41 +23,7 @@ const countComments = (cardId) => {
   return count
 }
 
-  return {addComment, countComments}
+  return {addComment, countComments, removeComment}
 }
 
 export default useCommentsCards;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*   const {user} = useAuth();
-  const {registeredCards, handleAddComment} = useCardsProvider();
-    
-  const addComment = (cardId, commentText) => {
-    if(!user) return;
-    handleAddComment(cardId, user.userId, commentText)
-  }
-
-
-  // count comments
-  const countComments = (cardId) => {
-    const card = registeredCards.find(c => c.cardId === cardId); 
-    // guarde
-    const commentsCount = (card?.comments || []).length;
-    return commentsCount;
-  }
-
-  return{addComment, countComments} */

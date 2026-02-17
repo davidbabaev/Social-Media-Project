@@ -121,14 +121,14 @@ const handleCardRegister = useCallback((title, text, img, category) => {
         }))
     }
 
-    const handleRemoveComment = (cardId, userId) => {
+    const handleRemoveComment = (cardId, commentId) => {
         setRegisteredCards(registeredCards.map((card) => {
             const comments = card.comments || []
 
             if(card.cardId === cardId){
                 return{
                     ...card,
-                    comments: comments.filter((c) => c.cardId !== cardId) 
+                    comments: comments.filter((c) => c.commentId !== commentId) 
                 }
             }
             else{
