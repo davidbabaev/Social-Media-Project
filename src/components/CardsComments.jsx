@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import { useAuth } from '../providers/AuthProvider';
 
 export default function CardsComments({card, allUsers, addComment, removeComment}) {
 
     const [commentText, setCommentText] = useState('');
+    const {user: loggedInUser} = useAuth();
 
 
     const handleSubmit = (e) => {
@@ -29,9 +31,15 @@ export default function CardsComments({card, allUsers, addComment, removeComment
                 const user = allUsers.find(u => u.userId === comment.userId);
                 return(
                     <div key= {comment.commentId}>
-                        <p>{user.name}</p>
+                        <hr />
+                        <p>{user?.name || "Unknown User"}</p>
                         <p>{comment.commentText}</p>
-                        <button onClick={() => removeComment(card.cardId, comment.commentId)}>X</button>
+                        { loggedInUser && 
+                        (loggedInUser.userId === comment.userId || 
+                            loggedInUser.userId === card.userId
+                        ) && (
+                            <button onClick={() => removeComment(card.cardId, comment.commentId)}>X</button>
+                        )}
                     </div>
                 )
             })

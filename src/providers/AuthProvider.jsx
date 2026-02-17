@@ -150,6 +150,7 @@ export function AuthProvider({children}) {
                     email: newEmail,
                 }
             }
+            return loggedInUser; // <- keep unchanged
         } 
         )
     }
@@ -166,5 +167,3 @@ export function AuthProvider({children}) {
 export function useAuth(){
     return useContext(UseAuthCheck)
 }
-
-
