@@ -3,13 +3,18 @@ import { useCardsProvider } from "../providers/CardsProvider";
 
 function useCommentsCards() {
 
-const {registeredCards ,handleAddComment} = useCardsProvider();
+const {registeredCards ,handleAddComment, handleRemoveComment} = useCardsProvider();
 const {user} = useAuth();
 
 
 const addComment = (commentText, cardId) => {
   if(!user) return;
   return handleAddComment(cardId, user.userId, commentText)
+}
+
+const removeComment = () => {
+  if(!user) return;
+  return handleRemoveComment()
 }
 
 const countComments = (cardId) => {

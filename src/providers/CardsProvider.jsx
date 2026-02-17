@@ -138,7 +138,7 @@ const handleCardRegister = useCallback((title, text, img, category) => {
     }
     
   return (
-    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike, handleAddComment}}>
+    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike, handleAddComment, handleRemoveComment}}>
         {children}
     </CardsContext.Provider>
   )

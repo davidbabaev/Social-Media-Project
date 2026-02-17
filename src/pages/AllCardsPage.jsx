@@ -35,7 +35,8 @@ export default function AllCardsPage() {
         setIsOpen(false)
     }
 
-    const [isCommentOpen, setIsCommentOpen] = useState(false);
+    const [isCommentOpen, setIsCommentOpen] = useState(null);
+
     const {addComment, countComments} = useCommentsCards();
 
     const navigate = useNavigate();
@@ -145,6 +146,8 @@ export default function AllCardsPage() {
             }}>
         {countedRegisterCards.map((card) => {
             const creator = allUsers.find(user => user.userId === card.userId);
+
+
             return(
                 <div style={{
                     border: 'solid black 1px', 
@@ -214,7 +217,13 @@ export default function AllCardsPage() {
                                     )}
 
                                 {user ? (
-                                    <button onClick={() => setIsCommentOpen(!isCommentOpen)}>add new comment</button>
+                                    <button onClick={() => {
+                                        if(isCommentOpen === card.cardId){
+                                            setIsCommentOpen(null)
+                                        } else{
+                                            setIsCommentOpen(card.cardId)
+                                        }
+                                    }}>add new comment</button>
                                 ): (
                                     <button onClick={() => setIsOpen(true)}>add new comment</button>
                                 )}
@@ -223,7 +232,7 @@ export default function AllCardsPage() {
                     </div>
                     <div>
                         {
-                        isCommentOpen &&(  
+                        isCommentOpen === card.cardId &&(  
                             <CardsComments
                                 card = {card}
                                 allUsers={allUsers}
@@ -237,7 +246,7 @@ export default function AllCardsPage() {
             
         })}
 
-        { isOpen && (
+        {  isOpen && (
             <LoginPopup
                 onClose = {onClose}
             />

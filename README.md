@@ -22,3 +22,4 @@
 | 6.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1C29j3xdf0Fhxn8T_uR0socKRjYzYQFDRKtbEMkcjw5Y/edit?usp=sharing) |
 | 7.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1_xqzOIX6cnRng9pqMxtDMthB2nFt3A5RzqyEfvlcu8Y/edit?usp=sharing) |
 | 8.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1G7nZcK5M_OClhyMrUyG5sKv7q6v15nSfkIieoQc1jo0/edit?usp=sharing) |
+| 16.2.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1w-mu3IQM7koP1A0xx-L-ISYf28jlk7UuPFzjHjFoDXw/edit?usp=sharing) |
