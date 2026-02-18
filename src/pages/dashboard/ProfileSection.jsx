@@ -67,20 +67,20 @@ return (
             <p>Source: {currentUser.source}</p>
 
             <button onClick={() => {
-            setEditMode(!editMode);
-            setEditName(currentUser.name);
-            setEditLastName(currentUser.lastName);
-            setEditEmail(currentUser.email);
-            setEditCountry(currentUser.country);
-            setEditCity(currentUser.city);
-            setEditPhoto(currentUser.photo);
-            setEditCoverImage(currentUser.coverImage);
-            setEditAge(currentUser.age);
-            setEditJob(currentUser.job);
-            setEditGender(currentUser.gender);
-            setEditBirthDate(currentUser.birthDate);
-            setEditPhone(currentUser.phone);
-            setEditAboutMe(currentUser.aboutMe);
+                setEditMode(!editMode);
+                setEditName(currentUser.name);
+                setEditLastName(currentUser.lastName);
+                setEditEmail(currentUser.email);
+                setEditCountry(currentUser.country);
+                setEditCity(currentUser.city);
+                setEditPhoto(currentUser.photo);
+                setEditCoverImage(currentUser.coverImage);
+                setEditAge(currentUser.age);
+                setEditJob(currentUser.job);
+                setEditGender(currentUser.gender);
+                setEditBirthDate(currentUser.birthDate);
+                setEditPhone(currentUser.phone);
+                setEditAboutMe(currentUser.aboutMe);
             }
             }>Edit Profile</button>
 
@@ -248,19 +248,22 @@ return (
                 () => {
                 editUser(
                     currentUser.userId,
-                    editName,
-                    editEmail, 
-                    editCountry, 
-                    editPhoto, 
-                    editAge, 
-                    editGender, 
-                    editPhone,
-                    editLastName,
-                    editCoverImage, 
-                    editCity,
-                    editJob,
-                    editBirthDate,
-                    editAboutMe,
+                    {
+                        name: editName,
+                        lastName: editLastName,
+                        email: editEmail,
+                        country: editCountry,
+                        city: editCity,
+                        photo: editPhoto,
+                        coverImage: editCoverImage,
+                        age: editAge,
+                        gender: editGender,
+                        phone: editPhone,
+                        job: editJob,
+                        birthDate: editBirthDate,
+                        aboutMe: editAboutMe,
+                    }
+
                 )
                 setEditMode(!editMode)
                 }}

@@ -143,38 +143,14 @@ export function AuthProvider({children}) {
 
     const editUser = (
         userId,
-        newName, 
-        newEmail, 
-        newCountry, 
-        newPhoto, 
-        newAge, 
-        newGender, 
-        newPhone,
-        newLastName,
-        newCoverImage, 
-        newCity,
-        newJob,
-        newBirthDate,
-        newAboutMe,
+        updatedFields // userId, newName, newEmail, newCountry, newPhoto, etc...
     ) => {
         
         setRegisteredUsers(registeredUsers.map(user => {
             if(user.userId === userId){
                 return{
                     ...user,
-                    name: newName,
-                    lastName: newLastName, 
-                    email: newEmail,
-                    country: newCountry,
-                    city: newCity,
-                    photo: newPhoto,
-                    coverImage: newCoverImage, 
-                    age: newAge,
-                    gender: newGender,
-                    phone: newPhone,
-                    job: newJob,
-                    birthDate: newBirthDate,
-                    aboutMe: newAboutMe
+                    ...updatedFields, // name: editName, email: editEmail, etc..
                 }
             }
             else{
@@ -186,8 +162,8 @@ export function AuthProvider({children}) {
             if(loggedInUser.userId === userId){
                 return{
                     ...loggedInUser,
-                    name: newName,
-                    email: newEmail,
+                    name: updatedFields.name || loggedInUser.name,
+                    email: updatedFields.email || loggedInUser.email,
                 }
             }
             return loggedInUser; // <- keep unchanged
