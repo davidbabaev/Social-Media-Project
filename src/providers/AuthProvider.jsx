@@ -145,7 +145,6 @@ export function AuthProvider({children}) {
         userId,
         updatedFields // userId, newName, newEmail, newCountry, newPhoto, etc...
     ) => {
-        
         setRegisteredUsers(registeredUsers.map(user => {
             if(user.userId === userId){
                 return{

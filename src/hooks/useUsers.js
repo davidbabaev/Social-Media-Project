@@ -15,13 +15,19 @@ import { transformApiUser } from "../utils/transformApiUser";
             const transformFormedUsers = data.results.map(transformApiUser)
 
             setUsers(transformFormedUsers);
-            localStorage.setItem('cachedUsers', JSON.stringify(transformFormedUsers))
+            // localStorage.setItem('cachedUsers', JSON.stringify(transformFormedUsers))
         }
         catch (err){
             console.log(err);
         }
         setLoading(false)
     }
+
+    useEffect(() => {
+        if(users.length > 0){
+            localStorage.setItem('cachedUsers', JSON.stringify(users))
+        }
+    }, [users])
 
     useEffect(() => {
         const cached = JSON.parse(localStorage.getItem('cachedUsers'))
@@ -33,7 +39,22 @@ import { transformApiUser } from "../utils/transformApiUser";
         }
     }, [])
 
-  return {users, loading}
+    // Edit API Users
+    const editApiUser = (userId, updatedFields) => {
+        setUsers(users.map((apiUser) => {
+            if(apiUser.userId === userId){
+                return{
+                    ...apiUser,
+                    ...updatedFields
+                }
+            }
+            else{
+                return apiUser;
+            }
+        }))
+    }
+
+  return {users, loading, editApiUser}
 }
 
 export default useUsers;
