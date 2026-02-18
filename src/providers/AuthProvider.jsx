@@ -53,7 +53,20 @@ export function AuthProvider({children}) {
         return Date.now().toString() + Math.random().toString(36).substring(2,6)
     }
 
-    const handleRegister = (email, password, name, country, age, gender, phone) => {
+    const handleRegister = (
+        email, 
+        password, 
+        name, 
+        country, 
+        age, 
+        gender, 
+        phone, 
+        lastName, 
+        city,
+        job,
+        birthDate,
+        aboutMe,
+    ) => {
         const emailExists = registeredUsers.some(user => user.email === email)
 
         if(emailExists){
@@ -66,13 +79,19 @@ export function AuthProvider({children}) {
         const newUser = {
             userId: generateID(),
             name: name,
+            lastName: lastName,
             email: email,
             password: password,
             country: country,
+            city: city,
             photo: 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png',
+            coverImage: 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png',
             age: age,
+            job: job,
             gender: gender,
+            birthDate: birthDate, 
             phone: phone,
+            aboutMe: aboutMe, 
             source: 'REGISTERED',
             createdAt: new Date().toISOString() // "2025-01-05T10:30:00.000Z"
         }
@@ -122,19 +141,40 @@ export function AuthProvider({children}) {
         setUser(null)
     }
 
-    const editUser = (userId ,newName, newEmail, newCountry, newPhoto, newAge, newGender, newPhone) => {
-
+    const editUser = (
+        userId,
+        newName, 
+        newEmail, 
+        newCountry, 
+        newPhoto, 
+        newAge, 
+        newGender, 
+        newPhone,
+        newLastName,
+        newCoverImage, 
+        newCity,
+        newJob,
+        newBirthDate,
+        newAboutMe,
+    ) => {
+        
         setRegisteredUsers(registeredUsers.map(user => {
             if(user.userId === userId){
                 return{
                     ...user,
                     name: newName,
+                    lastName: newLastName, 
                     email: newEmail,
                     country: newCountry,
+                    city: newCity,
                     photo: newPhoto,
+                    coverImage: newCoverImage, 
                     age: newAge,
                     gender: newGender,
-                    phone: newPhone
+                    phone: newPhone,
+                    job: newJob,
+                    birthDate: newBirthDate,
+                    aboutMe: newAboutMe
                 }
             }
             else{

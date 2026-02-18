@@ -1,25 +1,36 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useAuth } from '../providers/AuthProvider'
 import { useNavigate } from 'react-router-dom';
 import useCountries from '../hooks/useCountries';
+import { JOB_INDUSTRIES } from '../constants/usersJobIndustries';
+import getMaxBirthDate from '../utils/getMaxBirthDate';
 
 export default function RegisteredPage() {
     
     const [error, setError] = useState('');
 
     const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [country, setCountry] = useState('');
+    const [city, setCity] = useState('');
     const [age, setAge] = useState('');
+    const [job, setJob] = useState('');
     const [gender, setGender] = useState('');
+    const [birthDate, setBirthDate] = useState('');
     const [phone, setPhone] = useState('');
+    const [aboutMe, setAboutMe] = useState('');
+
 
     const {handleRegister} = useAuth();
-    const {apiCountriesList, apiCountriesListLoading} = useCountries();
+    const {apiCountriesList} = useCountries();
 
     // navigation
     const navigate = useNavigate();
+
+    // BirthDate function, handling
+    const maxDate = useMemo(() => getMaxBirthDate(), []);
 
     // handle form submit
     const handleSubmit = (e) => {
@@ -56,7 +67,20 @@ export default function RegisteredPage() {
             return;
         }
 
-        const result = handleRegister(email, password, name, country, age, gender, phone);
+        const result = handleRegister(
+            email, 
+            password, 
+            name, 
+            country, 
+            age, 
+            gender, 
+            phone, 
+            lastName, 
+            city,
+            job,
+            birthDate,
+            aboutMe,
+        );
         
         if(!result.success) {
             setError(result.message);
@@ -80,7 +104,18 @@ export default function RegisteredPage() {
                     type="text" 
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder='alon levi..'
+                    placeholder='Alon..'
+                />
+            </div>
+
+            <div>
+                <label>Last Name:</label>
+                <br />
+                <input 
+                    type="text" 
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder='Levi..'
                 />
             </div>
 
@@ -121,6 +156,17 @@ export default function RegisteredPage() {
             </div>
 
             <div>
+                <label>city:</label>
+                <br />
+                <input 
+                    type="text" 
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder='Viena'
+                />
+            </div>
+
+            <div>
                 <label>Age:</label>
                 <br />
                 <input 
@@ -131,6 +177,20 @@ export default function RegisteredPage() {
                     onChange={(e) => setAge(e.target.value)}
                     placeholder='24'
                     />
+            </div>
+
+            <div>
+                <label>Job:</label>
+                <br />
+                <select 
+                    value={job}
+                    onChange={(e) => setJob(e.target.value)}
+                >
+                    <option value="">All</option>
+                    {JOB_INDUSTRIES.map((job) => (
+                        <option key={job} value={job}>{job}</option>
+                    ))}
+                </select>
             </div>
 
             <div>
@@ -146,6 +206,19 @@ export default function RegisteredPage() {
             </div>
 
             <div>
+                <label>Birth Date:</label>
+                <br />
+                <input 
+                    type="date" 
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    max={maxDate}
+                    />
+                    <br />
+                    <small>You must be at least 5 years old</small>
+            </div>
+
+            <div>
                 <label>Phone:</label>
                 <br />
                 <input 
@@ -158,6 +231,17 @@ export default function RegisteredPage() {
                     />
             </div>
 
+            <div>
+                <label>About Me:</label>
+                <br />
+                <textarea
+                    value={aboutMe}
+                    onChange={(e) => setAboutMe(e.target.value)}
+                    style={{resize: 'none'}}
+                    rows={4}
+                />
+            </div>
+
 
             {error && <p style={{color: 'red'}}>{error}</p>}
             <br />
@@ -168,5 +252,7 @@ export default function RegisteredPage() {
         <h2>already user?</h2>
         <button onClick={() => navigate('/dashboard/myprofile')}>login to your account</button>
     </div>
+
   )
 }
+
