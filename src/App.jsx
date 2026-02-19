@@ -13,6 +13,7 @@ import RegisteredPage from './pages/RegisteredPage'
 import AllCardsPage from './pages/AllCardsPage'
 import UserProfile from './pages/UserProfile'
 import DashboardLayout from './pages/dashboard/DashboardLayout'
+import CardDetailsPage from './pages/CardDetailsPage'
 
 
 export default function App(){
@@ -38,6 +39,7 @@ export default function App(){
               <Route path='/registered' element ={<RegisteredPage/>}/>
               <Route path='/allcards' element ={<AllCardsPage/>}/>
               <Route path='/userprofile/:id' element ={<UserProfile/>}/>
+              <Route path='/carddetails/:id' element ={<CardDetailsPage/>}/>
             </Routes>
         </CardsProvider>
       </ThemeProvider>

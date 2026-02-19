@@ -144,6 +144,8 @@ export default function AllCardsPage() {
             display: 'flex', 
             flexDirection: 'column'
             }}>
+
+
         {countedRegisterCards.map((card) => {
             const creator = allUsers.find(user => user.userId === card.userId);
 
@@ -156,7 +158,7 @@ export default function AllCardsPage() {
                     margin: '20px 0px'
                     }} key={card.cardId}>
 
-                    <h2>{card.title}</h2>
+                    <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card.cardId}`)}>{card.title}</span></h2>
                     <p>{card.text}</p>
                     <img src={card.img} style={{
                         width: '500px',
@@ -229,7 +231,8 @@ export default function AllCardsPage() {
                                 ): (
                                     <button onClick={() => setIsOpen(true)}>add new comment</button>
                                 )}
-                              
+
+                                <button onClick={() => navigate(`/carddetails/${card.cardId}`)}>Show Card Details</button>    
                             </div>
                     </div>
                     <div>
@@ -243,7 +246,6 @@ export default function AllCardsPage() {
                             />
                         )}
                     </div>
-                        
                 </div>
             )
             

@@ -19,7 +19,7 @@ export default function NavBar() {
 
     const mystyle = {marginRight: '8px'}
 
-    const loggeduser = allUsers.find((userL) => userL.userId === user.userId)
+    const loggeduser = allUsers.find((userL) => userL.userId === user?.userId)
 
   return (
     <div>
