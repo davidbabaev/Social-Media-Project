@@ -160,11 +160,12 @@ function UsersPage({value}) {
         {visibleUsers.map((user) => (
             <div key={user.userId}>
                 <img style={{borderRadius: '50%', width: '15%'}} src={user.photo}/>
-                <h3>{user.name}</h3>
+                <h3>{user.name} {user.lastName}</h3>
                 <p>Source: {user.source} User</p>
                 <p>Email: {user.email}</p>
                 <p>Age: {user.age}</p>
                 <p>Country: {user.country}</p>
+                <p>Gender: {user.gender}</p>
 
                 {selectedUsers.some(selUser => selUser.userId === user.userId) ? (
                     <button onClick={() => selectHandleUser(user)}>Deselecte User</button>

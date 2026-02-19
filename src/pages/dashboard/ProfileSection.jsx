@@ -7,9 +7,9 @@ import getMaxBirthDate from '../../utils/getMaxBirthDate';
 
 export default function ProfileSection() {
 
-    const {user, editUser} = useAuth();
-    const {allUsers} = useAllUsers();
+    const {user} = useAuth(); // only works for registered
     const {apiCountriesList} = useCountries(); 
+    const {allUsers, editAnyUser} = useAllUsers();
     
     // edit logged-in user values states:
     const [editName, setEditName] = useState('');
@@ -202,8 +202,8 @@ return (
                 onChange={(e) => setEditGender(e.target.value)}
             >
                 <option value="">All</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
             </select>
             </div>
 
@@ -246,7 +246,7 @@ return (
             <button
             onClick={
                 () => {
-                editUser(
+                editAnyUser(
                     currentUser.userId,
                     {
                         name: editName,
@@ -263,7 +263,6 @@ return (
                         birthDate: editBirthDate,
                         aboutMe: editAboutMe,
                     }
-
                 )
                 setEditMode(!editMode)
                 }}

@@ -15,7 +15,6 @@ import { transformApiUser } from "../utils/transformApiUser";
             const transformFormedUsers = data.results.map(transformApiUser)
 
             setUsers(transformFormedUsers);
-            // localStorage.setItem('cachedUsers', JSON.stringify(transformFormedUsers))
         }
         catch (err){
             console.log(err);
