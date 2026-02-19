@@ -23,8 +23,8 @@ export default function MyCardsSection() {
     // import edit function that we need to initial in the AuthProvider page
     
     const currentUser = useMemo(() => {
-      const currentUser = allUsers.find(logedUser => logedUser.userId === user.userId);
-      return currentUser;
+      const currentLoginUser = allUsers.find(logedUser => logedUser.userId === user.userId);
+      return currentLoginUser;
     }, [allUsers]) 
 
 return (
@@ -94,8 +94,8 @@ return (
                     flexDirection: 'row', 
                     gap: '10px'
                     }}>
-                    <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}/>
-                    <p>{currentUser.name}</p>
+                    <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser?.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}/>
+                    <p>{currentUser?.name}</p>
                     <p>|</p>
                     <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
                     <button onClick={() => handleDeleteCard(card.cardId)}>Remove</button>

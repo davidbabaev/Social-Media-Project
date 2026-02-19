@@ -184,7 +184,7 @@ export default function AllCardsPage() {
                                 style={{cursor: 'pointer'}}
                                 onClick={() => navigate(`/userprofile/${creator.userId}`)}
                             >
-                                {creator?.name}
+                                {creator?.name} {creator?.lastName}
                             </span>
                         </p>
                         <p>|</p>
