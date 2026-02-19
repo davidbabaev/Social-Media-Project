@@ -86,32 +86,30 @@ export default function CardDetailsPage() {
                 <p>{countComments(currentCard.cardId)} comments</p>
                 <p>|</p>
 
-                    <div>
-                        {user ? (
-                            <button onClick={() => toggleLike(currentCard.cardId)}>
-                                {isLikeByMe(currentCard.cardId) ? "Unlike" : "Like"}
-                            </button>
-                        ):(
-                            <button onClick={() => setIsOpen(true)}>Like</button>
-                        )}
+                <div>
+                    {user ? (
+                        <button onClick={() => toggleLike(currentCard.cardId)}>
+                            {isLikeByMe(currentCard.cardId) ? "Unlike" : "Like"}
+                        </button>
+                    ):(
+                        <button onClick={() => setIsOpen(true)}>Like</button>
+                    )}
 
-                        {user ? (
-                            <div>
-                                {favoriteCards.some(c => c.cardId === currentCard.cardId) ? (
-                                    <button onClick={() => handleFavoriteCards(currentCard)}>Remove From Favorite</button>
-                                ) : (
-                                    <button onClick={() => handleFavoriteCards(currentCard)}>Add To Favorites</button>
-                                )}
-                            </div>
+                    {user ? (
+                        <div>
+                            {favoriteCards.some(c => c.cardId === currentCard.cardId) ? (
+                                <button onClick={() => handleFavoriteCards(currentCard)}>Remove From Favorite</button>
                             ) : (
-                                <button onClick={() => setIsOpen(true)}>Add to favorites</button>
+                                <button onClick={() => handleFavoriteCards(currentCard)}>Add To Favorites</button>
                             )}
-                        
-                    </div>
+                        </div>
+                        ) : (
+                            <button onClick={() => setIsOpen(true)}>Add to favorites</button>
+                    )}
+                </div>
             </div>
             <div>
-                {
-                currentCard.cardId &&(  
+                { currentCard.cardId && (  
                     <CardsComments
                         card = {currentCard}
                         allUsers={allUsers}

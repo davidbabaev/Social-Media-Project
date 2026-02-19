@@ -24,7 +24,6 @@ export function AuthProvider({children}) {
     
     useEffect(() => {
         if(!isRegistredLoaded) return;
-        // console.log("Effect B saving: ", registeredUsers);
         
         localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers))
     }, [registeredUsers, isRegistredLoaded]) 
@@ -93,7 +92,7 @@ export function AuthProvider({children}) {
             phone: phone,
             aboutMe: aboutMe, 
             source: 'REGISTERED',
-            createdAt: new Date().toISOString() // "2025-01-05T10:30:00.000Z"
+            createdAt: new Date().toLocaleDateString(), // "2025-01-05T10:30:00.000Z"
         }
 
         setRegisteredUsers([...registeredUsers, newUser]);
@@ -168,9 +167,9 @@ export function AuthProvider({children}) {
             return loggedInUser; // <- keep unchanged
         } 
         )
+
     }
-
-
+    
   return (
     <UseAuthCheck.Provider 
         value={{isLoggedIn, user, handleLogin, handleLogout, handleRegister, registeredUsers, editUser, setUser}}>
