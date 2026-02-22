@@ -1,6 +1,5 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
+/* import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { useAuth } from './AuthProvider';
-import { getAllCards, createCard, deleteCard, updateCard} from '../services/apiService';
 
 const CardsContext = createContext();
 
@@ -11,18 +10,17 @@ const { user } = useAuth();
     // state for saving cards (register cards)
 const [registeredCards, setRegisteredCards] = useState([]);
 
+const generateID = () => {
+    return new Date().getTime().toString() + Math.random().toString(36).substring(2,6)
+} 
+
 // useEffect on mount
 useEffect(() => {
-    const fetchCards = async () => {
-        try{
-            const response = await getAllCards();
-            setRegisteredCards(response);
-        }
-        catch(err){
-            console.log(err.message);
-        }
+    const saved = JSON.parse(localStorage.getItem('registeredCards'));
+
+    if(saved){
+        setRegisteredCards(saved);
     }
-    fetchCards();
 }, [])
 
 // useEffect with dependency cards
@@ -30,64 +28,52 @@ useEffect(() => {
     localStorage.setItem('registeredCards', JSON.stringify(registeredCards))
 }, [registeredCards])
 
+const handleCardRegister = useCallback((title, text, img, category) => {
+    // no dulicates check needed - genrateID() is always unique
 
-const handleCardRegister = async (cardData) => {
-    try{
-        const response = await createCard(cardData);
-        // take all the previous cards, add the new one at the end.
-        setRegisteredCards(prev => [...prev, response]);
+    const newCard = {
+        cardId: generateID(),
+        title: title,
+        text: text,
+        img: img,
+        category: category,
+        userId: user.userId,
+        userName: user.name,
+        likedUsers: [],
+        comments: [],
+        createdAt: new Date().toISOString()
+    };
 
-        return{
-            success: true,
-            message: 'Card registered successfully'
-        }
-    }
-    catch(err){
-        return{
-            success: false,
-            message: err.message
-        }
-    }
-}
+    setRegisteredCards( prev => [...prev, newCard]);
 
+    return{
+        success: true,
+        message: 'new cards added'
+    };
 
-    const handleDeleteCard = async (cardId) => {
-        try{
-            await deleteCard(cardId);
-            setRegisteredCards(registeredCards.filter(card => card._id !== cardId))
+}, [registeredCards, user])
 
-            return{
-                success: true,
-                message: 'Deleted Successfully'
-            }
-        }
-        catch(err){
-            return{
-                success: false,
-                message: err.message
-            }
-        }
+    const handleDeleteCard = (cardId) => {
+        setRegisteredCards(registeredCards.filter(card => card.cardId !== cardId))
     }
 
-        const handleEditCard = async (cardId, cardData) => {
-            try{
-                const response = await updateCard(cardId, cardData);
-                setRegisteredCards(prev => prev.map((card) => {
-                    return card._id === cardId ? response : card
-                }));
-
+    const handleEditCard = (cardId, newTitle, newText, newImg, newCategory) => {
+        setRegisteredCards(registeredCards.map(card => {
+            if(card.cardId === cardId){
+                // this is the one we're editing - return updated version
                 return{
-                    success: true,
-                    message: "Edited Successfully"
+                    ...card, //keep everything else (userId, userName, createdAt)
+                    title: newTitle, //update title
+                    text: newText, //udpate text
+                    img: newImg, // update img
+                    category: newCategory, // update category
                 }
+            } else{
+                // not the one - return uchanged
+                return card
             }
-            catch(err){
-                return{
-                    success: false,
-                    message: err.message
-                }
-            }
-        }
+        }))
+    }
 
     const handleToggleLike = (cardId, userId) => {
         setRegisteredCards(registeredCards.map((card) => {
@@ -161,3 +147,4 @@ const handleCardRegister = async (cardData) => {
 export function useCardsProvider(){
     return useContext(CardsContext);
 }
+ */
