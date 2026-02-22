@@ -1,0 +1,184 @@
+// import React, { createContext, useContext, useEffect, useState } from 'react'
+// import { loginUser, registerUser } from '../services/apiService';
+
+// const UseAuthCheck = createContext();
+
+// export function AuthProvider({children}) {
+
+//     const[isLoggedIn, setIsLoggedIn] = useState(false);
+//     const[user, setUser] = useState(null);
+
+//     // flags: 
+//     // const [isRegistredLoaded, setIsRegistredLoaded] = useState(false)
+//     const [isUserLoaded , setIsUserLoaded] = useState(false)
+
+//     // const [registeredUsers, setRegisteredUsers] = useState([]);
+
+// /*     useEffect(() => {
+//         const savedRegisteredUsers = JSON.parse(localStorage.getItem('registeredUsers'))
+        
+//         if(savedRegisteredUsers){
+//             setRegisteredUsers(savedRegisteredUsers)
+//         }
+//         setIsRegistredLoaded(true); 
+//     }, []) */
+    
+// /*     useEffect(() => {
+//         if(!isRegistredLoaded) return;
+        
+//         localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers))
+//     }, [registeredUsers, isRegistredLoaded])  */
+
+//     //===========================================================================
+//     // user + logged in localStorage saving
+//     useEffect(() => {
+//         const savedLoggedInUser = JSON.parse(localStorage.getItem('loggedInUser'))
+
+//         if(savedLoggedInUser){
+//             setUser(savedLoggedInUser)
+//             setIsLoggedIn(true) 
+//         } else{
+//             setIsLoggedIn(false) 
+//         }
+//         setIsUserLoaded(true);
+//     }, [])
+
+//     useEffect(() => {
+//         if(!isUserLoaded) return;
+//         localStorage.setItem('loggedInUser', JSON.stringify(user))
+//     }, [user, isUserLoaded])
+
+
+// /*     const generateID = () => {
+//         return Date.now().toString() + Math.random().toString(36).substring(2,6)
+//     } */
+
+// /*     const handleRegister = (
+//         email, 
+//         password, 
+//         name, 
+//         country, 
+//         age, 
+//         gender, 
+//         phone, 
+//         lastName, 
+//         city,
+//         job,
+//         birthDate,
+//         aboutMe,
+//     ) => {
+//         const emailExists = registeredUsers.some(user => user.email === email)
+
+//         if(emailExists){
+//             return {
+//                 success: false,
+//                 message: 'Email already registered'
+//             };
+//         }
+
+//         const newUser = {
+//             userId: generateID(),
+//             name: name,
+//             lastName: lastName,
+//             email: email,
+//             password: password,
+//             country: country,
+//             city: city,
+//             photo: 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png',
+//             coverImage: 'https://images.unsplash.com/photo-1507608869274-d3177c8bb4c7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+//             age: age,
+//             job: job,
+//             gender: gender,
+//             birthDate: birthDate, 
+//             phone: phone,
+//             aboutMe: aboutMe, 
+//             source: 'REGISTERED',
+//             createdAt: new Date().toLocaleDateString(), // "2025-01-05T10:30:00.000Z"
+//         }
+
+//         setRegisteredUsers([...registeredUsers, newUser]);
+
+//         setUser({
+//             name: newUser.name,
+//             email: newUser.email,
+//             userId: newUser.userId
+//         })
+
+//         setIsLoggedIn(true);
+
+//         return {
+//             success: true, 
+//             message: 'Registration successful'
+//         };  
+//     } */
+
+// /*     const handleLogin = (email, password, allUsers) => {
+
+//         const foundUser = allUsers.find(user => user.email === email && user.password === password);
+
+//         if(!foundUser){
+//             return{
+//                 success: false,
+//                 message: 'Invalid email or password'
+//             }
+//         }
+
+//         setUser({
+//             name: foundUser.name,
+//             email: foundUser.email,
+//             userId: foundUser.userId,
+//         })
+
+//         setIsLoggedIn(true);
+//         return{ 
+//             success: true,
+//             message: 'logged in successfully'
+//         }
+//     } */
+
+//     const handleLogout = () => {
+//         setIsLoggedIn(false);
+//         setUser(null);
+//     }
+
+//     const editUser = (
+//         userId,
+//         updatedFields // userId, newName, newEmail, newCountry, newPhoto, etc...
+//     ) => {
+//         setRegisteredUsers(registeredUsers.map(user => {
+//             if(user.userId === userId){
+//                 return{
+//                     ...user,
+//                     ...updatedFields, // name: editName, email: editEmail, etc..
+//                 }
+//             }
+//             else{
+//                 return user;
+//             }
+//         }))
+        
+//         setUser(loggedInUser => {
+//             if(loggedInUser.userId === userId){
+//                 return{
+//                     ...loggedInUser,
+//                     name: updatedFields.name || loggedInUser.name,
+//                     email: updatedFields.email || loggedInUser.email,
+//                 }
+//             }
+//             return loggedInUser; // <- keep unchanged
+//         } 
+//         )
+
+//     }
+    
+//   return (
+//     <UseAuthCheck.Provider 
+//         value={{isLoggedIn, user, handleLogin, handleLogout, handleRegister, registeredUsers, editUser, setUser}}>
+//             {children}
+//     </UseAuthCheck.Provider>
+//   )
+// }
+
+// export function useAuth(){
+//     return useContext(UseAuthCheck)
+// }
