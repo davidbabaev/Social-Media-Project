@@ -13,7 +13,6 @@ import { transformApiUser } from "../utils/transformApiUser";
             const data = await response.json()
 
             const transformFormedUsers = data.results.map(transformApiUser)
-
             setUsers(transformFormedUsers);
         }
         catch (err){

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import { loginUser, registerUser } from '../services/apiService';
 
 const UseAuthCheck = createContext();
 

@@ -1,36 +1,68 @@
-const BASE_URL = "http://localhost:8181";
+const BASE_URL = 'http://localhost:8181';
 
-// get token from localStorage
-const getToken = () => localStorage.getItem("token");
+const getToken = () => localStorage.getItem('auth-token');
 
-// general helper for all API calls
-const httpRequest = async (endpoint, method = "GET", body = null) => {
-    const headers = {
-        "Content-Type": "application/json",
-    };
-
-    // if we have a token, attach it
+const httpRequest = async (endpoint, method, body) => {
+    
     const token = getToken();
-    if(token) {
-        headers["auth-token"] = token
+
+    // headers
+    const headers = {
+        "Content-Type": "application/json"
     }
 
-    const config = {
+    if(token){
+        headers['auth-token'] = token;
+    }
+
+    // options
+    const options = {
         method,
         headers,
-    };
+    }
 
-    // only add body for requests that send data
     if(body){
-        config.body = JSON.stringify(body);
-    };
+        options.body = JSON.stringify(body);
+    }
 
-    const response = await fetch(`${BASE_URL}${endpoint}`, config);
+    const response = await fetch(BASE_URL + endpoint, options)
 
     if(!response.ok){
-        const errorMessage = await response.text();
-        throw new Error(errorMessage);
-    };
+        throw new Error(response.statusText);
+    }
 
     return await response.json();
 }
+
+// Users Requests
+export const loginUser = (userData) => httpRequest('/users/login', 'POST', userData);
+export const registerUser = (userData) => httpRequest('/users', 'POST', userData);
+export const getAllUsers = () => httpRequest('/users', 'GET');
+export const getSingleUser = (id) => httpRequest(`/users/${id}`, 'GET');
+export const updateUser = (id, userData) => httpRequest(`/users/${id}`, 'PUT', userData);
+export const deleteUser = (id) => httpRequest(`/users/${id}`, 'DELETE');
+
+// Cards Requests
+export const getAllCards = () => httpRequest('/cards', 'GET');
+export const getCard = (id) => httpRequest(`/cards/${id}`, 'GET');
+export const createCard = (cardData) => httpRequest('/cards', 'POST', cardData);
+export const updateCard = (id ,cardData) => httpRequest(`/cards/${id}`, 'PUT', cardData);
+export const deleteCard = (id) => httpRequest(`/cards/${id}`, 'DELETE');
+export const likeUnlikeCard = (id) => httpRequest(`/cards/${id}`, 'PATCH');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
