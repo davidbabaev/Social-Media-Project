@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { useAuth } from './AuthProvider';
-import { getAllCards, createCard, deleteCard, updateCard} from '../services/apiService';
+import { getAllCards, createCard, deleteCard, updateCard, likeUnlikeCard} from '../services/apiService';
 
 const CardsContext = createContext();
 
@@ -24,11 +24,6 @@ useEffect(() => {
     }
     fetchCards();
 }, [])
-
-// useEffect with dependency cards
-useEffect(() => {
-    localStorage.setItem('registeredCards', JSON.stringify(registeredCards))
-}, [registeredCards])
 
 
 const handleCardRegister = async (cardData) => {
@@ -89,30 +84,27 @@ const handleCardRegister = async (cardData) => {
             }
         }
 
-    const handleToggleLike = (cardId, userId) => {
-        setRegisteredCards(registeredCards.map((card) => {
-            const likedUsers = card.likedUsers || []
-            if(card.cardId === cardId){
-                if(likedUsers.includes(userId)){
-                    return{
-                        ...card,
-                        likedUsers: likedUsers.filter(id => id !== userId)
-                    }
-                }
-                else{
-                    return{
-                        ...card,
-                        likedUsers: [...likedUsers, userId]
-                    }
-                }
+    const handleToggleLike = async (cardId) => {
+        try{
+            const response = await likeUnlikeCard(cardId);
+            setRegisteredCards(prev => prev.map((card) => {
+                return card._id === cardId ? response : card
+            }))
+
+            return{
+                success: true,
+                message: 'liked Successfully'
             }
-            else{
-                return card;
+        }
+        catch(err){
+            return{
+                success: false,
+                message: err.message,
             }
-        }))
+        }
     }
 
-    const handleAddComment = (cardId, userId, commentText) => {
+    /* const handleAddComment = (cardId, userId, commentText) => {
         setRegisteredCards(registeredCards.map((card) => {
             const comments = card.comments || [];
             if(card.cardId === cardId){
@@ -149,10 +141,10 @@ const handleCardRegister = async (cardData) => {
                 return card;
             }
         }))
-    }
+    } */
     
   return (
-    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike, handleAddComment, handleRemoveComment}}>
+    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike}}>
         {children}
     </CardsContext.Provider>
   )
