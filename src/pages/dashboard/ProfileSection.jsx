@@ -18,7 +18,7 @@ export default function ProfileSection() {
     const [editEmail, setEditEmail] = useState('');
     const [editCountry, setEditCountry] = useState('');
     const [editCity, setEditCity] = useState('');
-    const [editPhoto, setEditPhoto] = useState('');
+    const [editprofilePicture, setEditprofilePicture] = useState('');
     const [editCoverImage, setEditCoverImage] = useState('');
     const [editAge, setEditAge] = useState('');
     const [editJob, setEditJob] = useState('');
@@ -53,14 +53,14 @@ return (
             }}
             >
             <img style={{width: '100%', borderRadius: '10px', height:'230px', objectFit:'cover'}} src={currentUser.coverImage}/>
-            <img style={{marginTop: '-100px',marginLeft: '20px',width: '17%', borderRadius: '50%', border: 'solid 2px white', objectFit:'cover', height:'170px'}} src={currentUser.photo}/>
+            <img style={{marginTop: '-100px',marginLeft: '20px',width: '17%', borderRadius: '50%', border: 'solid 2px white', objectFit:'cover', height:'170px'}} src={currentUser.profilePicture}/>
             <h2>{currentUser.name} {currentUser.lastName}</h2>
             <hr />
             <p><span style={{fontWeight:'bold', fontSize: '20px'}}>About</span><br/> {currentUser.aboutMe}</p>
             <hr />
             <p>Email: {currentUser.email}</p>
-            <p>Country: {currentUser.country}</p>
-            <p>City: {currentUser.city}</p>
+            <p>Country: {currentUser.address.country}</p>
+            <p>City: {currentUseraddress.city}</p>
             <p>Age: {currentUser.age}</p>
             <p>Job: {currentUser.job}</p>
             <p>Gender: {currentUser.gender}</p>
@@ -71,9 +71,9 @@ return (
                 setEditName(currentUser.name);
                 setEditLastName(currentUser.lastName);
                 setEditEmail(currentUser.email);
-                setEditCountry(currentUser.country);
-                setEditCity(currentUser.city);
-                setEditPhoto(currentUser.photo);
+                setEditCountry(currentUser.address.country);
+                setEditCity(currentUseraddress.city);
+                setEditprofilePicture(currentUser.profilePicture);
                 setEditCoverImage(currentUser.coverImage);
                 setEditAge(currentUser.age);
                 setEditJob(currentUser.job);
@@ -154,9 +154,9 @@ return (
             <label>Edit Profile Image:</label>
             <br />
             <input type="text" 
-                value={editPhoto}
-                onChange={(e) => setEditPhoto(e.target.value)}
-                placeholder= {editPhoto}
+                value={editprofilePicture}
+                onChange={(e) => setEditprofilePicture(e.target.value)}
+                placeholder= {editprofilePicture}
                 />
             </div>
 
@@ -254,7 +254,7 @@ return (
                         email: editEmail,
                         country: editCountry,
                         city: editCity,
-                        photo: editPhoto,
+                        profilePicture: editprofilePicture,
                         coverImage: editCoverImage,
                         age: editAge,
                         gender: editGender,

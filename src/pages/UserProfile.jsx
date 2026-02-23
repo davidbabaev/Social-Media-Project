@@ -52,7 +52,7 @@ export default function UserProfile() {
       }}
       >
       <img style={{width: '100%', borderRadius: '10px', height:'230px', objectFit:'cover'}} src={userProfile.coverImage}/>
-      <img style={{marginTop: '-100px',marginLeft: '20px',width: '17%', borderRadius: '50%', border: 'solid 2px white', objectFit:'cover', height:'170px'}} src={userProfile.photo}/>
+      <img style={{marginTop: '-100px',marginLeft: '20px',width: '17%', borderRadius: '50%', border: 'solid 2px white', objectFit:'cover', height:'170px'}} src={userProfile.profilePicture}/>
       <h2>{userProfile.name} {userProfile.lastName}</h2>
       <hr />
       <p><span style={{fontWeight:'bold', fontSize: '20px'}}>About</span><br/> {userProfile.aboutMe}</p>
@@ -60,8 +60,8 @@ export default function UserProfile() {
       <hr />
       
       <p>Email: {userProfile.email}</p>
-      <p>Country: {userProfile.country}</p>
-      <p>City: {userProfile.city}</p>
+      <p>Country: {userProfile.address.country}</p>
+      <p>City: {userProfileaddress.city}</p>
       <p>Age: {userProfile.age}</p>
       <p>Job: {userProfile.job}</p>
       <p>Gender: {userProfile.gender}</p>
@@ -102,7 +102,7 @@ export default function UserProfile() {
                           marginTop: '4px',
                           cursor: 'pointer'
                       }} 
-                          src={creator?.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}
+                          src={creator?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}
                       onClick={() => navigate(`/userprofile/${creator._id}`)}    
                   />
                   <p>

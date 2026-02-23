@@ -66,7 +66,7 @@ export default function CardDetailsPage() {
                         marginTop: '4px',
                         cursor: 'pointer'
                     }} 
-                        src={creator?.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}
+                        src={creator?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}
                     onClick={() => navigate(`/userprofile/${creator._id}`)}    
                 />
                 <p>

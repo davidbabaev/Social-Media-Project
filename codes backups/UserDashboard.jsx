@@ -26,7 +26,7 @@ export default function UserDashboard() {
     const [editName, setEditName] = useState('');
     const [editEmail, setEditEmail] = useState('');
     const [editCountry, setEditCountry] = useState('');
-    const [editPhoto, setEditPhoto] = useState('');
+    const [editprofilePicture, setEditprofilePicture] = useState('');
     const [editAge, setEditAge] = useState('');
     const [editGender, setEditGender] = useState('');
     const [editPhone, setEditPhone] = useState('');
@@ -53,10 +53,10 @@ export default function UserDashboard() {
               }}
               >
               <h2>My Profile</h2>
-              <img style={{width: '100px', borderRadius: '50%'}} src={currentUser.photo}/>
+              <img style={{width: '100px', borderRadius: '50%'}} src={currentUser.profilePicture}/>
               <h3>{currentUser.name}</h3>
               <p>Email: {currentUser.email}</p>
-              <p>Country: {currentUser.country}</p>
+              <p>Country: {currentUser.address.country}</p>
               <p>Age: {currentUser.age}</p>
               <p>Gender: {currentUser.gender}</p>
               <p>Phone: {currentUser.phone}</p>
@@ -66,8 +66,8 @@ export default function UserDashboard() {
                 setEditMode(!editMode);
                 setEditName(currentUser.name);
                 setEditEmail(currentUser.email);
-                setEditCountry(currentUser.country);
-                setEditPhoto(currentUser.photo);
+                setEditCountry(currentUser.address.country);
+                setEditprofilePicture(currentUser.profilePicture);
                 setEditAge(currentUser.age);
                 setEditGender(currentUser.gender);
                 setEditPhone(currentUser.phone);
@@ -113,12 +113,12 @@ export default function UserDashboard() {
               </div>
 
               <div>
-                <label>Edit Photo:</label>
+                <label>Edit profilePicture:</label>
                 <br />
                 <input type="text" 
-                  value={editPhoto}
-                  onChange={(e) => setEditPhoto(e.target.value)}
-                  placeholder= {editPhoto}
+                  value={editprofilePicture}
+                  onChange={(e) => setEditprofilePicture(e.target.value)}
+                  placeholder= {editprofilePicture}
                   />
               </div>
 
@@ -160,7 +160,7 @@ export default function UserDashboard() {
               <button
                 onClick={
                   () => {
-                    editUser( currentUser.userId ,editName, editEmail, editCountry, editPhoto, editAge, editGender, editPhone)
+                    editUser( currentUser.userId ,editName, editEmail, editCountry, editprofilePicture, editAge, editGender, editPhone)
                     setEditMode(!editMode)
                   }}
               >Save Edits</button>
@@ -234,7 +234,7 @@ export default function UserDashboard() {
                         flexDirection: 'row', 
                         gap: '10px'
                       }}>
-                        <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}/>
+                        <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}/>
                         <p>{currentUser.name}</p>
                         <p>|</p>
                         <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>

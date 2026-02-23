@@ -21,7 +21,7 @@ export default function SelectedPage() {
             {!selectedUsers[0] && (<p>You Didn't Select Users  Yet</p>)}
             {selectedUsers.map((selected) => (
                 <div key={selected._id}>
-                    <img style={{borderRadius: '50%', width: '100px'}} src={selected.photo}/>
+                    <img style={{borderRadius: '50%', width: '100px'}} src={selected.profilePicture}/>
                     <p>{selected.name}</p>
                     <button onClick={() => handleRemoveUser(selected)}>Remove</button>
                     <button onClick={() => navigate(`/userprofile/${selected._id}`)}>to the user page</button>
@@ -57,7 +57,7 @@ export default function SelectedPage() {
                             flexDirection: 'row', 
                             gap: '10px'
                         }}>
-                            <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}/>
+                            <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}/>
                             <p>{currentUser.name}</p>
                             <p>|</p>
                             <p>Created at: {new Date(favCard.createdAt).toLocaleDateString()}</p>

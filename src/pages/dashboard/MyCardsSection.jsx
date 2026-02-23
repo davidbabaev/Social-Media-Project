@@ -100,7 +100,7 @@ return (
                     flexDirection: 'row', 
                     gap: '10px'
                     }}>
-                    <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser?.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}/>
+                    <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}/>
                     <p>{currentUser?.name}</p>
                     <p>|</p>
                     <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>

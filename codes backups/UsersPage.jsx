@@ -23,7 +23,7 @@ function UsersPage({value}) {
     
     const navigateToUser = useNavigate();
 
-    const countries = [...new Set(allUsers.map(user => user.country.toLowerCase()))] 
+    const countries = [...new Set(allUsers.map(user => user.address.country.toLowerCase()))] 
     // remove doplicates from array, and we get new array by name countries that without duplicates
     
     const filtred = useMemo(() => {
@@ -47,7 +47,7 @@ function UsersPage({value}) {
 
         // country filter:
         if(countryFilter !== ''){
-            result = result.filter(user => user.country.toLowerCase() === countryFilter.toLowerCase())
+            result = result.filter(user => user.address.country.toLowerCase() === countryFilter.toLowerCase())
         }
 
         // sorts:
@@ -160,12 +160,12 @@ function UsersPage({value}) {
         <br />
         {visibleUsers.map((user) => (
             <div key={user.userId}>
-                <img style={{borderRadius: '50%', width: '15%'}} src={user.photo}/>
+                <img style={{borderRadius: '50%', width: '15%'}} src={user.profilePicture}/>
                 <h3>{user.name} {user.lastName}</h3>
                 <p>Source: {user.source} User</p>
                 <p>Email: {user.email}</p>
                 <p>Age: {user.age}</p>
-                <p>Country: {user.country}</p>
+                <p>Country: {user.address.country}</p>
                 <p>Gender: {user.gender}</p>
 
                 {selectedUsers.some(selUser => selUser.userId === user.userId) ? (

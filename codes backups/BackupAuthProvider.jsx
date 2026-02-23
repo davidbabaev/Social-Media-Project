@@ -84,8 +84,8 @@
 //             password: password,
 //             country: country,
 //             city: city,
-//             photo: 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png',
-//             coverImage: 'https://images.unsplash.com/photo-1507608869274-d3177c8bb4c7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+//             profilePicture: 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png',
+//             coverImage: 'https://images.unsplash.com/profilePicture-1507608869274-d3177c8bb4c7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 //             age: age,
 //             job: job,
 //             gender: gender,
@@ -143,7 +143,7 @@
 
 //     const editUser = (
 //         userId,
-//         updatedFields // userId, newName, newEmail, newCountry, newPhoto, etc...
+//         updatedFields // userId, newName, newEmail, newCountry, newprofilePicture, etc...
 //     ) => {
 //         setRegisteredUsers(registeredUsers.map(user => {
 //             if(user.userId === userId){
