@@ -1,16 +1,17 @@
 import React, { useMemo, useState } from 'react'
 import { useAuth } from '../../providers/AuthProvider';
-import useAllUsers from '../../hooks/useAllUsers';
 import useCountries from '../../hooks/useCountries';
 import { JOB_INDUSTRIES } from '../../constants/usersJobIndustries';
 import getMaxBirthDate from '../../utils/getMaxBirthDate';
+import useUsers from '../../hooks/useUsers';
 
 export default function ProfileSection() {
 
-    const {user} = useAuth(); // only works for registered
+    const {user, editUser} = useAuth(); // only works for registered
     const {apiCountriesList} = useCountries(); 
-    const {allUsers, editAnyUser} = useAllUsers();
-    
+
+    const {users} = useUsers();
+
     // edit logged-in user values states:
     const [editName, setEditName] = useState('');
     const [editLastName, setEditLastName] = useState('');
@@ -34,9 +35,9 @@ export default function ProfileSection() {
     // import edit function that we need to initial in the AuthProvider page
     
     const currentUser = useMemo(() => {
-      const currentUser = allUsers.find(loggedUser => loggedUser.userId === user.userId);
+      const currentUser = users.find(loggedUser => loggedUser._id === user._id);
       return currentUser;
-    }, [allUsers]) 
+    }, [users]) 
 
     if(!currentUser) return <p>Loading...</p>
 return (
@@ -64,7 +65,6 @@ return (
             <p>Job: {currentUser.job}</p>
             <p>Gender: {currentUser.gender}</p>
             <p>Phone: {currentUser.phone}</p>
-            <p>Source: {currentUser.source}</p>
 
             <button onClick={() => {
                 setEditMode(!editMode);
@@ -246,8 +246,8 @@ return (
             <button
             onClick={
                 () => {
-                editAnyUser(
-                    currentUser.userId,
+                editUser(
+                    currentUser._id,
                     {
                         name: editName,
                         lastName: editLastName,

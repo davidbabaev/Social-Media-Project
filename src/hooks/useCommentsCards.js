@@ -9,7 +9,7 @@ const {user} = useAuth();
 
 const addComment = (commentText, cardId) => {
   if(!user) return;
-  return handleAddComment(cardId, user.userId, commentText)
+  return handleAddComment(cardId, user._id, commentText)
 }
 
 const removeComment = (cardId, commentId) => {
@@ -18,7 +18,7 @@ const removeComment = (cardId, commentId) => {
 }
 
 const countComments = (cardId) => {
-  const card = registeredCards.find(c => c.cardId === cardId)
+  const card = registeredCards.find(c => c._id === cardId)
   const count = (card?.comments || []).length
   return count
 }

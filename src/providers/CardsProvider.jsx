@@ -29,7 +29,6 @@ useEffect(() => {
 const handleCardRegister = async (cardData) => {
     try{
         const response = await createCard(cardData);
-        // take all the previous cards, add the new one at the end.
         setRegisteredCards(prev => [...prev, response]);
 
         return{

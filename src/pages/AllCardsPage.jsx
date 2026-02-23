@@ -46,7 +46,7 @@ export default function AllCardsPage() {
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
     const {user} = useAuth();
     const [count, setCount] = useState(2);
-    const {allUsers} = useAllUsers(); 
+    const {users} = useUsers(); 
     const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
 
     const filteredCards = useMemo(() => {
@@ -91,8 +91,8 @@ export default function AllCardsPage() {
                 onChange={(e) => setCreatorId(e.target.value)}    
             >
                 <option value="">All Users</option>
-                {allUsers.map((user) => (
-                    <option key={user.userId} value={user.userId}>{user.name}</option>
+                {users.map((user) => (
+                    <option key={user._id} value={user._id}>{user.name}</option>
                 ))}
             </select>
         </div>
@@ -148,8 +148,7 @@ export default function AllCardsPage() {
 
 
         {countedRegisterCards.map((card) => {
-            const creator = allUsers.find(user => user.userId === card.userId);
-
+            const creator = users.find(user => user._id === card.userId);
 
             return(
                 <div style={{
@@ -157,9 +156,9 @@ export default function AllCardsPage() {
                     padding: '20px', 
                     borderRadius: '20px', 
                     margin: '20px 0px'
-                    }} key={card.cardId}>
+                    }} key={card._id}>
 
-                    <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card.cardId}`)}>{card.title}</span></h2>
+                    <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card._id}`)}>{card.title}</span></h2>
                     <p>{card.text}</p>
                     <img src={card.img} style={{
                         width: '500px',
@@ -180,12 +179,12 @@ export default function AllCardsPage() {
                                 cursor: 'pointer'
                             }} 
                                 src={creator?.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}
-                            onClick={() => navigate(`/userprofile/${creator.userId}`)}    
+                            onClick={() => navigate(`/userprofile/${creator._id}`)}    
                         />
                         <p>
                             <span
                                 style={{cursor: 'pointer'}}
-                                onClick={() => navigate(`/userprofile/${creator.userId}`)}
+                                onClick={() => navigate(`/userprofile/${creator._id}`)}
                             >
                                 {creator?.name} {creator?.lastName}
                             </span>
@@ -195,15 +194,15 @@ export default function AllCardsPage() {
                         <p>|</p>
                         {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {card.category}</p>)}
                         <p>|</p>
-                        <p>{getLikeCount(card.cardId)} likes</p>
+                        <p>{getLikeCount(card._id)} likes</p>
                         <p>|</p>
-                        <p>{countComments(card.cardId)} comments</p>
+                        <p>{countComments(card._id)} comments</p>
                         <p>|</p>
 
                             <div>
                                 {user ? (
-                                    <button onClick={() => toggleLike(card.cardId)}>
-                                        {isLikeByMe(card.cardId) ? "Unlike" : "Like"}
+                                    <button onClick={() => toggleLike(card._id)}>
+                                        {isLikeByMe(card._id) ? "Unlike" : "Like"}
                                     </button>
                                 ):(
                                     <button onClick={() => setIsOpen(true)}>Like</button>
@@ -211,7 +210,7 @@ export default function AllCardsPage() {
 
                                 {user ? (
                                     <div>
-                                        {favoriteCards.some(c => c.cardId === card.cardId) ? (
+                                        {favoriteCards.some(c => c._id === card._id) ? (
                                             <button onClick={() => handleFavoriteCards(card)}>Remove From Favorite</button>
                                         ) : (
                                             <button onClick={() => handleFavoriteCards(card)}>Add To Favorites</button>
@@ -223,25 +222,25 @@ export default function AllCardsPage() {
 
                                 {user ? (
                                     <button onClick={() => {
-                                        if(isCommentOpen === card.cardId){
+                                        if(isCommentOpen === card._id){
                                             setIsCommentOpen(null)
                                         } else{
-                                            setIsCommentOpen(card.cardId)
+                                            setIsCommentOpen(card._id)
                                         }
                                     }}>add new comment</button>
                                 ): (
                                     <button onClick={() => setIsOpen(true)}>add new comment</button>
                                 )}
 
-                                <button onClick={() => navigate(`/carddetails/${card.cardId}`)}>Show Card Details</button>    
+                                <button onClick={() => navigate(`/carddetails/${card._id}`)}>Show Card Details</button>    
                             </div>
                     </div>
                     <div>
                         {
-                        isCommentOpen === card.cardId &&(  
+                        isCommentOpen === card._id &&(  
                             <CardsComments
                                 card = {card}
-                                allUsers={allUsers}
+                                users={users}
                                 addComment={addComment}
                                 removeComment = {removeComment}
                             />

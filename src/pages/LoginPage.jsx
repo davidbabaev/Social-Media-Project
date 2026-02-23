@@ -1,21 +1,17 @@
 import React, { useState } from 'react'
 import { useAuth } from '../providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
-import useUsers from '../hooks/useUsers';
-
 
 export default function LoginPage() {
 
   const[password, setPassword] = useState('')
   const[email, setEmail] = useState('')
   const [error, setError] = useState('');
-  
 
   const {handleLogin} = useAuth();
   const navigate = useNavigate();
-  const {allUsers} = useAllUsers();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if(password.trim().length < 6){
@@ -28,7 +24,7 @@ export default function LoginPage() {
       return;
     }
 
-    const result = handleLogin(email, password, allUsers);
+    const result = await handleLogin(email, password);
 
     if(!result.success){
       setError(result.message);

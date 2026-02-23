@@ -1,6 +1,3 @@
-// new component with internal nav + nested <Routes>
-
-
 import React from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
 import SelectedPage from '../SelectedPage'

@@ -1,16 +1,15 @@
-// cut the cards code from UserDashboard
-
 import React, { useMemo, useState } from 'react'
 import { useCardsProvider } from '../../providers/CardsProvider';
 import { useAuth } from '../../providers/AuthProvider';
 import { CARD_CATEGORIES } from '../../constants/cardsCategories';
-import useAllUsers from '../../hooks/useAllUsers';
+import useUsers from '../../hooks/useUsers';
 export default function MyCardsSection() {
 
     const {registeredCards, handleDeleteCard, handleEditCard} = useCardsProvider()
     const {user} = useAuth();
-    const {allUsers} = useAllUsers();
     const [editingCardId, setEditingCardId] = useState(null);
+    
+    const {users} = useUsers(); 
 
     // edit card values states:
     const [editTitle, setEditTitle] = useState('');
@@ -18,14 +17,14 @@ export default function MyCardsSection() {
     const [editImg, setEditImg] = useState('');
     const [editCategory, setEditCategory] = useState('');
   
-    const myCards = registeredCards.filter(card => card.userId === user.userId);
+    const myCards = registeredCards.filter(card => card.userId === user._id);
 
     // import edit function that we need to initial in the AuthProvider page
     
     const currentUser = useMemo(() => {
-      const currentLoginUser = allUsers.find(logedUser => logedUser.userId === user.userId);
+      const currentLoginUser = users.find(logedUser => logedUser._id === user._id);
       return currentLoginUser;
-    }, [allUsers]) 
+    }, [users]) 
 
 return (
 <div>
@@ -37,8 +36,8 @@ return (
         padding: '20px', 
         borderRadius: '20px', 
         margin: '20px 0px'
-        }} key={card.cardId}>
-            {editingCardId === card.cardId ? (
+        }} key={card._id}>
+            {editingCardId === card._id ? (
             // yes - I am being edited -> show form
             <div>
                 <p>EDITING:</p>
@@ -76,7 +75,14 @@ return (
                 <button onClick={() => setEditingCardId(null)}>Cancel</button>
                 <button
                 onClick={() => {
-                    handleEditCard(card.cardId, editTitle, editText, editImg, editCategory)
+                    handleEditCard(
+                        card._id, 
+                    {
+                        title: editTitle, 
+                        content: editText, 
+                        image: editImg, 
+                        category: editCategory
+                    })
                     setEditingCardId(null)
                 }}
                 >Save</button>
@@ -98,9 +104,9 @@ return (
                     <p>{currentUser?.name}</p>
                     <p>|</p>
                     <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
-                    <button onClick={() => handleDeleteCard(card.cardId)}>Remove</button>
+                    <button onClick={() => handleDeleteCard(card._id)}>Remove</button>
                     <button onClick={() => {
-                        setEditingCardId(card.cardId);
+                        setEditingCardId(card._id);
                         setEditTitle(card.title);
                         setEditText(card.text);
                         setEditImg(card.img);

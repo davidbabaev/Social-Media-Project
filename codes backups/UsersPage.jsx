@@ -8,7 +8,7 @@ import useUsers from '../hooks/useUsers';
 function UsersPage({value}) {
 
     const debounceSearch = useDebounce(value, 2000);
-    const {users, loading} = useUsers();
+    const {allUsers, loading} = useAllUsers();
     const {selectedUsers ,selectHandleUser} = useSelectedUsers();
     const [count, setCount] = useState(10);
 
@@ -18,16 +18,17 @@ function UsersPage({value}) {
 
     // filters
     const [genderFilter, setGenderFilter] = useState('');
+    const [sourcesFilter, setSourcesFilter] = useState('');
     const [countryFilter, setCountryFilter] = useState('');
     
     const navigateToUser = useNavigate();
 
-    const countries = [...new Set(users.map(user => user.country.toLowerCase()))] 
+    const countries = [...new Set(allUsers.map(user => user.country.toLowerCase()))] 
     // remove doplicates from array, and we get new array by name countries that without duplicates
     
     const filtred = useMemo(() => {
 
-        let result = users;
+        let result = allUsers;
 
         // search by name;
         result = result.filter((user) => {
@@ -37,6 +38,11 @@ function UsersPage({value}) {
         // filter: Gender
         if(genderFilter !== ''){
             result = result.filter(user => user.gender === genderFilter)
+        }
+
+        // filter Source - api/real
+        if(sourcesFilter !== ''){
+            result = result.filter(user => user.source === sourcesFilter)
         }
 
         // country filter:
@@ -68,7 +74,7 @@ function UsersPage({value}) {
         });
 
         return result;
-    }, [debounceSearch, users, ageSort, nameSort, genderFilter, countryFilter])
+    }, [debounceSearch, allUsers, ageSort, nameSort, genderFilter, countryFilter, sourcesFilter])
     
     const visibleUsers = filtred.slice(0, count)
     
@@ -124,6 +130,20 @@ function UsersPage({value}) {
 
             <select
                 style={{
+                    backgroundColor: sourcesFilter ? 'lightblue' : 'white', 
+                    border: 'none', 
+                    marginRight: '8px',
+                    padding: '8px',
+                }}
+                value={sourcesFilter} 
+                onChange={(e) => setSourcesFilter(e.target.value)}>
+                    <option value="">All Sources</option>
+                    <option value="API">API Users</option>
+                    <option value="REGISTERED">Registered Users</option>
+            </select>
+
+            <select
+                style={{
                     backgroundColor: countryFilter ? 'lightblue' : 'white', 
                     border: 'none', 
                     marginRight: '8px',
@@ -139,21 +159,22 @@ function UsersPage({value}) {
         <br />
         <br />
         {visibleUsers.map((user) => (
-            <div key={user._id}>
+            <div key={user.userId}>
                 <img style={{borderRadius: '50%', width: '15%'}} src={user.photo}/>
                 <h3>{user.name} {user.lastName}</h3>
+                <p>Source: {user.source} User</p>
                 <p>Email: {user.email}</p>
                 <p>Age: {user.age}</p>
                 <p>Country: {user.country}</p>
                 <p>Gender: {user.gender}</p>
 
-                {selectedUsers.some(selUser => selUser._id === user._id) ? (
+                {selectedUsers.some(selUser => selUser.userId === user.userId) ? (
                     <button onClick={() => selectHandleUser(user)}>Deselecte User</button>
                 ): (
                     <button onClick={() => selectHandleUser(user)}>Select User</button>
                 )}
 
-                <button onClick={() => navigateToUser(`/userprofile/${user._id}`)}>To The User</button>
+                <button onClick={() => navigateToUser(`/userprofile/${user.userId}`)}>To The User</button>
                 <hr />
             </div>
         ))}

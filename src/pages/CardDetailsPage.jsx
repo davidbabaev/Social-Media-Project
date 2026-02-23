@@ -17,7 +17,7 @@ export default function CardDetailsPage() {
     const {id} = useParams();
     const {registeredCards} = useCardsProvider()
     const {favoriteCards, handleFavoriteCards} = useFavoriteCards();
-    const {allUsers} = useAllUsers();
+    const {users} = useUsers();
     const {user} = useAuth();
 
     const [isOpen, setIsOpen] = useState(false);
@@ -29,13 +29,13 @@ export default function CardDetailsPage() {
 
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
 
-    const currentCard = registeredCards.find((card) => card.cardId === id);
+    const currentCard = registeredCards.find((card) => card._id === id);
     
         if(!currentCard){
             return <p>Loading..</p>
         }
     
-    const creator = allUsers.find((userC) => userC.userId === currentCard.userId)
+    const creator = users.find((userC) => userC._id === currentCard.userId)
     
   return (
     <div>
@@ -44,7 +44,7 @@ export default function CardDetailsPage() {
             padding: '20px', 
             borderRadius: '20px', 
             margin: '20px 0px'
-            }} key={currentCard.cardId}>
+            }} key={currentCard._id}>
 
             <h2>{currentCard.title}</h2>
             <img src={currentCard.img} style={{
@@ -67,12 +67,12 @@ export default function CardDetailsPage() {
                         cursor: 'pointer'
                     }} 
                         src={creator?.photo || 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png'}
-                    onClick={() => navigate(`/userprofile/${creator.userId}`)}    
+                    onClick={() => navigate(`/userprofile/${creator._id}`)}    
                 />
                 <p>
                     <span
                         style={{cursor: 'pointer'}}
-                        onClick={() => navigate(`/userprofile/${creator.userId}`)}
+                        onClick={() => navigate(`/userprofile/${creator._id}`)}
                     >
                         {creator?.name} {creator?.lastName}
                     </span>
@@ -82,15 +82,15 @@ export default function CardDetailsPage() {
                 <p>|</p>
                 {!currentCard.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {currentCard.category}</p>)}
                 <p>|</p>
-                <p>{getLikeCount(currentCard.cardId)} likes</p>
+                <p>{getLikeCount(currentCard._id)} likes</p>
                 <p>|</p>
-                <p>{countComments(currentCard.cardId)} comments</p>
+                <p>{countComments(currentCard._id)} comments</p>
                 <p>|</p>
 
                 <div>
                     {user ? (
-                        <button onClick={() => toggleLike(currentCard.cardId)}>
-                            {isLikeByMe(currentCard.cardId) ? "Unlike" : "Like"}
+                        <button onClick={() => toggleLike(currentCard._id)}>
+                            {isLikeByMe(currentCard._id) ? "Unlike" : "Like"}
                         </button>
                     ):(
                         <button onClick={() => setIsOpen(true)}>Like</button>
@@ -98,7 +98,7 @@ export default function CardDetailsPage() {
 
                     {user ? (
                         <div>
-                            {favoriteCards.some(c => c.cardId === currentCard.cardId) ? (
+                            {favoriteCards.some(c => c._id === currentCard._id) ? (
                                 <button onClick={() => handleFavoriteCards(currentCard)}>Remove From Favorite</button>
                             ) : (
                                 <button onClick={() => handleFavoriteCards(currentCard)}>Add To Favorites</button>
@@ -110,10 +110,10 @@ export default function CardDetailsPage() {
                 </div>
             </div>
             <div>
-                { currentCard.cardId && (  
+                { currentCard._id && (  
                     <CardsComments
                         card = {currentCard}
-                        allUsers={allUsers}
+                        users={users}
                         addComment={addComment}
                         removeComment = {removeComment}
                     />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllUsers, updateUser } from "../services/apiService";
+import { getAllUsers} from "../services/apiService";
 
  function useUsers() {
 
@@ -24,19 +24,7 @@ import { getAllUsers, updateUser } from "../services/apiService";
         getUsers();
     }, [])
 
-    const editUser = async (userId, updatedFields) => {
-        try{    
-            const response = await updateUser(userId, updatedFields)
-            setUsers(prev => prev.map((user) => {
-                return user._id === userId ? response : user 
-            }))
-        }
-        catch(err){
-            console.log(err.message);
-        }
-    }
-
-  return {users, loading, editUser}
+  return {users, loading}
 }
 
 export default useUsers;

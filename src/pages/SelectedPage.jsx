@@ -10,7 +10,7 @@ export default function SelectedPage() {
     const {selectedUsers, handleRemoveUser} = useSelectedUsers()
     const {favoriteCards, handleRemoveCard} = useFavoriteCards();
 
-    const {allUsers} = useAllUsers()
+    const {users} = useUsers()
 
     const navigate = useNavigate();
 
@@ -20,11 +20,11 @@ export default function SelectedPage() {
             <h2>Selected Users</h2>
             {!selectedUsers[0] && (<p>You Didn't Select Users  Yet</p>)}
             {selectedUsers.map((selected) => (
-                <div key={selected.userId}>
+                <div key={selected._id}>
                     <img style={{borderRadius: '50%', width: '100px'}} src={selected.photo}/>
                     <p>{selected.name}</p>
                     <button onClick={() => handleRemoveUser(selected)}>Remove</button>
-                    <button onClick={() => navigate(`/userprofile/${selected.userId}`)}>to the user page</button>
+                    <button onClick={() => navigate(`/userprofile/${selected._id}`)}>to the user page</button>
                     <hr />
                 </div>
             ))}
@@ -35,7 +35,7 @@ export default function SelectedPage() {
             <h2>Selected Cards</h2>
             {favoriteCards.map((favCard) => {
 
-                const currentUser = allUsers.find(user => favCard.userId === user.userId) 
+                const currentUser = users.find(user => favCard.userId === user._id) 
 
                 return(
                     <div style={{
@@ -43,7 +43,7 @@ export default function SelectedPage() {
                         padding: '20px', 
                         borderRadius: '20px', 
                         margin: '20px 0px'
-                    }} key={favCard.cardId}>
+                    }} key={favCard._id}>
 
                         <h2>{favCard.title}</h2>
                         <p>{favCard.text}</p>

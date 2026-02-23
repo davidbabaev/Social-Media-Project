@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useCardsProvider } from '../providers/CardsProvider'
 import { useNavigate } from 'react-router-dom';
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
@@ -15,8 +15,7 @@ export default function CardsRegisterPage() {
 
     const navigate = useNavigate();
 
-    // function, (e) e.preventdefault()
-    const handleSubmitNewCard = (e) => {
+    const handleSubmitNewCard = async (e) => {
         e.preventDefault();
 
         if(title.trim() === ''){
@@ -34,7 +33,12 @@ export default function CardsRegisterPage() {
             return;
         }
 
-        const result = handleCardRegister(title, text, img, category)
+        const result = await handleCardRegister({
+            title: title, 
+            content: text, 
+            image: img, 
+            category: category
+        })
 
         if(!result.success){
             setError(result.message)// show error to user

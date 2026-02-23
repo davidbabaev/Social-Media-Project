@@ -33,7 +33,7 @@ export default function RegisteredPage() {
     const maxDate = useMemo(() => getMaxBirthDate(), []);
 
     // handle form submit
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         
@@ -67,27 +67,27 @@ export default function RegisteredPage() {
             return;
         }
 
-        const result = handleRegister(
-            email, 
-            password, 
-            name, 
-            country, 
-            age, 
-            gender, 
-            phone, 
-            lastName, 
-            city,
-            job,
-            birthDate,
-            aboutMe,
+        const result = await handleRegister(
+            {
+                email: email, 
+                password: password, 
+                name: name, 
+                country: country, 
+                age: age, 
+                gender: gender, 
+                phone: phone, 
+                lastName: lastName, 
+                city: city,
+                job: job,
+                birthDate: birthDate,
+                aboutMe: aboutMe,
+            }
         );
         
         if(!result.success) {
             setError(result.message);
             return;
         }
-
-        // success! go to dashboard
         navigate('/dashboard/myprofile')
     }
 
@@ -250,7 +250,10 @@ export default function RegisteredPage() {
         <br />
         <hr />
         <h2>already user?</h2>
-        <button onClick={() => navigate('/dashboard/myprofile')}>login to your account</button>
+        <button 
+        onClick={() => navigate('/dashboard/myprofile')}>
+            login to your account
+        </button>
     </div>
 
   )

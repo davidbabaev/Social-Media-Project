@@ -6,25 +6,23 @@ import { useAuth } from "../providers/AuthProvider";
     const [selectedUsers, setSelectedUsers] = useState([])
     const {user} = useAuth();
 
-    const selectedUserStorageKey = user ? `selectedUsers_${user.userId}` : null;
+    const selectedUserStorageKey = user ? `selectedUsers_${user._id}` : null;
     
     const selectHandleUser = useCallback((user) => {
         setSelectedUsers((prev) => {
-            const include = prev.some(sel => sel.userId === user.userId)
+            const include = prev.some(sel => sel._id === user._id)
 
             if(!include){
                 return [...prev, user]
             }
 
-            // small syntax fix:
-            // the: prev = prev.... <-- is unecessary. just: prev.filter()
-            return prev = prev.filter(userCard => userCard.userId !== user.userId)
+            return prev.filter(userCard => userCard._id !== user._id)
         })
     }, [])
     
     const handleRemoveUser = useCallback((selectedUser) => {
         setSelectedUsers((prev) => {
-            return prev.filter(sel => sel.userId !== selectedUser.userId);
+            return prev.filter(sel => sel._id !== selectedUser._id);
         })
     }, [])
 

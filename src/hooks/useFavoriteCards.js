@@ -7,21 +7,21 @@ function useFavoriteCards() {
     const [favoriteCards, setFavoriteCards] = useState([]);
     const {user} = useAuth();
 
-    const storageUserkey = user ? `favoriteCards_${user.userId}` : null;
+    const storageUserkey = user ? `favoriteCards_${user._id}` : null;
 
     const handleFavoriteCards = useCallback((card) => {
         setFavoriteCards((prev) => {
-            const include = prev.some(fav => fav.cardId === card.cardId)
+            const include = prev.some(fav => fav._id === card._id)
             if(!include){
                 return [...prev, card]
             }
-            return prev.filter(fav => fav.cardId !== card.cardId)
+            return prev.filter(fav => fav._id !== card._id)
         })
     }, [])
 
     const handleRemoveCard = useCallback((card) => {
         setFavoriteCards((prev) => {
-            return prev.filter(fav => fav.cardId !== card.cardId)
+            return prev.filter(fav => fav._id !== card._id)
         })
     }, [])
 

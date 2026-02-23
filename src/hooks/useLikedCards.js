@@ -5,25 +5,20 @@ function useLikedCards() {
     const {user} = useAuth();
     const {registeredCards, handleToggleLike} = useCardsProvider();
 
-    // write the three functions. start with the simplest one -> toggleLike
-    // all it does is call handleToggleLike but passes user.userId automatically so the page doesn't have to.
-
-    // handling add/ filer likes and unlikes with card object, likedUsers array.
     const toggleLike = (cardId) => {
         if(!user) return;
-        handleToggleLike(cardId, user.userId)
+        handleToggleLike(cardId)
     }
 
-    // for the UI, the real add and filter from the array happening is handleToggleLike
     const isLikeByMe = (cardId) => {
-        const card = registeredCards.find(card => card.cardId === cardId);
+        const card = registeredCards.find(card => card._id === cardId);
         if(!card && !user) return false;
-        return (card?.likedUsers || []).includes(user?.userId);
+        return (card?.likes || []).includes(user?._id);
     }
 
     const getLikeCount = (cardId) => {
-        const card = registeredCards.find(c => c.cardId === cardId)
-        const likeCount = (card?.likedUsers || []).length;
+        const card = registeredCards.find(c => c._id === cardId)
+        const likeCount = (card?.likes || []).length;
         return likeCount;
     }
 

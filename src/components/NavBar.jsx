@@ -2,15 +2,12 @@ import React, { useState } from 'react'
 import { useThemeContext } from '../providers/ThemeProvider';
 import { useAuth } from '../providers/AuthProvider';
 import { Link, useNavigate } from 'react-router-dom';
-import useUsers from '../hooks/useUsers';
 
 export default function NavBar() {
 
     const {darkMode, handleToggle} = useThemeContext();
     const{handleLogout, isLoggedIn, user} = useAuth();
     const navigate = useNavigate();
-
-    const {allUsers} = useAllUsers();
 
     const onLogOut = () => {
         handleLogout();
@@ -19,11 +16,9 @@ export default function NavBar() {
 
     const mystyle = {marginRight: '8px'}
 
-    const loggeduser = allUsers.find((userL) => userL.userId === user?.userId)
-
   return (
     <div>
-        {isLoggedIn && (<p>Logged In As: {user?.name} {loggeduser?.lastName}</p>)}
+        {isLoggedIn && (<p>Logged In As: {user?.name} {user?.lastName}</p>)}
         
         <button onClick={handleToggle}>
             {darkMode ? 'Dark Mode' : 'Light Mode'}

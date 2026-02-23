@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../providers/AuthProvider';
 
-export default function CardsComments({card, allUsers, addComment, removeComment}) {
+export default function CardsComments({card, users, addComment, removeComment}) {
 
     const [commentText, setCommentText] = useState('');
     const {user: loggedInUser} = useAuth();
@@ -10,7 +10,7 @@ export default function CardsComments({card, allUsers, addComment, removeComment
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        addComment(commentText, card.cardId)
+        addComment(commentText, card._id)
         setCommentText('');
     }
 
@@ -37,17 +37,17 @@ export default function CardsComments({card, allUsers, addComment, removeComment
 
         {
             countedComments.map((comment) => {
-                const user = allUsers.find(u => u.userId === comment.userId);
+                const user = users.find(u => u._id === comment.userId);
 
                 return(
-                    <div key= {comment.commentId}>
+                    <div key= {comment._id}>
                         <p>{user?.name || "Unknown User"}</p>
                         <p>{comment.commentText}</p>
                         { loggedInUser && 
-                        (loggedInUser.userId === comment.userId || 
-                            loggedInUser.userId === card.userId
+                        (loggedInUser._id === comment.userId || 
+                            loggedInUser._id === card.userId
                         ) && (
-                            <button onClick={() => removeComment(card.cardId, comment.commentId)}>X</button>
+                            <button onClick={() => removeComment(card._id, comment._id)}>X</button>
                         )}
                         <hr />
                     </div>
