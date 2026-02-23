@@ -61,7 +61,7 @@ export default function UserProfile() {
       
       <p>Email: {userProfile.email}</p>
       <p>Country: {userProfile.address.country}</p>
-      <p>City: {userProfileaddress.city}</p>
+      <p>City: {user.Profileaddress.city}</p>
       <p>Age: {userProfile.age}</p>
       <p>Job: {userProfile.job}</p>
       <p>Gender: {userProfile.gender}</p>

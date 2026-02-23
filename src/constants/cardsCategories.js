@@ -34,7 +34,7 @@ export const CARD_CATEGORIES = [
   "Music",
   "Nature & Outdoors",
   "News & Politics",
-  "profilePicturegraphy",
+  "Photography",
   "Productivity",
   "Quotes & Inspiration",
   "Relationships",

@@ -60,7 +60,7 @@ return (
             <hr />
             <p>Email: {currentUser.email}</p>
             <p>Country: {currentUser.address.country}</p>
-            <p>City: {currentUseraddress.city}</p>
+            <p>City: {currentUser.address.city}</p>
             <p>Age: {currentUser.age}</p>
             <p>Job: {currentUser.job}</p>
             <p>Gender: {currentUser.gender}</p>
@@ -72,7 +72,7 @@ return (
                 setEditLastName(currentUser.lastName);
                 setEditEmail(currentUser.email);
                 setEditCountry(currentUser.address.country);
-                setEditCity(currentUseraddress.city);
+                setEditCity(currentUser.address.city);
                 setEditprofilePicture(currentUser.profilePicture);
                 setEditCoverImage(currentUser.coverImage);
                 setEditAge(currentUser.age);
@@ -252,8 +252,10 @@ return (
                         name: editName,
                         lastName: editLastName,
                         email: editEmail,
-                        country: editCountry,
-                        city: editCity,
+                        address: {
+                            country: editCountry,
+                            city: editCity,
+                        },
                         profilePicture: editprofilePicture,
                         coverImage: editCoverImage,
                         age: editAge,
