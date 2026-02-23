@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { useCardsProvider } from '../providers/CardsProvider';
-import useAllUsers from '../hooks/useAllUsers';
+import useUsers from '../hooks/useUsers';
+
 import { useAuth } from '../providers/AuthProvider';
 import useFavoriteCards from '../hooks/useFavoriteCards';
 import CardsComments from '../components/CardsComments';

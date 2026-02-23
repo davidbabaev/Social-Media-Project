@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { useCardsProvider } from '../providers/CardsProvider'
-import useAllUsers from '../hooks/useAllUsers';
+import useUsers from '../hooks/useUsers';
+
 import useDebounce from '../hooks/useDebounce';
 import useFavoriteCards from '../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../constants/cardsCategories';

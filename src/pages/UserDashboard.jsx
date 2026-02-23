@@ -2,7 +2,8 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useCardsProvider } from '../providers/CardsProvider'
 import { useAuth } from '../providers/AuthProvider'
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
-import useAllUsers from '../hooks/useAllUsers';
+import useUsers from '../hooks/useUsers';
+
 import useCountries from '../hooks/useCountries';
 
 export default function UserDashboard() {

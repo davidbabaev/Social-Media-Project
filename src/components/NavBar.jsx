@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useThemeContext } from '../providers/ThemeProvider';
 import { useAuth } from '../providers/AuthProvider';
 import { Link, useNavigate } from 'react-router-dom';
-import useAllUsers from '../hooks/useAllUsers';
+import useUsers from '../hooks/useUsers';
 
 export default function NavBar() {
 

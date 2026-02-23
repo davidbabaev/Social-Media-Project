@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import useAllUsers from '../hooks/useAllUsers';
+import useUsers from '../hooks/useUsers';
+
 import { useAuth } from '../providers/AuthProvider';
 import { useCardsProvider } from '../providers/CardsProvider';
 

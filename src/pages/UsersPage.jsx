@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import useDebounce from '../hooks/useDebounce';
 import useSelectedUsers from '../hooks/useSelectedUsers';
 import { Link, useNavigate } from 'react-router-dom';
-import useAllUsers from '../hooks/useAllUsers';
+import useUsers from '../hooks/useUsers';
+
 
 function UsersPage({value}) {
 

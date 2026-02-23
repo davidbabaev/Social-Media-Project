@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useAuth } from '../providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
-import useAllUsers from '../hooks/useAllUsers';
+import useUsers from '../hooks/useUsers';
+
 
 export default function LoginPage() {
 

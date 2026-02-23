@@ -2,7 +2,8 @@ import React from 'react'
 import useSelectedUsers from '../hooks/useSelectedUsers'
 import useFavoriteCards from '../hooks/useFavoriteCards'
 import { useNavigate } from 'react-router-dom';
-import useAllUsers from '../hooks/useAllUsers';
+import useUsers from '../hooks/useUsers';
+
 
 export default function SelectedPage() {
 
