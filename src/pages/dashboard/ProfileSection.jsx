@@ -59,8 +59,8 @@ return (
             <p><span style={{fontWeight:'bold', fontSize: '20px'}}>About</span><br/> {currentUser.aboutMe}</p>
             <hr />
             <p>Email: {currentUser.email}</p>
-            <p>Country: {currentUser.address.country}</p>
-            <p>City: {currentUser.address.city}</p>
+            <p>Country: {currentUser.address?.country}</p>
+            <p>City: {currentUser.address?.city}</p>
             <p>Age: {currentUser.age}</p>
             <p>Job: {currentUser.job}</p>
             <p>Gender: {currentUser.gender}</p>
@@ -71,8 +71,8 @@ return (
                 setEditName(currentUser.name);
                 setEditLastName(currentUser.lastName);
                 setEditEmail(currentUser.email);
-                setEditCountry(currentUser.address.country);
-                setEditCity(currentUser.address.city);
+                setEditCountry(currentUser.address?.country);
+                setEditCity(currentUser.address?.city);
                 setEditprofilePicture(currentUser.profilePicture);
                 setEditCoverImage(currentUser.coverImage);
                 setEditAge(currentUser.age);
@@ -244,9 +244,8 @@ return (
             <br />
 
             <button
-            onClick={
-                () => {
-                editUser(
+            onClick={async() => {
+                await editUser(
                     currentUser._id,
                     {
                         name: editName,

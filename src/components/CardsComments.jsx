@@ -54,7 +54,7 @@ export default function CardsComments({card, users, addComment, removeComment}) 
                 )
             })
         }
-        {commentsCount >= card?.comments.length ? (<p>No more Cards</p>): (
+        {commentsCount >= (card?.comments || []).length ? (<p>No more Cards</p>): (
             <button onClick={() => setCommentsCount(commentsCount + 5)}>Read More</button>
         )}
 

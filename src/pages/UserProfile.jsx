@@ -60,8 +60,8 @@ export default function UserProfile() {
       <hr />
       
       <p>Email: {userProfile.email}</p>
-      <p>Country: {userProfile.address.country}</p>
-      <p>City: {user.Profileaddress.city}</p>
+      <p>Country: {userProfile.address?.country}</p>
+      <p>City: {userProfile.address?.city}</p>
       <p>Age: {userProfile.age}</p>
       <p>Job: {userProfile.job}</p>
       <p>Gender: {userProfile.gender}</p>
@@ -83,8 +83,8 @@ export default function UserProfile() {
               }} key={card._id}>
 
               <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card._id}`)}>{card.title}</span></h2>
-              <p>{card.text}</p>
-              <img src={card.img} style={{
+              <p>{card.content}</p>
+              <img src={card.image} style={{
                   width: '500px',
                   borderRadius: '20px'
               }}/>

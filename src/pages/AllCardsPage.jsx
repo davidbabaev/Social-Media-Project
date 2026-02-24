@@ -159,8 +159,8 @@ export default function AllCardsPage() {
                     }} key={card._id}>
 
                     <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card._id}`)}>{card.title}</span></h2>
-                    <p>{card.text}</p>
-                    <img src={card.img} style={{
+                    <p>{card.content}</p>
+                    <img src={card.image} style={{
                         width: '500px',
                         borderRadius: '20px'
                     }}/>

@@ -47,11 +47,11 @@ export default function CardDetailsPage() {
             }} key={currentCard._id}>
 
             <h2>{currentCard.title}</h2>
-            <img src={currentCard.img} style={{
+            <img src={currentCard.image} style={{
                 width: '100%',
                 borderRadius: '20px'
             }}/>
-            <p>{currentCard.text}</p>
+            <p>{currentCard.content}</p>
             <hr />
             <div style={{
                 display: 'flex', 

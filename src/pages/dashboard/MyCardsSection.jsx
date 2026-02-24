@@ -91,9 +91,9 @@ return (
             // no - I am not being edited -> show normally
             <div>
                 <h2>{card.title}</h2>
-                <p>{card.text}</p>
+                <p>{card.content}</p>
                 <p><span style={{fontWeight: 'bold'}}>Category: </span>{card.category}</p>
-                <img src={card.img} style={{width: '90%', borderRadius: '20px'}}/>
+                <img src={card.image} style={{width: '90%', borderRadius: '20px'}}/>
                 <hr />
                 <div style={{
                     display: 'flex', 
@@ -108,8 +108,8 @@ return (
                     <button onClick={() => {
                         setEditingCardId(card._id);
                         setEditTitle(card.title);
-                        setEditText(card.text);
-                        setEditImg(card.img);
+                        setEditText(card.content);
+                        setEditImg(card.image);
                         setEditCategory(card.category);
                     }}>Edit</button>
                 </div>

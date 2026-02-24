@@ -46,8 +46,8 @@ export default function SelectedPage() {
                     }} key={favCard._id}>
 
                         <h2>{favCard.title}</h2>
-                        <p>{favCard.text}</p>
-                        <img src={favCard.img} style={{
+                        <p>{favCard.content}</p>
+                        <img src={favCard.image} style={{
                             width: '500px',
                             borderRadius: '20px'
                         }}/>
