@@ -1,16 +1,13 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { useCardsProvider } from '../../providers/CardsProvider';
 import { useAuth } from '../../providers/AuthProvider';
 import { CARD_CATEGORIES } from '../../constants/cardsCategories';
-import useUsers from '../../hooks/useUsers';
 export default function MyCardsSection() {
 
-    const {registeredCards, handleDeleteCard, handleEditCard} = useCardsProvider()
+    const {registeredCards, handleDeleteCard, handleEditCard} = useCardsProvider();
     const {user} = useAuth();
     const [editingCardId, setEditingCardId] = useState(null);
     
-    const {users} = useUsers(); 
-
     // edit card values states:
     const [editTitle, setEditTitle] = useState('');
     const [editText, setEditText] = useState('');
@@ -18,13 +15,13 @@ export default function MyCardsSection() {
     const [editCategory, setEditCategory] = useState('');
   
     const myCards = registeredCards.filter(card => card.userId === user._id);
-
-    // import edit function that we need to initial in the AuthProvider page
+    console.log("user._id: ", user._id);
+    console.log("card userIds: ", registeredCards.map(c => c.userId));
     
-    const currentUser = useMemo(() => {
-      const currentLoginUser = users.find(logedUser => logedUser._id === user._id);
-      return currentLoginUser;
-    }, [users]) 
+
+    if(!user){
+        return <p>Loading ...</p>
+    }
 
 return (
 <div>
@@ -74,8 +71,8 @@ return (
                 />
                 <button onClick={() => setEditingCardId(null)}>Cancel</button>
                 <button
-                onClick={() => {
-                    handleEditCard(
+                onClick={async () => {
+                    let result = await handleEditCard(
                         card._id, 
                     {
                         title: editTitle, 
@@ -83,7 +80,11 @@ return (
                         image: editImg, 
                         category: editCategory
                     })
-                    setEditingCardId(null)
+                    if(result.success){
+                        setEditingCardId(false)
+                    }else{
+                        alert(result.message)
+                    }
                 }}
                 >Save</button>
             </div>
@@ -100,8 +101,8 @@ return (
                     flexDirection: 'row', 
                     gap: '10px'
                     }}>
-                    <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}/>
-                    <p>{currentUser?.name}</p>
+                    <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={user?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}/>
+                    <p>{user?.name} {user?.lastName}</p>
                     <p>|</p>
                     <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
                     <button onClick={() => handleDeleteCard(card._id)}>Remove</button>

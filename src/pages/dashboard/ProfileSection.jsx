@@ -3,14 +3,11 @@ import { useAuth } from '../../providers/AuthProvider';
 import useCountries from '../../hooks/useCountries';
 import { JOB_INDUSTRIES } from '../../constants/usersJobIndustries';
 import getMaxBirthDate from '../../utils/getMaxBirthDate';
-import useUsers from '../../hooks/useUsers';
 
 export default function ProfileSection() {
 
     const {user, editUser} = useAuth(); // only works for registered
     const {apiCountriesList} = useCountries(); 
-
-    const {users} = useUsers();
 
     // edit logged-in user values states:
     const [editName, setEditName] = useState('');
@@ -31,15 +28,9 @@ export default function ProfileSection() {
 
     const maxDate = useMemo(() => getMaxBirthDate(), []);
     
-
     // import edit function that we need to initial in the AuthProvider page
-    
-    const currentUser = useMemo(() => {
-      const currentUser = users.find(loggedUser => loggedUser._id === user._id);
-      return currentUser;
-    }, [users]) 
 
-    if(!currentUser) return <p>Loading...</p>
+    if(!user) return <p>Loading...</p>
 return (
 <div>
     <h2>My Profile</h2>
@@ -52,35 +43,37 @@ return (
             margin: '20px 0px'
             }}
             >
-            <img style={{width: '100%', borderRadius: '10px', height:'230px', objectFit:'cover'}} src={currentUser.coverImage}/>
-            <img style={{marginTop: '-100px',marginLeft: '20px',width: '17%', borderRadius: '50%', border: 'solid 2px white', objectFit:'cover', height:'170px'}} src={currentUser.profilePicture}/>
-            <h2>{currentUser.name} {currentUser.lastName}</h2>
+            <img style={{width: '100%', borderRadius: '10px', height:'230px', objectFit:'cover'}} src={user.coverImage}/>
+            <img style={{marginTop: '-100px',marginLeft: '20px',width: '17%', borderRadius: '50%', border: 'solid 2px white', objectFit:'cover', height:'170px'}} src={user.profilePicture}/>
+            <h2>{user.name} {user.lastName}</h2>
             <hr />
-            <p><span style={{fontWeight:'bold', fontSize: '20px'}}>About</span><br/> {currentUser.aboutMe}</p>
+            <p><span style={{fontWeight:'bold', fontSize: '20px'}}>About</span><br/> {user.aboutMe}</p>
             <hr />
-            <p>Email: {currentUser.email}</p>
-            <p>Country: {currentUser.address?.country}</p>
-            <p>City: {currentUser.address?.city}</p>
-            <p>Age: {currentUser.age}</p>
-            <p>Job: {currentUser.job}</p>
-            <p>Gender: {currentUser.gender}</p>
-            <p>Phone: {currentUser.phone}</p>
+            <p>Email: {user.email}</p>
+            <p>Country: {user.address?.country}</p>
+            <p>City: {user.address?.city}</p>
+            <p>Age: {user.age}</p>
+            <p>Job: {user.job}</p>
+            <p>Gender: {user.gender}</p>
+            <p>Phone: {user.phone}</p>
+            <p>Birth Date: {user.birthDate.split("T")[0]}</p>
+            <p>Registered At: {user.createdAt.split("T")[0]}</p>
 
             <button onClick={() => {
                 setEditMode(!editMode);
-                setEditName(currentUser.name);
-                setEditLastName(currentUser.lastName);
-                setEditEmail(currentUser.email);
-                setEditCountry(currentUser.address?.country);
-                setEditCity(currentUser.address?.city);
-                setEditprofilePicture(currentUser.profilePicture);
-                setEditCoverImage(currentUser.coverImage);
-                setEditAge(currentUser.age);
-                setEditJob(currentUser.job);
-                setEditGender(currentUser.gender);
-                setEditBirthDate(currentUser.birthDate);
-                setEditPhone(currentUser.phone);
-                setEditAboutMe(currentUser.aboutMe);
+                setEditName(user.name);
+                setEditLastName(user.lastName);
+                setEditEmail(user.email);
+                setEditCountry(user.address?.country);
+                setEditCity(user.address?.city);
+                setEditprofilePicture(user.profilePicture);
+                setEditCoverImage(user.coverImage);
+                setEditAge(user.age);
+                setEditJob(user.job);
+                setEditGender(user.gender);
+                setEditBirthDate(user.birthDate.split("T")[0]);
+                setEditPhone(user.phone);
+                setEditAboutMe(user.aboutMe);
             }
             }>Edit Profile</button>
 
@@ -245,8 +238,8 @@ return (
 
             <button
             onClick={async() => {
-                await editUser(
-                    currentUser._id,
+                const result = await editUser(
+                    user._id,
                     {
                         name: editName,
                         lastName: editLastName,
@@ -265,7 +258,11 @@ return (
                         aboutMe: editAboutMe,
                     }
                 )
-                setEditMode(!editMode)
+                if(result.success){
+                    setEditMode(false);
+                } else{
+                    alert(result.message)
+                }
                 }}
             >Save Edits</button>
             <button onClick={() => setEditMode(!editMode)}>Cancel Edit Mode</button>
