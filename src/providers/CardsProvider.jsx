@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { useAuth } from './AuthProvider';
-import { getAllCards, createCard, deleteCard, updateCard, likeUnlikeCard} from '../services/apiService';
+import { getAllCards, createCard, deleteCard, updateCard, likeUnlikeCard, addComment, removeComment} from '../services/apiService';
 
 const CardsContext = createContext();
 
@@ -103,47 +103,48 @@ const handleCardRegister = async (cardData) => {
         }
     }
 
-    /* const handleAddComment = (cardId, userId, commentText) => {
-        setRegisteredCards(registeredCards.map((card) => {
-            const comments = card.comments || [];
-            if(card.cardId === cardId){
-                    return {
-                        ...card,
-                        comments: [
-                            ...comments, 
-                            {
-                                userId: userId, 
-                                commentText: commentText,
-                                createdAt: new Date().toISOString(),
-                                commentId: generateID(),
-                            }
-                        ],
-                    };
-                }
-            else{
-                return card;
+    const handleAddComment = async (cardId, commentText) => {
+        try{   
+            const response = await addComment(cardId, {commentText})
+            setRegisteredCards(prev => prev.map((card) => {
+                return card._id === cardId ? response : card
+            }))
+            return{
+                success: true,
+                message: "Comment added successfully"
             }
-        }))
+        }
+        catch(err){
+            return{
+                success: false,
+                message: err.message
+            }
+        }
     }
 
-    const handleRemoveComment = (cardId, commentId) => {
-        setRegisteredCards(registeredCards.map((card) => {
-            const comments = card.comments || []
+    const handleRemoveComment = async (cardId, commentId) => {
+        try{
+            const response = await removeComment(cardId, commentId)
+            setRegisteredCards(prev => prev.map((card) => {
+                return card._id === cardId ? response : card
+            }))
 
-            if(card.cardId === cardId){
-                return{
-                    ...card,
-                    comments: comments.filter((c) => c.commentId !== commentId) 
-                }
+            return{
+                success: true,
+                message: 'Card removed successfully'
             }
-            else{
-                return card;
+        }
+        catch(err){
+            return{
+                success: false,
+                message: err.message
             }
-        }))
-    } */
+        }
+    }
+    
     
   return (
-    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike}}>
+    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike, handleAddComment, handleRemoveComment}}>
         {children}
     </CardsContext.Provider>
   )

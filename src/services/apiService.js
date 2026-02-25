@@ -49,6 +49,8 @@ export const createCard = (cardData) => httpRequest('/cards', 'POST', cardData);
 export const updateCard = (id ,cardData) => httpRequest(`/cards/${id}`, 'PUT', cardData);
 export const deleteCard = (id) => httpRequest(`/cards/${id}`, 'DELETE');
 export const likeUnlikeCard = (id) => httpRequest(`/cards/${id}`, 'PATCH');
+export const addComment = (id, cardData) => httpRequest(`/cards/${id}/comments`, 'PATCH', cardData);
+export const removeComment = (id, commentId) => httpRequest(`/cards/${id}/comments/${commentId}`, 'PATCH');
 
 
 

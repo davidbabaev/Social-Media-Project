@@ -9,7 +9,7 @@ const {user} = useAuth();
 
 const addComment = (commentText, cardId) => {
   if(!user) return;
-  return handleAddComment(cardId, user._id, commentText)
+  return handleAddComment(cardId, commentText)
 }
 
 const removeComment = (cardId, commentId) => {
