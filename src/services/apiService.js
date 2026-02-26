@@ -41,6 +41,7 @@ export const getAllUsers = () => httpRequest('/users', 'GET');
 export const getSingleUser = (id) => httpRequest(`/users/${id}`, 'GET');
 export const updateUser = (id, userData) => httpRequest(`/users/${id}`, 'PUT', userData);
 export const deleteUser = (id) => httpRequest(`/users/${id}`, 'DELETE');
+export const followUnfollowUser = (id) => httpRequest(`/users/${id}/follow`, 'PATCH');
 
 // Cards Requests
 export const getAllCards = () => httpRequest('/cards', 'GET');

@@ -7,24 +7,25 @@ import { getAllUsers} from "../services/apiService";
     const [loading, setLoading] = useState(false)
 
 
-    useEffect(() => {
-        const getUsers = async () => {
-            setLoading(true)
-            try{
-                const response = await getAllUsers();
-                setUsers(response);
-            }
-            catch(err){
-                console.log(err.message);
-            }
-            finally{
-                setLoading(false)
-            }
+    const getUsers = async () => {
+        setLoading(true)
+        try{
+            const response = await getAllUsers();
+            setUsers(response);
         }
+        catch(err){
+            console.log(err.message);
+        }
+        finally{
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
         getUsers();
     }, [])
 
-  return {users, loading}
+  return {users, loading, getUsers}
 }
 
 export default useUsers;

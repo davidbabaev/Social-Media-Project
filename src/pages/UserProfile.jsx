@@ -10,6 +10,7 @@ import useLikedCards from '../hooks/useLikedCards';
 import LoginPopup from '../components/LoginPopup';
 import CardsComments from '../components/CardsComments';
 import useCommentsCards from '../hooks/useCommentsCards';
+import useFollowUser from '../hooks/useFollowUser';
 
 export default function UserProfile() {
 
@@ -29,7 +30,9 @@ export default function UserProfile() {
     const {addComment, countComments, removeComment} = useCommentsCards();    
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
     const {favoriteCards, handleFavoriteCards} = useFavoriteCards();
+    const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
 
+    console.log(users);
     
     const userProfile = users.find(u => u._id === id);
     
@@ -54,6 +57,16 @@ export default function UserProfile() {
       <img style={{width: '100%', borderRadius: '10px', height:'230px', objectFit:'cover'}} src={userProfile.coverImage}/>
       <img style={{marginTop: '-100px',marginLeft: '20px',width: '17%', borderRadius: '50%', border: 'solid 2px white', objectFit:'cover', height:'170px'}} src={userProfile.profilePicture}/>
       <h2>{userProfile.name} {userProfile.lastName}</h2>
+      <div style={{display:'flex', gap: '20px'}}>
+        <div style={{display:'block', border: '1px solid black', padding: '10px', borderRadius: '10px'}}>
+            <p>Followers</p>
+            <p>{getFollowersCount(userProfile._id)}</p>
+        </div>
+        <div style={{display:'block', border: '1px solid black', padding: '10px', borderRadius: '10px'}}>
+            <p>following</p>
+            <p>{getFollowingCount(userProfile._id)}</p>
+        </div>
+      </div>
       <hr />
       <p><span style={{fontWeight:'bold', fontSize: '20px'}}>About</span><br/> {userProfile.aboutMe}</p>
 
@@ -69,7 +82,15 @@ export default function UserProfile() {
       <p>Joined On: {userProfile.createdAt}</p>
       
       {user?._id === userProfile._id && (<button onClick={() => navigate(`/dashboard/myprofile`)}>Edit Your Profile</button>)}
+
+      {user?._id !== userProfile._id && (
+        <button onClick={() => toggleFollow(userProfile._id)}>{
+            isFollowByMe(userProfile._id) ? "Unfollow" : "Follow"
+        }</button>
+      )}
+
       </div>
+      
 
       {userCards.map((card) => {
       const creator = users.find(user => user._id === card.userId);

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { loginUser, registerUser, updateUser } from '../services/apiService';
+import { followUnfollowUser, loginUser, registerUser, updateUser } from '../services/apiService';
 
 const UseAuthCheck = createContext();
 
@@ -65,6 +65,24 @@ export function AuthProvider({children}) {
         }
     }
 
+    const handleToggleFollow = async (userId) => {
+        try{
+            const response = await followUnfollowUser(userId);
+            setUser(response)
+
+            return{
+                success: true,
+                message: "Followed Successfully"
+            }
+        }
+        catch(err){
+            return{
+                success: false,
+                message: err.message
+            }
+        }
+    }
+
     const handleLogout = () => {
         localStorage.removeItem('auth-token');
         setIsLoggedIn(false);
@@ -90,7 +108,7 @@ export function AuthProvider({children}) {
     
   return (
     <UseAuthCheck.Provider 
-        value={{isLoggedIn, user, handleLogin, handleLogout, handleRegister, editUser, setUser}}>
+        value={{isLoggedIn, user, handleLogin, handleLogout, handleRegister, editUser, setUser, handleToggleFollow}}>
             {children}
     </UseAuthCheck.Provider>
   )
