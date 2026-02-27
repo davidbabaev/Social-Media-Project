@@ -12,8 +12,7 @@ export default function UserProfileLayout() {
 
     const followingList = users.filter((user) => currentProfileUser.following.includes(user._id))
     
-    const followersList = users.filter((user) => currentProfileUser.following.includes(!user._id))
-
+    const followersList = users.filter((user) => user.following.includes(currentProfileUser._id))
   return (
     <div>UserProfileLayout</div>
   )
