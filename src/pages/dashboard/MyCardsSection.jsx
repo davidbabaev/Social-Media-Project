@@ -15,8 +15,8 @@ export default function MyCardsSection() {
     const [editCategory, setEditCategory] = useState('');
   
     const myCards = registeredCards.filter(card => card.userId === user._id);
-    console.log("user._id: ", user._id);
-    console.log("card userIds: ", registeredCards.map(c => c.userId));
+    // console.log("user._id: ", user._id);
+    // console.log("card userIds: ", registeredCards.map(c => c.userId));
 
     if(!user){
         return <p>Loading ...</p>

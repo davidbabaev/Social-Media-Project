@@ -38,6 +38,7 @@ export const JOB_INDUSTRIES = [
   "Insurance",
   "Internet & Web Services",
   "Legal",
+  "Software Engineer",
   "Logistics & Supply Chain",
   "Manufacturing & Production",
   "Marketing & Growth",

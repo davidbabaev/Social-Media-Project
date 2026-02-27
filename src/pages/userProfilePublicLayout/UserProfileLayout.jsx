@@ -4,6 +4,8 @@ import useFollowUser from '../../hooks/useFollowUser';
 import UserProfileAbout from './UserProfileAbout';
 import UserProfileMain from './UserProfileMain';
 import { useAuth } from '../../providers/AuthProvider';
+import UserProfileFollowing from './UserProfileFollowing';
+import UserProfileFollowers from './UserProfileFollowers';
 
 export default function UserProfileLayout() {
 
@@ -79,6 +81,8 @@ export default function UserProfileLayout() {
           <nav>
               <Link style={mystyle} to={`/profiledashboard/${id}/profilemain`}>All Media</Link>
               <Link style={mystyle} to={`/profiledashboard/${id}/about`}>About</Link>
+              <Link style={mystyle} to={`/profiledashboard/${id}/following`}>Following</Link>
+              <Link style={mystyle} to={`/profiledashboard/${id}/followers`}>Followers</Link>
           </nav>
       </div>
     </div> 
@@ -87,6 +91,8 @@ export default function UserProfileLayout() {
               <Route index element = {<UserProfileMain/>}/>
               <Route path='/profilemain' element = {<UserProfileMain/>}/>
               <Route path='/about' element = {<UserProfileAbout/>}/>
+              <Route path='/following' element = {<UserProfileFollowing/>}/>
+              <Route path='/followers' element = {<UserProfileFollowers/>}/>
             </Routes>
     </div>
   )
