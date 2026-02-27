@@ -1,35 +1,21 @@
-import React, { useMemo, useState } from 'react'
-import { useCardsProvider } from '../providers/CardsProvider'
-import useUsers from '../hooks/useUsers';
+import React, { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import useUsers from '../../hooks/useUsers';
+import { useCardsProvider } from '../../providers/CardsProvider';
+import { useAuth } from '../../providers/AuthProvider';
+import useCommentsCards from '../../hooks/useCommentsCards';
+import useLikedCards from '../../hooks/useLikedCards';
+import useFavoriteCards from '../../hooks/useFavoriteCards';
+import CardsComments from '../../components/CardsComments';
+import LoginPopup from '../../components/LoginPopup';
 
-import useDebounce from '../hooks/useDebounce';
-import useFavoriteCards from '../hooks/useFavoriteCards';
-import { CARD_CATEGORIES } from '../constants/cardsCategories';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../providers/AuthProvider';
-import useLikedCards from '../hooks/useLikedCards';
-import LoginPopup from '../components/LoginPopup';
-import CardsComments from '../components/CardsComments';
-import useCommentsCards from '../hooks/useCommentsCards';
+export default function UserProfileMain() {
 
-export default function AllCardsPage() {
-
-    // filter cards by creator
-    const [creatorId, setCreatorId] = useState('')
-
-    // search cards by title/ text
-    const [searchCard, setSearchCard] = useState('')
-
-    const debounceSearchCard = useDebounce(searchCard, 2000);
-
-    // sort cards (newest/ oldest)
-    const [dateSort, setDateSort] = useState('');
-
-    // favorite/ like cards
-    const [favorites, setFavorites] = useState('')
-
-    // card categories/ tags
-    const [categoryFilter, setCategoryFilter] = useState('');
+  const {id} = useParams();
+  const {users} = useUsers();
+  const {registeredCards} = useCardsProvider();
+  const {user} = useAuth();
+  const navigate = useNavigate();
 
     const [isOpen, setIsOpen] = useState(false);
     function onClose(){
@@ -37,119 +23,24 @@ export default function AllCardsPage() {
     }
 
     const [isCommentOpen, setIsCommentOpen] = useState(null);
-
-    const {addComment, countComments, removeComment} = useCommentsCards();
-
-    const navigate = useNavigate();
-    
-    const {registeredCards} = useCardsProvider();
+    const {addComment, countComments, removeComment} = useCommentsCards();    
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
-    const {user} = useAuth();
-    const [count, setCount] = useState(2);
-    const {users} = useUsers(); 
-    const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
+    const {favoriteCards, handleFavoriteCards} = useFavoriteCards();
 
-    const filteredCards = useMemo(() => {
+    const userProfile = users.find(u => u._id === id);
 
-        // Step 1: Choose starting data based on favorites filter:
-        let result = 
-        favorites === 'myFavorites' ? [...favoriteCards] : [...registeredCards];
-        
-        if(creatorId !== ''){
-            result = result.filter(card => card.userId === creatorId)
-        }
+    if(!userProfile){
+      return <p>Loading..</p>
+    }
 
-        if(debounceSearchCard !== ''){
-            result = result.filter(card => card.title.toLowerCase().includes(debounceSearchCard.toLowerCase()))
-        }
+    const userCards = registeredCards.filter(uCard => uCard.userId === userProfile._id)
 
-        if(dateSort !== ''){
-            if(dateSort === 'newest'){
-                result.sort((a,b) => b.createdAt.localeCompare(a.createdAt))
-            }
-            else if (dateSort === 'oldest'){
-                result.sort((a,b) => a.createdAt.localeCompare(b.createdAt))   
-            }
-        }
-
-        if(categoryFilter !== ''){
-            result = result.filter(card => card.category === categoryFilter)
-        }
-
-        return result;
-    }, [creatorId, registeredCards, debounceSearchCard, dateSort, categoryFilter, favorites])
-    
-    const countedRegisterCards = filteredCards.slice(0, count)    
-
-  return (
-    <div>
-        <h1>All Cards</h1>
-
-        <div>
-            <select 
-                value={creatorId}
-                onChange={(e) => setCreatorId(e.target.value)}    
-            >
-                <option value="">All Users</option>
-                {users.map((user) => (
-                    <option key={user._id} value={user._id}>{user?.name}</option>
-                ))}
-            </select>
-        </div>
-
-        <div>
-            <select 
-                value={dateSort}
-                onChange={(e) => setDateSort(e.target.value)}
-            >
-                <option value="">All Dates</option>
-                <option value="newest">Newest first</option>
-                <option value="oldest">Oldest first</option>
-            </select>
-        </div>
-
-        <div>
-            <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-            >
-                <option value="">All Categories</option>
-                {CARD_CATEGORIES.map((category, index) => (
-                    <option key={category} value={category}>
-                        {category}
-                    </option>
-                ))}
-            </select>
-        </div>
-
-        <div>
-            <select 
-                value={favorites}
-                onChange={(e) => setFavorites(e.target.value)}
-            >
-                <option value="">All / Favorites</option>
-                <option value="myFavorites">My Favorites Cards</option>
-            </select>
-        </div>
-
-        <div>
-            <input 
-                type="text" 
-                value={searchCard}
-                onChange={(e) => setSearchCard(e.target.value)}
-            />
-        </div>
-
-        {countedRegisterCards.length === 0 && <p>You haven't created any cards yet.</p>}
-        <div style={{
-            display: 'flex', 
-            flexDirection: 'column'
-            }}>
-
-
-        {countedRegisterCards.map((card) => {
+return (
+  <div>
+      <div>      
+      {userCards.map((card) => {
             const creator = users.find(user => user._id === card.userId);
-
+      
             return(
                 <div style={{
                     border: 'solid black 1px', 
@@ -157,7 +48,7 @@ export default function AllCardsPage() {
                     borderRadius: '20px', 
                     margin: '20px 0px'
                     }} key={card._id}>
-
+      
                     <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card._id}`)}>{card.title}</span></h2>
                     <p>{card.content}</p>
                     <img src={card.image} style={{
@@ -198,7 +89,7 @@ export default function AllCardsPage() {
                         <p>|</p>
                         <p>{countComments(card._id)} comments</p>
                         <p>|</p>
-
+      
                             <div>
                                 {user ? (
                                     <button onClick={() => toggleLike(card._id)}>
@@ -207,7 +98,7 @@ export default function AllCardsPage() {
                                 ):(
                                     <button onClick={() => setIsOpen(true)}>Like</button>
                                 )}
-
+      
                                 {user ? (
                                     <div>
                                         {favoriteCards.some(c => c._id === card._id) ? (
@@ -219,7 +110,7 @@ export default function AllCardsPage() {
                                     ) : (
                                         <button onClick={() => setIsOpen(true)}>Add to favorites</button>
                                     )}
-
+      
                                 {user ? (
                                     <button onClick={() => {
                                         if(isCommentOpen === card._id){
@@ -231,7 +122,7 @@ export default function AllCardsPage() {
                                 ): (
                                     <button onClick={() => setIsOpen(true)}>add new comment</button>
                                 )}
-
+      
                                 <button onClick={() => navigate(`/carddetails/${card._id}`)}>Show Card Details</button>    
                             </div>
                     </div>
@@ -250,17 +141,16 @@ export default function AllCardsPage() {
             )
             
         })}
-
+            
         {  isOpen && (
             <LoginPopup
                 onClose = {onClose}
             />
         )}
-
-        </div>
-        {count >= filteredCards.length ? (<p>No More Cards</p>) : (
-            <button onClick={() => setCount(count + 2)}>Read more</button>
-        )}
+      
     </div>
-  )
+
+
+  </div>
+)
 }

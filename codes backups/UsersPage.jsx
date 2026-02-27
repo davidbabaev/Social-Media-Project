@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import useDebounce from '../hooks/useDebounce';
+import React, { useMemo, useState } from 'react'
 import useSelectedUsers from '../hooks/useSelectedUsers';
-import { Link, useNavigate } from 'react-router-dom';
-import useUsers from '../hooks/useUsers';
+import { useNavigate } from 'react-router-dom';
+import useUsers from '../src/hooks/useUsers';
+import useDebounce from '../src/hooks/useDebounce';
 
 
 function UsersPage({value}) {
 
     const debounceSearch = useDebounce(value, 2000);
-    const {allUsers, loading} = useAllUsers();
-    const {selectedUsers ,selectHandleUser} = useSelectedUsers();
+    const {users, loading} = useUsers();
+    const {selectedUsers ,selectHandleUser} = useSe;
     const [count, setCount] = useState(10);
 
     // sorts
@@ -18,18 +18,18 @@ function UsersPage({value}) {
 
     // filters
     const [genderFilter, setGenderFilter] = useState('');
-    const [sourcesFilter, setSourcesFilter] = useState('');
     const [countryFilter, setCountryFilter] = useState('');
     
     const navigateToUser = useNavigate();
 
-    const countries = [...new Set(allUsers.map(user => user.address.country.toLowerCase()))] 
+    const countries = [...new Set(users.map(user => user.address.country.toLowerCase()))] 
     // remove doplicates from array, and we get new array by name countries that without duplicates
     
     const filtred = useMemo(() => {
-
-        let result = allUsers;
-
+        
+        let result = users;
+        
+        
         // search by name;
         result = result.filter((user) => {
             return (user.name).toLowerCase().includes(debounceSearch.toLowerCase())
@@ -40,10 +40,6 @@ function UsersPage({value}) {
             result = result.filter(user => user.gender === genderFilter)
         }
 
-        // filter Source - api/real
-        if(sourcesFilter !== ''){
-            result = result.filter(user => user.source === sourcesFilter)
-        }
 
         // country filter:
         if(countryFilter !== ''){
@@ -74,7 +70,7 @@ function UsersPage({value}) {
         });
 
         return result;
-    }, [debounceSearch, allUsers, ageSort, nameSort, genderFilter, countryFilter, sourcesFilter])
+    }, [debounceSearch, users, ageSort, nameSort, genderFilter, countryFilter])
     
     const visibleUsers = filtred.slice(0, count)
     
@@ -128,19 +124,6 @@ function UsersPage({value}) {
                     <option value="female">Female</option>
             </select>
 
-            <select
-                style={{
-                    backgroundColor: sourcesFilter ? 'lightblue' : 'white', 
-                    border: 'none', 
-                    marginRight: '8px',
-                    padding: '8px',
-                }}
-                value={sourcesFilter} 
-                onChange={(e) => setSourcesFilter(e.target.value)}>
-                    <option value="">All Sources</option>
-                    <option value="API">API Users</option>
-                    <option value="REGISTERED">Registered Users</option>
-            </select>
 
             <select
                 style={{
@@ -159,22 +142,21 @@ function UsersPage({value}) {
         <br />
         <br />
         {visibleUsers.map((user) => (
-            <div key={user.userId}>
+            <div key={user._id}>
                 <img style={{borderRadius: '50%', width: '15%'}} src={user.profilePicture}/>
-                <h3>{user.name} {user.lastName}</h3>
-                <p>Source: {user.source} User</p>
+                <h3>{user?.name} {user?.lastName}</h3>
                 <p>Email: {user.email}</p>
                 <p>Age: {user.age}</p>
                 <p>Country: {user.address.country}</p>
                 <p>Gender: {user.gender}</p>
 
-                {selectedUsers.some(selUser => selUser.userId === user.userId) ? (
+                {selectedUsers.some(selUser => selUser._id === user._id) ? (
                     <button onClick={() => selectHandleUser(user)}>Deselecte User</button>
                 ): (
                     <button onClick={() => selectHandleUser(user)}>Select User</button>
                 )}
 
-                <button onClick={() => navigateToUser(`/userprofile/${user.userId}`)}>To The User</button>
+                <button onClick={() => navigateToUser(`/profiledashboard/${user._id}/profilemain`)}>To The User</button>
                 <hr />
             </div>
         ))}

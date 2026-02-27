@@ -8,12 +8,12 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import CardsRegisterPage from './pages/CardsRegisterPage'
-import DisplayUsers from './components/DisplayUsers'
 import RegisteredPage from './pages/RegisteredPage'
 import AllCardsPage from './pages/AllCardsPage'
-import UserProfile from './pages/UserProfile'
 import DashboardLayout from './pages/dashboard/DashboardLayout'
 import CardDetailsPage from './pages/CardDetailsPage'
+import UserProfileLayout from './pages/userProfilePublicLayout/UserProfileLayout'
+import UsersPage from './pages/UsersPage'
 
 
 export default function App(){
@@ -30,15 +30,15 @@ export default function App(){
                   <DashboardLayout/>
                 </ProtectedRoute>
               }/>
+              <Route path='/profiledashboard/:id/*' element={<UserProfileLayout/>}/>
               <Route path='/createnewcard' element={
                 <ProtectedRoute>
                   <CardsRegisterPage/>
                 </ProtectedRoute>
               }/>
-              <Route path='/allusers' element ={<DisplayUsers/>}/>
+              <Route path='/allusers' element ={<UsersPage/>}/>
               <Route path='/registered' element ={<RegisteredPage/>}/>
               <Route path='/allcards' element ={<AllCardsPage/>}/>
-              <Route path='/userprofile/:id' element ={<UserProfile/>}/>
               <Route path='/carddetails/:id' element ={<CardDetailsPage/>}/>
             </Routes>
         </CardsProvider>

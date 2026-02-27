@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import useDebounce from '../hooks/useDebounce';
-import useSelectedUsers from '../hooks/useSelectedUsers';
 import { Link, useNavigate } from 'react-router-dom';
 import useUsers from '../hooks/useUsers';
+import useSelectedUsers from '../hooks/useSelectedUsers';
 
 
 function UsersPage({value}) {
@@ -18,11 +18,11 @@ function UsersPage({value}) {
 
     // filters
     const [genderFilter, setGenderFilter] = useState('');
-    const [countryFilter, setCountryFilter] = useState('');
+    // const [countryFilter, setCountryFilter] = useState('');
     
     const navigateToUser = useNavigate();
 
-    const countries = [...new Set(users.map(user => user.address.country.toLowerCase()))] 
+    // const countries = [...new Set(users.map(user => user.address.country.toLowerCase()))]
     // remove doplicates from array, and we get new array by name countries that without duplicates
     
     const filtred = useMemo(() => {
@@ -31,7 +31,7 @@ function UsersPage({value}) {
 
         // search by name;
         result = result.filter((user) => {
-            return (user.name).toLowerCase().includes(debounceSearch.toLowerCase())
+            return user?.name?.toLowerCase().includes(debounceSearch.toLowerCase())
         });
 
         // filter: Gender
@@ -40,9 +40,9 @@ function UsersPage({value}) {
         }
 
         // country filter:
-        if(countryFilter !== ''){
-            result = result.filter(user => user.address.country.toLowerCase() === countryFilter.toLowerCase())
-        }
+        // if(countryFilter !== ''){
+        //     result = result.filter(user => user.address?.country?.toLowerCase() === countryFilter.toLowerCase())
+        // }
 
         // sorts:
         result.sort((a,b) => {
@@ -68,7 +68,7 @@ function UsersPage({value}) {
         });
 
         return result;
-    }, [debounceSearch, users, ageSort, nameSort, genderFilter, countryFilter])
+    }, [debounceSearch, users, ageSort, nameSort, genderFilter])
     
     const visibleUsers = filtred.slice(0, count)
     
@@ -122,7 +122,7 @@ function UsersPage({value}) {
                     <option value="female">Female</option>
             </select>
 
-            <select
+{/*             <select
                 style={{
                     backgroundColor: countryFilter ? 'lightblue' : 'white', 
                     border: 'none', 
@@ -135,7 +135,7 @@ function UsersPage({value}) {
                     {countries.map((c) => (
                         <option key={c} value={c}>{c}</option>
                     ))}
-            </select>
+            </select> */}
         <br />
         <br />
         {visibleUsers.map((user) => (

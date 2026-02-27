@@ -31,8 +31,6 @@ export default function UserProfile() {
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
     const {favoriteCards, handleFavoriteCards} = useFavoriteCards();
     const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
-
-    console.log(users);
     
     const userProfile = users.find(u => u._id === id);
     
@@ -124,12 +122,12 @@ export default function UserProfile() {
                           cursor: 'pointer'
                       }} 
                           src={creator?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}
-                      onClick={() => navigate(`/userprofile/${creator._id}`)}    
+                      onClick={() => navigate(`/profiledashboard/${creator._id}/profilemain`)}    
                   />
                   <p>
                       <span
                           style={{cursor: 'pointer'}}
-                          onClick={() => navigate(`/userprofile/${creator._id}`)}
+                          onClick={() => navigate(`/profiledashboard/${creator._id}/profilemain`)}
                       >
                           {creator?.name} {creator?.lastName}
                       </span>

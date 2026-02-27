@@ -4,7 +4,12 @@ import { useAuth } from '../providers/AuthProvider';
 
 export default function ProtectedRoute({children}) {
 
-    const {isLoggedIn} = useAuth();
+    const {isLoggedIn, isUserLoaded} = useAuth();
+
+    if(!isUserLoaded){
+        return <p>Loading..</p>
+    }
+
 
     if(isLoggedIn){
         // user logged in -> show the page

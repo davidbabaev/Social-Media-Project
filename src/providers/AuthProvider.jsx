@@ -108,7 +108,7 @@ export function AuthProvider({children}) {
     
   return (
     <UseAuthCheck.Provider 
-        value={{isLoggedIn, user, handleLogin, handleLogout, handleRegister, editUser, setUser, handleToggleFollow}}>
+        value={{isLoggedIn, user, handleLogin, handleLogout, handleRegister, editUser, setUser, handleToggleFollow, isUserLoaded}}>
             {children}
     </UseAuthCheck.Provider>
   )

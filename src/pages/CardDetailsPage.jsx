@@ -67,12 +67,12 @@ export default function CardDetailsPage() {
                         cursor: 'pointer'
                     }} 
                         src={creator?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}
-                    onClick={() => navigate(`/userprofile/${creator._id}`)}    
+                    onClick={() => navigate(`/profiledashboard/${creator._id}/profilemain`)}    
                 />
                 <p>
                     <span
                         style={{cursor: 'pointer'}}
-                        onClick={() => navigate(`/userprofile/${creator._id}`)}
+                        onClick={() => navigate(`/profiledashboard/${creator._id}/profilemain`)}
                     >
                         {creator?.name} {creator?.lastName}
                     </span>
