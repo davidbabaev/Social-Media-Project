@@ -67,7 +67,7 @@ export default function UserDashboard() {
                 setEditName(currentUser.name);
                 setEditEmail(currentUser.email);
                 setEditCountry(currentUser.address.country);
-                setEditprofilePicture(currentUser.profilePicture);
+                setEditprofilePicture(currentUser?.profilePicture);
                 setEditAge(currentUser.age);
                 setEditGender(currentUser.gender);
                 setEditPhone(currentUser.phone);

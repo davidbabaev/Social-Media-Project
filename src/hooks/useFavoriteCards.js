@@ -6,6 +6,7 @@ function useFavoriteCards() {
     // const {registeredCards} = useCardsProvider();
     const [favoriteCards, setFavoriteCards] = useState([]);
     const {user} = useAuth();
+    const [isUserLoaded, setIsUserLoaded] = useState(false);
 
     const storageUserkey = user ? `favoriteCards_${user._id}` : null;
 
@@ -34,14 +35,17 @@ function useFavoriteCards() {
         if(savedCards){
             setFavoriteCards(savedCards)
         }
+
+        setIsUserLoaded(true);
     }, [storageUserkey]);
     
     // useEffect when changed with set LocalStorage
     useEffect(() => {
+        if(!isUserLoaded) return;
         if(!storageUserkey) return;
 
         localStorage.setItem(storageUserkey ,JSON.stringify(favoriteCards))
-    }, [favoriteCards, storageUserkey])
+    }, [favoriteCards, storageUserkey, isUserLoaded])
 
   return{favoriteCards, handleFavoriteCards, handleRemoveCard}
 }
