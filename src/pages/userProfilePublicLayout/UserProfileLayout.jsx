@@ -6,12 +6,14 @@ import UserProfileMain from './UserProfileMain';
 import { useAuth } from '../../providers/AuthProvider';
 import UserProfileFollowing from './UserProfileFollowing';
 import UserProfileFollowers from './UserProfileFollowers';
+import { useCardsProvider } from '../../providers/CardsProvider';
 
 export default function UserProfileLayout() {
 
     const {id} = useParams();
     const{users} = useUsers();
     const {user} = useAuth();
+    const {refreshFeed} = useCardsProvider();
 
     const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
     
@@ -71,11 +73,14 @@ export default function UserProfileLayout() {
 
         {user?._id === userProfile._id && (<button onClick={() => navigate(`/dashboard/myprofile`)}>Edit Your Profile</button>)}
       
-            {user?._id !== userProfile._id && (
-              <button onClick={() => toggleFollow(userProfile._id)}>{
-                  isFollowByMe(userProfile._id) ? "Unfollow" : "Follow"
-              }</button>
-            )}
+      {user?._id !== userProfile._id && (
+        <button onClick={async() => {
+            await toggleFollow(userProfile._id)
+            refreshFeed();
+        }}>
+            {isFollowByMe(userProfile._id) ? "Unfollow" : "Follow"}
+        </button>
+      )}
 
         <div>
           <nav>

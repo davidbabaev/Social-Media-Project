@@ -1,15 +1,14 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
-import { useAuth } from './AuthProvider';
-import { getAllCards, createCard, deleteCard, updateCard, likeUnlikeCard, addComment, removeComment} from '../services/apiService';
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { getAllCards, createCard, deleteCard, updateCard, likeUnlikeCard, addComment, removeComment, getFeedCards} from '../services/apiService';
 
 const CardsContext = createContext();
 
 export function CardsProvider({children}) {
 
-const { user } = useAuth();
-
     // state for saving cards (register cards)
 const [registeredCards, setRegisteredCards] = useState([]);
+
+const [feedCards, setFeedCards] = useState([]);
 
 // useEffect on mount
 useEffect(() => {
@@ -25,6 +24,21 @@ useEffect(() => {
     fetchCards();
 }, [])
 
+// fetches feed on mount (first load) 
+useEffect(() => {
+    refreshFeed();
+}, []);
+
+// can be called anytime you need to re-fetch
+const refreshFeed = async () => {
+    try{
+        const response = await getFeedCards();
+        setFeedCards(response);
+    }
+    catch(err){
+        console.log(err.message);
+    }
+}
 
 const handleCardRegister = async (cardData) => {
     try{
@@ -144,7 +158,17 @@ const handleCardRegister = async (cardData) => {
     
     
   return (
-    <CardsContext.Provider value={{registeredCards, handleCardRegister, handleDeleteCard, handleEditCard, handleToggleLike, handleAddComment, handleRemoveComment}}>
+    <CardsContext.Provider value={{
+        registeredCards, 
+        handleCardRegister, 
+        handleDeleteCard, 
+        handleEditCard, 
+        handleToggleLike, 
+        handleAddComment, 
+        handleRemoveComment, 
+        refreshFeed, 
+        feedCards
+    }}>
         {children}
     </CardsContext.Provider>
   )

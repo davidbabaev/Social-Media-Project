@@ -18,8 +18,8 @@ export default function UserProfile() {
 
     const{users} = useUsers();
     const navigate = useNavigate();
-    const {registeredCards} = useCardsProvider();
-    const {user} = useAuth()
+    const {registeredCards, refreshFeed} = useCardsProvider();
+    const {user} = useAuth()    
 
     const [isOpen, setIsOpen] = useState(false);
     function onClose(){
@@ -82,9 +82,15 @@ export default function UserProfile() {
       {user?._id === userProfile._id && (<button onClick={() => navigate(`/dashboard/myprofile`)}>Edit Your Profile</button>)}
 
       {user?._id !== userProfile._id && (
-        <button onClick={() => toggleFollow(userProfile._id)}>{
-            isFollowByMe(userProfile._id) ? "Unfollow" : "Follow"
-        }</button>
+        <button onClick={async() => {
+            console.log("1 - before toggle");
+            await toggleFollow(userProfile._id)
+            console.log("2 - after Toggle toggle");
+            refreshFeed();
+            console.log("3 - after refresh");
+        }}>
+            {isFollowByMe(userProfile._id) ? "Unfollow" : "Follow"}
+        </button>
       )}
 
       </div>

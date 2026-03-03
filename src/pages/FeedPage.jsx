@@ -1,8 +1,16 @@
 import React, { useState } from 'react'
+import CardItem from '../components/CardItem'
+import { useCardsProvider } from '../providers/CardsProvider';
 
-export default function HomePage() {
+export default function FeedPage() {
+
+    const {feedCards} = useCardsProvider();
+    const [count, setCount] = useState(2);
+
+    const countedRegisterCards = feedCards.slice(0, count)
 
 
+  
   return (
     <div style={{display: 'flex', width:"100%"}}>
         <div style={{border: '1px solid black', padding: '20px', width:"100%", margin: '5px'}}>
@@ -24,7 +32,9 @@ export default function HomePage() {
             <p style={{border: '1px solid black', padding: '20px'}}>Create new card</p>
             <div style={{border: '1px solid black', padding: '20px'}}>
               feed of cards of users that i follow on
-              
+                {countedRegisterCards.map((card) => (
+                    <CardItem key={card._id} card={card}/>
+                ))}
             </div>
         </div>
 

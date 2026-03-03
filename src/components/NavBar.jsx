@@ -27,7 +27,7 @@ export default function NavBar() {
             logout
         </button>
         <nav>
-            <Link style={mystyle} to={'/'}>Home</Link>
+            <Link style={mystyle} to={'/'}>Feed</Link>
             <Link style={mystyle} to={'/login'}>login</Link>
             <Link style={mystyle} to={'/dashboard/myprofile'}>user dashboard</Link>
             <Link style={mystyle} to={'/registered'}>register</Link>

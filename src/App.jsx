@@ -4,7 +4,6 @@ import { AuthProvider } from './providers/AuthProvider'
 import { ThemeProvider } from './providers/ThemeProvider'
 import { CardsProvider } from './providers/CardsProvider'
 import NavBar from './components/NavBar'
-import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import CardsRegisterPage from './pages/CardsRegisterPage'
@@ -14,6 +13,7 @@ import DashboardLayout from './pages/dashboard/DashboardLayout'
 import CardDetailsPage from './pages/CardDetailsPage'
 import UserProfileLayout from './pages/userProfilePublicLayout/UserProfileLayout'
 import UsersPage from './pages/UsersPage'
+import FeedPage from './pages/FeedPage'
 
 
 export default function App(){
@@ -23,7 +23,7 @@ export default function App(){
         <CardsProvider>
           <NavBar/>
             <Routes>
-              <Route path='/' element={<HomePage/>}/>
+              <Route path='/' element={<FeedPage/>}/>
               <Route path='/login' element={<LoginPage/>}/>
               <Route path='/dashboard/*' element={
                 <ProtectedRoute>

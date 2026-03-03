@@ -144,7 +144,7 @@ export default function AllCardsPage() {
         <div style={{
             display: 'flex', 
             flexDirection: 'column'
-            }}>
+        }}>
 
 
         {countedRegisterCards.map((card) => {
