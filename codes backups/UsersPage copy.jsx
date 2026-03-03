@@ -1,29 +1,28 @@
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import useDebounce from '../hooks/useDebounce';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useUsers from '../hooks/useUsers';
 import useSelectedUsers from '../hooks/useSelectedUsers';
 
 
-function UsersPage() {
+function UsersPage({value}) {
 
+    const debounceSearch = useDebounce(value, 2000);
     const {users, loading} = useUsers();
     const {selectedUsers ,selectHandleUser} = useSelectedUsers();
     const [count, setCount] = useState(10);
-    const [search, setSearch] = useState('')
-    const debounceSearch = useDebounce(search, 2000);
-    
+
     // sorts
     const [ageSort, setAgeSort] = useState('');
     const [nameSort, setNameSort] = useState('');
 
     // filters
     const [genderFilter, setGenderFilter] = useState('');
-    const [countryFilter, setCountryFilter] = useState('');
+    // const [countryFilter, setCountryFilter] = useState('');
     
     const navigateToUser = useNavigate();
 
-    const countries = [...new Set(users.map(user => user.address?.country.toLowerCase()))]
+    // const countries = [...new Set(users.map(user => user.address.country.toLowerCase()))]
     // remove doplicates from array, and we get new array by name countries that without duplicates
     
     const filtred = useMemo(() => {
@@ -41,9 +40,9 @@ function UsersPage() {
         }
 
         // country filter:
-        if(countryFilter !== ''){
-            result = result.filter(user => user?.address?.country.toLowerCase() === countryFilter.toLowerCase())
-        }
+        // if(countryFilter !== ''){
+        //     result = result.filter(user => user.address?.country?.toLowerCase() === countryFilter.toLowerCase())
+        // }
 
         // sorts:
         result.sort((a,b) => {
@@ -69,7 +68,7 @@ function UsersPage() {
         });
 
         return result;
-    }, [debounceSearch, users, ageSort, nameSort, genderFilter, countryFilter])
+    }, [debounceSearch, users, ageSort, nameSort, genderFilter])
     
     const visibleUsers = filtred.slice(0, count)
     
@@ -79,13 +78,6 @@ function UsersPage() {
 
   return (
     <div>
-        <div>
-        <input 
-            type="text" 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-        />
-        </div>
          <select 
                 disabled={nameSort}
                 style={{
@@ -126,11 +118,11 @@ function UsersPage() {
                 value={genderFilter} 
                 onChange={(e) => setGenderFilter(e.target.value)}>
                     <option value="">All Genders</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
             </select>
 
-            <select
+{/*             <select
                 style={{
                     backgroundColor: countryFilter ? 'lightblue' : 'white', 
                     border: 'none', 
@@ -143,7 +135,7 @@ function UsersPage() {
                     {countries.map((c) => (
                         <option key={c} value={c}>{c}</option>
                     ))}
-            </select>
+            </select> */}
         <br />
         <br />
         {visibleUsers.map((user) => (
@@ -161,7 +153,7 @@ function UsersPage() {
                     <button onClick={() => selectHandleUser(user)}>Select User</button>
                 )}
 
-                <button onClick={() => navigateToUser(`/profiledashboard/${user._id}/profilemain`)}>To The User</button>
+                <button onClick={() => navigateToUser(`/userprofile/${user._id}`)}>To The User</button>
                 <hr />
             </div>
         ))}

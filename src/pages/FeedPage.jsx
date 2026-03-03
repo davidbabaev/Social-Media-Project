@@ -9,8 +9,6 @@ export default function FeedPage() {
 
     const countedRegisterCards = feedCards.slice(0, count)
 
-
-  
   return (
     <div style={{display: 'flex', width:"100%"}}>
         <div style={{border: '1px solid black', padding: '20px', width:"100%", margin: '5px'}}>
@@ -35,6 +33,12 @@ export default function FeedPage() {
                 {countedRegisterCards.map((card) => (
                     <CardItem key={card._id} card={card}/>
                 ))}
+                <div>
+                    {count >= countedRegisterCards.length ? (<p>No More Cards</p>) : (
+                    <button onClick={() => setCount(count + 2)}>Read more</button>
+                    )} 
+
+                </div>
             </div>
         </div>
 
