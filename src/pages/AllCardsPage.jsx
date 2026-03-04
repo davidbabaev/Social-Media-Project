@@ -172,11 +172,12 @@ export default function AllCardsPage() {
                         }}>
                         <img 
                             style={{
-                                width: '6%', 
-                                height: '6%', 
-                                borderRadius: '50%', 
-                                marginTop: '4px',
-                                cursor: 'pointer'
+                                width: '60px',
+                                height: '60px',
+                                borderRadius: '50%',
+                                border: '2px, solid, white',
+                                objectFit: 'cover',
+                                cursor: 'pointer',
                             }} 
                                 src={creator?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}
                             onClick={() => navigate(`/profiledashboard/${creator._id}/profilemain`)}    

@@ -12,16 +12,27 @@ export default function FeedPage() {
     const [count, setCount] = useState(2);
     const {user} = useAuth();
     const {users} = useUsers();
-    const{getFollowingCount, getFollowersCount} = useFollowUser();
+    const{getFollowingCount, getFollowersCount, toggleFollow, isFollowByMe} = useFollowUser();
     const navigate = useNavigate();
 
-    const userFollowing = users.filter(userU => user.following.includes(userU._id))
+    const userFollowing = users.filter(userU => user?.following.includes(userU._id))
 
     const {registeredCards} = useCardsProvider();
 
-    const myCardsCount = registeredCards.filter(card => card.userId === user._id).length;
+    const myCardsCount = registeredCards.filter(card => card.userId === user?._id).length;
 
     const countedRegisterCards = feedCards.slice(0, count)
+
+    const friendsOfFriends = userFollowing.map((user) => {
+        const somt = user.following;
+        
+    const usersdata = users.filter(userU => somt.includes(userU._id))
+        return usersdata
+    }).flat().filter(userU => userU._id !== user._id).filter(userU => !user?.following.includes(userU._id));
+    
+    const uniqueFriendsOfFriends = 
+    [...new Map(friendsOfFriends.map((u => {return [u._id, u]}))).values()]
+    
 
   return (
     <div style={{display: 'flex', width:"100%"}}>
@@ -81,7 +92,7 @@ export default function FeedPage() {
                     <CardItem key={card._id} card={card}/>
                 ))}
                 <div>
-                    {count >= countedRegisterCards.length ? (<p>No More Cards</p>) : (
+                    {count >= feedCards.length ? (<p>No More Cards</p>) : (
                     <button onClick={() => setCount(count + 2)}>Read more</button>
                     )} 
 
@@ -90,7 +101,40 @@ export default function FeedPage() {
         </div>
 
         <div style={{padding: '5px', border: '1px solid lightGray', borderRadius:'10px', width:"100%", margin: '5px'}}>
-            <p style={{padding: '5px', border: '1px solid lightGray', borderRadius:'10px'}}>add new firsnds 'friends of friends'</p>
+            <p>New Friends Suggestions</p>
+            <hr style={{border: '1px solid lightgray'}}/>
+            {uniqueFriendsOfFriends.length === 0 && (<p>No Suggestion</p>)}
+            <div 
+                style={{
+                    padding: '5px', 
+                    borderRadius:'10px',
+                }}>
+                    {uniqueFriendsOfFriends.map((userF) => (
+                           <div key={userF._id} style={{display:'flex', gap: '10px', marginBottom: '15px'}}>
+                            <img style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                border: '2px, solid, white',
+                                objectFit: 'cover',
+                                cursor: 'pointer',
+                            }} src={userF.profilePicture}/>
+                            <p>
+                                <span
+                                    style={{cursor: 'pointer'}}
+                                    onClick={() => navigate(`/profiledashboard/${userF._id}/profilemain`)}
+                                >
+                                {userF.name} {userF.lastName}
+                                </span>
+                            </p>
+                            {user?._id !== userF._id && (
+                                <button
+                                onClick={() => toggleFollow(userF._id)}
+                                >{isFollowByMe(userF._id) ? "Unfollow" : "Follow"}</button>
+                            )}
+                    </div>
+                ))}
+            </div>
         </div>
     </div>
   )

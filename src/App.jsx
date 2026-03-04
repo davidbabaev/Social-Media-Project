@@ -23,7 +23,11 @@ export default function App(){
         <CardsProvider>
           <NavBar/>
             <Routes>
-              <Route path='/' element={<FeedPage/>}/>
+              <Route path='/' element={
+                <ProtectedRoute>
+                  <FeedPage/>
+                </ProtectedRoute>
+              }/>
               <Route path='/login' element={<LoginPage/>}/>
               <Route path='/dashboard/*' element={
                 <ProtectedRoute>

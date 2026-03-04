@@ -27,7 +27,14 @@ export default function UserProfileFollowing() {
 
       {currentUserFollowing.map((following) => (
         <div key={following._id} style={{display:'flex', gap: '10px', marginBottom: '15px'}}>
-          <img style={{borderRadius: '50%', width: '5%'}} src={following.profilePicture}/>
+          <img style={{
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              border: '2px, solid, white',
+              objectFit: 'cover',
+              cursor: 'pointer'
+          }} src={following.profilePicture}/>
           <p>
             <span
                 style={{cursor: 'pointer'}}

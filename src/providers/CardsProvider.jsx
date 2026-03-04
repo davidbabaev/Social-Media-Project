@@ -26,11 +26,17 @@ useEffect(() => {
 
 // fetches feed on mount (first load) 
 useEffect(() => {
-    refreshFeed();
+    const token = localStorage.getItem('auth-token')
+    if(token){
+        refreshFeed();
+    }
 }, []);
 
 // can be called anytime you need to re-fetch
 const refreshFeed = async () => {
+    const token = localStorage.getItem('auth-token')
+    if(!token) return; //<- guard
+
     try{
         const response = await getFeedCards();
         setFeedCards(response);
@@ -104,6 +110,10 @@ const handleCardRegister = async (cardData) => {
                 return card._id === cardId ? response : card
             }))
 
+            setFeedCards(prev => prev.map((card) => {
+                return card._id === cardId ? response : card
+            }))
+
             return{
                 success: true,
                 message: 'liked Successfully'
@@ -123,6 +133,10 @@ const handleCardRegister = async (cardData) => {
             setRegisteredCards(prev => prev.map((card) => {
                 return card._id === cardId ? response : card
             }))
+
+            setFeedCards(prev => prev.map((card) => {
+                return card._id === cardId ? response : card
+            }))
             return{
                 success: true,
                 message: "Comment added successfully"
@@ -140,6 +154,10 @@ const handleCardRegister = async (cardData) => {
         try{
             const response = await removeComment(cardId, commentId)
             setRegisteredCards(prev => prev.map((card) => {
+                return card._id === cardId ? response : card
+            }))
+
+            setFeedCards(prev => prev.map((card) => {
                 return card._id === cardId ? response : card
             }))
 

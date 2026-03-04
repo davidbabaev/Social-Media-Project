@@ -148,7 +148,14 @@ function UsersPage() {
         <br />
         {visibleUsers.map((user) => (
             <div key={user._id}>
-                <img style={{borderRadius: '50%', width: '15%'}} src={user.profilePicture}/>
+                <img style={{
+                    width: '150px',
+                    height: '150px',
+                    borderRadius: '50%',
+                    border: '2px, solid, white',
+                    objectFit: 'cover',
+                    cursor: 'pointer'
+                }} src={user.profilePicture}/>
                 <h3>{user.name} {user.lastName}</h3>
                 <p>Email: {user.email}</p>
                 <p>Age: {user.age}</p>
