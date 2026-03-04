@@ -17,7 +17,7 @@ export default function FeedPage() {
     const{getFollowingCount, getFollowersCount, toggleFollow, isFollowByMe} = useFollowUser();
     const navigate = useNavigate();
     const debounceFollowing = useDebounce(user?.following, 3000)
-    const {handleCardRegister, refreshFeed} = useCardsProvider();
+    const {refreshFeed} = useCardsProvider();
     
 
     const userFollowing = users.filter(userU => debounceFollowing?.includes(userU._id))
@@ -95,7 +95,6 @@ export default function FeedPage() {
         <div style={{padding: '5px', width:"100%", margin: '5px'}}>
             <div style={{padding: '5px', border: '1px solid lightGray', borderRadius:'10px'}}>
                 <CreateCardForm
-                    handleCardRegister={handleCardRegister}
                     onSuccess = {() => refreshFeed()}
                 />    
             </div>

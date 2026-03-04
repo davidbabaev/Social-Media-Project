@@ -14,6 +14,8 @@ import CardDetailsPage from './pages/CardDetailsPage'
 import UserProfileLayout from './pages/userProfilePublicLayout/UserProfileLayout'
 import UsersPage from './pages/UsersPage'
 import FeedPage from './pages/FeedPage'
+import AdminDashboardLayout from './pages/adminUserDashboard/AdminDashboardLayout'
+import AdminProtectedRoute from './components/AdminProtectedRoute'
 
 
 export default function App(){
@@ -27,6 +29,11 @@ export default function App(){
                 <ProtectedRoute>
                   <FeedPage/>
                 </ProtectedRoute>
+              }/>
+              <Route path='/admindashboard' element={
+                <AdminProtectedRoute>
+                  <AdminDashboardLayout/>
+                </AdminProtectedRoute>
               }/>
               <Route path='/login' element={<LoginPage/>}/>
               <Route path='/dashboard/*' element={

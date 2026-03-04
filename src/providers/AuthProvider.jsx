@@ -5,8 +5,8 @@ const UseAuthCheck = createContext();
 
 export function AuthProvider({children}) {
 
-    const[isLoggedIn, setIsLoggedIn] = useState(false);
-    const[user, setUser] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [user, setUser] = useState(null);
     const [isUserLoaded , setIsUserLoaded] = useState(false)
 
     useEffect(() => {
@@ -52,6 +52,7 @@ export function AuthProvider({children}) {
             localStorage.setItem('auth-token', response.token)
             setUser(response.safeUser)
             setIsLoggedIn(true);
+
             return{
                 success: true,
                 message: 'Logged in successfully'
