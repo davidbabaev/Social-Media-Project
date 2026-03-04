@@ -14,15 +14,14 @@ export default function UserProfileLayout() {
     const{users} = useUsers();
     const {user} = useAuth();
     const {refreshFeed} = useCardsProvider();
-
+    
     const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
     
     const userProfile = users.find(u => u._id === id);
     
     const mystyle = {marginRight: '8px'};
     const navigate = useNavigate();
-
-
+    
     if(!userProfile){
         return <p>Loading..</p>
     }

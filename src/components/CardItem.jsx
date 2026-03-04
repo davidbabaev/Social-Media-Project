@@ -29,7 +29,7 @@ export default function CardItem({card}) {
   return (
     <div>
       <div style={{
-          border: 'solid black 1px', 
+          border: 'solid lightgray 1px', 
           padding: '20px', 
           borderRadius: '20px', 
           margin: '20px 0px'

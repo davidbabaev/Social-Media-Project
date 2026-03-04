@@ -5,6 +5,8 @@ import { useAuth } from '../providers/AuthProvider';
 import useUsers from '../hooks/useUsers';
 import useFollowUser from '../hooks/useFollowUser';
 import { useNavigate } from 'react-router-dom';
+import useDebounce from '../hooks/useDebounce';
+import CreateCardForm from '../components/CreateCardForm';
 
 export default function FeedPage() {
 
@@ -14,8 +16,11 @@ export default function FeedPage() {
     const {users} = useUsers();
     const{getFollowingCount, getFollowersCount, toggleFollow, isFollowByMe} = useFollowUser();
     const navigate = useNavigate();
+    const debounceFollowing = useDebounce(user?.following, 3000)
+    const {handleCardRegister, refreshFeed} = useCardsProvider();
+    
 
-    const userFollowing = users.filter(userU => user?.following.includes(userU._id))
+    const userFollowing = users.filter(userU => debounceFollowing?.includes(userU._id))
 
     const {registeredCards} = useCardsProvider();
 
@@ -28,10 +33,12 @@ export default function FeedPage() {
         
     const usersdata = users.filter(userU => somt.includes(userU._id))
         return usersdata
-    }).flat().filter(userU => userU._id !== user._id).filter(userU => !user?.following.includes(userU._id));
+    }).flat().filter(userU => userU._id !== user._id).filter(userU => !debounceFollowing?.includes(userU._id));
     
     const uniqueFriendsOfFriends = 
     [...new Map(friendsOfFriends.map((u => {return [u._id, u]}))).values()]
+
+
     
 
   return (
@@ -86,7 +93,12 @@ export default function FeedPage() {
         </div>
 
         <div style={{padding: '5px', width:"100%", margin: '5px'}}>
-            <p style={{padding: '5px', border: '1px solid lightGray', borderRadius:'10px'}}>Create new card</p>
+            <div style={{padding: '5px', border: '1px solid lightGray', borderRadius:'10px'}}>
+                <CreateCardForm
+                    handleCardRegister={handleCardRegister}
+                    onSuccess = {() => refreshFeed()}
+                />    
+            </div>
             <div style={{padding: '5px'}}>
                 {countedRegisterCards.map((card) => (
                     <CardItem key={card._id} card={card}/>
@@ -129,6 +141,11 @@ export default function FeedPage() {
                             </p>
                             {user?._id !== userF._id && (
                                 <button
+                                style={{
+                                    border: '1px solid lightGray', padding: '5px', 
+                                    borderRadius: '10px', 
+                                    cursor: 'pointer'
+                                }}
                                 onClick={() => toggleFollow(userF._id)}
                                 >{isFollowByMe(userF._id) ? "Unfollow" : "Follow"}</button>
                             )}
