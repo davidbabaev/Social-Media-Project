@@ -1,10 +1,9 @@
 import React from 'react'
 import useUsers from '../../hooks/useUsers'
-import { useAuth } from '../../providers/AuthProvider';
 import { useCardsProvider } from '../../providers/CardsProvider';
 
 
-export default function AdminUsersPannel() {
+export default function AdminUsersPanel() {
 
   const {users, handleDeleteUser} = useUsers();
 

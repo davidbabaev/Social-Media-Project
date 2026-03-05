@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import { AuthProvider } from './providers/AuthProvider'
 import { ThemeProvider } from './providers/ThemeProvider'
 import { CardsProvider } from './providers/CardsProvider'
@@ -19,11 +19,16 @@ import AdminProtectedRoute from './components/AdminProtectedRoute'
 
 
 export default function App(){
+
+  const location = useLocation()
+  
   return(
     <AuthProvider>
       <ThemeProvider>
         <CardsProvider>
-          <NavBar/>
+          {!location.pathname.includes('/admindashboard') && (
+            <NavBar/>
+          )}
             <Routes>
               <Route path='/' element={
                 <ProtectedRoute>

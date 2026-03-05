@@ -1,22 +1,24 @@
 import { Link, Route, Routes } from "react-router-dom";
-import AdminUsersPannel from "./AdminUsersPannel";
-import AdminOverViewPannel from "./AdminOverViewPannel";
+import AdminUsersPanel from "./AdminUsersPanel";
+import AdminOverViewPanel from "./AdminOverViewPanel";
 
 export default function AdminDashboardLayout() {
   const mystyle = {marginRight: '8px'}
 
   return(
     <div>
-      <div>
-        <nav>
-          <Link style={mystyle} to={'/admindashboard/overviewpannel'}>Overview</Link>
-          <Link style={mystyle} to={'/admindashboard/userspannel'}>Users Pannel</Link>
+      <div style={{display: 'flex'}}>
+        <nav style={{display: 'flex', width: '150px' , flexDirection: 'column', backgroundColor: 'lightgray', margin: '10px', padding: '10px', borderRadius: '15px'}}>
+          <Link style={mystyle} to={'/admindashboard/overviewpanel'}>Overview</Link>
+          <Link style={mystyle} to={'/admindashboard/userspanel'}>Users Panel</Link>
+          <Link style={mystyle} to={'/'}>back to Feed 🏠︎</Link>
         </nav>
-
-        <Routes>
-          <Route path="/userspannel" element={<AdminUsersPannel/>}/>
-          <Route path="/overviewpannel" element={<AdminOverViewPannel/>}/>
-        </Routes>
+        <div style={{display: 'flex', flexDirection: 'column', border: '1px solid lightgray', margin: '10px', padding: '10px', borderRadius: '15px'}}>
+          <Routes>
+            <Route path="/userspanel" element={<AdminUsersPanel/>}/>
+            <Route path="/overviewpanel" element={<AdminOverViewPanel/>}/>
+          </Routes>
+        </div>
       </div>
     </div>
   )

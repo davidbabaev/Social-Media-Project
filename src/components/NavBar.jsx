@@ -26,17 +26,17 @@ export default function NavBar() {
         <button onClick={onLogOut}>
             logout
         </button>
-        <nav>
-            <Link style={mystyle} to={'/'}>Feed</Link>
-            <Link style={mystyle} to={'/login'}>login</Link>
-            {user?.isAdmin && (<Link style={mystyle} to={'/admindashboard/overviewpannel'}>Admin Dashboard</Link>)}
-            <Link style={mystyle} to={'/dashboard/myprofile'}>user dashboard</Link>
-            <Link style={mystyle} to={'/registered'}>register</Link>
-            <Link style={mystyle} to={'/allusers'}>all users</Link>
-            <Link style={mystyle} to={'/createnewcard'}>create card</Link>
-            <Link style={mystyle} to={'/allcards'}>all cards</Link>
-            <button onClick={() => navigate('/dashboard/myfavorites')}>Selected</button>
-        </nav>
+            <nav>
+                <Link style={mystyle} to={'/'}>Feed</Link>
+                <Link style={mystyle} to={'/login'}>login</Link>
+                {user?.isAdmin && (<Link style={mystyle} to={`/admindashboard/overviewpanel`}>Admin Dashboard</Link>)}
+                <Link style={mystyle} to={'/dashboard/myprofile'}>user dashboard</Link>
+                <Link style={mystyle} to={'/registered'}>register</Link>
+                <Link style={mystyle} to={'/allusers'}>all users</Link>
+                <Link style={mystyle} to={'/createnewcard'}>create card</Link>
+                <Link style={mystyle} to={'/allcards'}>all cards</Link>
+                <button onClick={() => navigate('/dashboard/myfavorites')}>Selected</button>
+            </nav>
     </div>
   )
 }
