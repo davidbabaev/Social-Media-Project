@@ -106,6 +106,7 @@ export function AuthProvider({children}) {
             }
         }
     }
+
     
   return (
     <UseAuthCheck.Provider 

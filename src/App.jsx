@@ -30,8 +30,8 @@ export default function App(){
                   <FeedPage/>
                 </ProtectedRoute>
               }/>
-              <Route path='/admindashboard' element={
-                <AdminProtectedRoute>
+              <Route path='/admindashboard/*' element={
+                <AdminProtectedRoute> 
                   <AdminDashboardLayout/>
                 </AdminProtectedRoute>
               }/>

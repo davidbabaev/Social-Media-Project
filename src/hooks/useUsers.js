@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllUsers} from "../services/apiService";
+import { deleteUser, getAllUsers} from "../services/apiService";
 
  function useUsers() {
 
@@ -21,11 +21,29 @@ import { getAllUsers} from "../services/apiService";
         }
     }
 
+    const handleDeleteUser = async (userId) => {
+        try{
+            await deleteUser(userId);
+            setUsers(users.filter(user => user._id !== userId))
+
+            return{
+                success: true,
+                message: "User deleted successfully"
+            }
+        }
+        catch(err){
+            return{
+                success: false,
+                message: err.message
+            }
+        }
+    }
+
     useEffect(() => {
         getUsers();
     }, [])
 
-  return {users, loading, getUsers}
+  return {users, loading, getUsers, handleDeleteUser}
 }
 
 export default useUsers;
