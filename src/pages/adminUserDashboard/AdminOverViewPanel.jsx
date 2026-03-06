@@ -3,11 +3,25 @@ import { useCardsProvider } from '../../providers/CardsProvider'
 import useUsers from '../../hooks/useUsers';
 import { useNavigate } from 'react-router-dom';
 
+import { LineChart, Line, ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar ,PieChart, Pie, Cell} from 'recharts';
+
 export default function AdminOverViewPanel() {
 
   const {registeredCards} = useCardsProvider();
   const {users} = useUsers();
   const navigate = useNavigate();
+  const COLORS = [
+    '#0088FE', 
+    '#00C49F', 
+    '#FFBB28', 
+    '#FF8042', 
+    '#8884d8', 
+    '#82ca9d', 
+    '#ff6b6b', 
+    '#ffd93d', 
+    '#6bcb77', 
+    '#4d96ff'
+  ];
 
   const commentsCount = registeredCards.reduce((sum, card) => sum + (card.comments || []).length, 0);
   const likesCount = registeredCards.reduce((sum, card) => sum + (card.likes || []).length, 0);
@@ -17,34 +31,57 @@ export default function AdminOverViewPanel() {
       const usersCards = card.userId === user._id
       return usersCards;
     })
-    return {user: user, cardCount: (maxCardsUser || []).length}
+    return {name: user.name + ' ' + user.lastName, posts: (maxCardsUser || []).length}
   }) 
-
-
+  // look like:
+  // [{user: {...}, cardCount: 3}, {user: {...}, cardCount: 1}]
+  
+  const topTenUsers = usersC.sort((a,b) => b.posts - a.posts).slice(0,10)
+  
   const mostActiveUser = usersC.length > 0
-  ? usersC.reduce((max, current) => current.cardCount > max.cardCount ? current : max)
+  ? usersC.reduce((max, current) => current.posts > max.posts ? current : max)
   : null;
-
+  
   const mostLikesCard = registeredCards.length > 0
   ? registeredCards.reduce((max, current) => current.likes.length > max.likes.length ? current : max)
-  : null
-
-
+  : null;
+  
+  
   const lastFiveUsers = users.sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0,5)
   const lstFiveCards = registeredCards.sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0,5)
 
-
   const countPerCategory = registeredCards.reduce((acc, card) => {
     if(acc[card.category]){
-        acc[card.category] = acc[card.category] + 1
+      acc[card.category] = acc[card.category] + 1
     } else{
-        acc[card.category] = 1
+      acc[card.category] = 1
     }
     return acc
   }, {})
+  // looks like:
+  // { tech: 3, sport: 1, food: 1 }
+  
+  const arrayCountPerCategory = Object.entries(countPerCategory).map((item) => {
+    return {name: item[0], posts: item[1]}
+  });
+  // {[ ["tech": 3], ["sport": 1], ["food": 1] ]}
+  
+  const topTenCategories = arrayCountPerCategory.sort((a,b) => b.posts - a.posts).slice(0,10)
+  
+  const groupUsersRegistarationByMonth = users.reduce((acc, user) => {
+    const userCrestedDate = user.createdAt.slice(0,10);
+    if(acc[userCrestedDate]){
+          acc[userCrestedDate] = acc[userCrestedDate] + 1
+      }
+      else{
+        acc[userCrestedDate] = 1
+      }
+      return acc
+  }, {})
 
-
-
+  const arrayGroupUsersRegistarationByMonth = Object.entries(groupUsersRegistarationByMonth).map((item) => {
+    return{month: item[0], users: item[1]}
+  }).sort((a,b) => new Date(a.month) - new Date(b.month))
 
   return (
     <div>
@@ -66,12 +103,11 @@ export default function AdminOverViewPanel() {
           </div>
 
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-            <h2>{mostActiveUser?.user.name}</h2>
+            <h2>{mostActiveUser?.name}</h2>
             <p>Most Active User</p>
-            <h2>{mostActiveUser?.cardCount}</h2>
+            <h2>{mostActiveUser?.posts}</h2>
             <p>total Posts</p>
           </div>
-
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>{mostLikesCard?.title}</h2>
             <p>Most like card</p>
@@ -169,13 +205,68 @@ export default function AdminOverViewPanel() {
           </div>
           <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
             <h2>Posts by catrgories</h2>
-            {Object.entries(countPerCategory).map(([catName, count], index) => (
-              <p key={index}>{catName} - {count} {count === 1 ? "Post" : "Posts"}</p>
+            {arrayCountPerCategory.map((item, index) => (
+              <p key={index}>{item.name} - {item.posts} {item.posts === 1 ? "Post" : "Posts"}</p>
             ))}
           </div>
       </div>
-    </div>
 
+      <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+        <h2>Top 10 Active Users</h2>
+        <ResponsiveContainer  
+          width="90%" height={300}>
+            <BarChart 
+              responsive
+              data={topTenUsers}
+              margin={{top: 5, right: 30, left: 20, bottom: 5}}
+            >
+              <XAxis dataKey="name" />
+              <YAxis/>
+              <Tooltip />
+              <Bar dataKey="posts" fill="gray" />
+            </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+        <h2>10 Most popular categories</h2>
+        <PieChart  width={700} height={400}>
+              <Pie 
+                data={topTenCategories} 
+                nameKey="name" 
+                dataKey="posts"
+                label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                {topTenCategories.map((entry, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]}/>
+                ))}
+                </Pie>
+              <Tooltip />
+        </PieChart>
+      </div>
+
+    
+      <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+        <h2>Users registration</h2>
+        <ResponsiveContainer  
+          width="90%" height={300}>
+            <LineChart 
+              responsive
+              data={arrayGroupUsersRegistarationByMonth}
+              margin={{top: 5, right: 30, left: 20, bottom: 5}}
+            >
+              <XAxis dataKey="month" />
+              <YAxis/>
+              <Tooltip />
+              <Line dataKey="users" stroke="#8884d8" />
+            </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+
+
+
+
+    </div>
 )
 }
 
