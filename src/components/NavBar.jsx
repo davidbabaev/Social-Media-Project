@@ -28,6 +28,7 @@ export default function NavBar() {
         </button>
             <nav>
                 <Link style={mystyle} to={'/'}>Feed</Link>
+                <Link style={mystyle} to={'/recall'}>Recall</Link>
                 <Link style={mystyle} to={'/login'}>login</Link>
                 {user?.isAdmin && (<Link style={mystyle} to={`/admindashboard/overviewpanel`}>Admin Dashboard</Link>)}
                 <Link style={mystyle} to={'/dashboard/myprofile'}>user dashboard</Link>

@@ -33,6 +33,19 @@ export default function AdminOverViewPanel() {
   const lastFiveUsers = users.sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0,5)
   const lstFiveCards = registeredCards.sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0,5)
 
+
+  const countPerCategory = registeredCards.reduce((acc, card) => {
+    if(acc[card.category]){
+        acc[card.category] = acc[card.category] + 1
+    } else{
+        acc[card.category] = 1
+    }
+    return acc
+  }, {})
+
+
+
+
   return (
     <div>
       <h1>Overview</h1>
@@ -153,10 +166,13 @@ export default function AdminOverViewPanel() {
                 </div>
               )
             })}
-
-
           </div>
-
+          <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
+            <h2>Posts by catrgories</h2>
+            {Object.entries(countPerCategory).map(([catName, count], index) => (
+              <p key={index}>{catName} - {count} {count === 1 ? "Post" : "Posts"}</p>
+            ))}
+          </div>
       </div>
     </div>
 
