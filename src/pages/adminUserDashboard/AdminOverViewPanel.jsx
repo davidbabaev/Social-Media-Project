@@ -230,7 +230,7 @@ export default function AdminOverViewPanel() {
 
       <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
         <h2>10 Most popular categories</h2>
-        <PieChart  width={700} height={400}>
+        <PieChart  width={700} height={400} style={{outline: 'none'}}>
               <Pie 
                 data={topTenCategories} 
                 nameKey="name" 
