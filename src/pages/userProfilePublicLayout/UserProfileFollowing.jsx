@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import useUsers from '../../hooks/useUsers';
 import { useAuth } from '../../providers/AuthProvider';
 import useFollowUser from '../../hooks/useFollowUser';
+import { useCardsProvider } from '../../providers/CardsProvider';
 
 export default function UserProfileFollowing() {
 
@@ -11,6 +12,8 @@ export default function UserProfileFollowing() {
   const {user} = useAuth();
   const {toggleFollow, isFollowByMe} = useFollowUser();
   const navigate = useNavigate();
+  const {refreshFeed} = useCardsProvider();
+  
   
   const currentUserProfile = users.find((userP) => userP._id === id);
 
@@ -45,7 +48,11 @@ export default function UserProfileFollowing() {
           </p>
           {user?._id !== following._id && (
             <button
-              onClick={() => toggleFollow(following._id)}
+              onClick={
+                async () => {
+                  await toggleFollow(following._id)
+                  refreshFeed();
+                }}
             >{isFollowByMe(following._id) ? "Unfollow" : "Follow"}</button>
           )}
         </div>
