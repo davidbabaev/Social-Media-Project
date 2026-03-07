@@ -19,15 +19,17 @@ export default function AdminUsersPanel() {
   const [sortConfig, setSortConfig] = useState({column: '', direction: 'asc'});
   
   const handleSortTable = (column) => {
+    // first click:
+    // reset to asc, new column
     if(column !== sortConfig.column){
       setSortConfig({column: column, direction: 'asc'})
     }
     
+    // second click:
+    // toggle direction
     if(column === sortConfig.column){
       setSortConfig({column:column ,direction: sortConfig.direction === 'asc' ? 'desc' : 'asc'})
     }
-
-    console.log(sortConfig);
   }
   
 
@@ -246,8 +248,26 @@ export default function AdminUsersPanel() {
                 (sortConfig.direction === 'asc' ? '▲': '▼')
                 : '▼'}
               </th>
-              <th onClick={() => handleSortTable('posts')}>Posts</th>
-              <th onClick={() => handleSortTable('followers')}>Followers</th>
+              <th 
+                onClick={() => handleSortTable('posts')} 
+                style={{cursor: 'pointer'}}
+              >
+                {sortConfig.column === 'posts' ? 
+                (sortConfig.direction === 'asc' ? '▲' : '▼')
+                : '▼'
+              }
+                Posts
+              </th>
+              <th 
+                onClick={() => handleSortTable('followers')}
+                style={{cursor: 'pointer'}}
+              >
+                {sortConfig.column === 'followers' ? 
+                  (sortConfig.direction === 'asc' ? '▲' : '▼')
+                  : '▼'
+                }
+                  Followers
+                </th>
               <th>Role</th>
               <th>Remove</th>
             </tr>
@@ -286,7 +306,10 @@ export default function AdminUsersPanel() {
                     <td>{userM.isAdmin ? "Admin" : "User"}</td>
                     <td>
                       {userM._id !== user._id ? (
-                        <button onClick={() => handleDeleteUser(userM._id)}>Delete User</button>
+                        <button onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteUser(userM._id);
+                        }}>Delete User</button>
                       ):(
                         <p>You Admin</p>
                       )}
