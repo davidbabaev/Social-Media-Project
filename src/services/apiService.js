@@ -42,6 +42,8 @@ export const getSingleUser = (id) => httpRequest(`/users/${id}`, 'GET');
 export const updateUser = (id, userData) => httpRequest(`/users/${id}`, 'PUT', userData);
 export const deleteUser = (id) => httpRequest(`/users/${id}`, 'DELETE');
 export const followUnfollowUser = (id) => httpRequest(`/users/${id}/follow`, 'PATCH');
+export const banUser = (id) => httpRequest(`/users/${id}/ban`, 'PATCH');
+export const promoteUser = (id) => httpRequest(`/users/${id}/promote`, 'PATCH');
 
 // Cards Requests
 export const getAllCards = () => httpRequest('/cards', 'GET');

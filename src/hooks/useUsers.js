@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { deleteUser, getAllUsers} from "../services/apiService";
+import { banUser, deleteUser, getAllUsers, promoteUser} from "../services/apiService";
 
  function useUsers() {
 
@@ -39,11 +39,51 @@ import { deleteUser, getAllUsers} from "../services/apiService";
         }
     }
 
+    const handleBanUser = async (userId) => {
+        try{
+            const response = await banUser(userId)
+            setUsers(prev => prev.map((user) => {
+                return user._id === userId ? response : user
+            }))
+
+            return{
+                success: true,
+                message: "User banned succefully"
+            }
+        }
+        catch(err){
+            return{
+                success: false,
+                message: err.message
+            }
+        }
+    }
+
+    const handlePromoteUser = async (userId) => {
+        try{
+            const response = await promoteUser(userId);
+            setUsers(prev => prev.map((user) => {
+                return user._id === userId ? response : user;
+            }))
+
+            return{
+                success: true,
+                message: 'User becam admin successfully'
+            }
+        }
+        catch(err){
+            return{
+                success: false,
+                message: err.message
+            }
+        }
+    }
+
     useEffect(() => {
         getUsers();
     }, [])
 
-  return {users, loading, getUsers, handleDeleteUser}
+  return {users, loading, getUsers, handleDeleteUser, handleBanUser, handlePromoteUser}
 }
 
 export default useUsers;

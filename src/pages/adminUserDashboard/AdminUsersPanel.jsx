@@ -8,7 +8,7 @@ import { useAuth } from '../../providers/AuthProvider';
 
 export default function AdminUsersPanel() {
 
-  const {users, handleDeleteUser, loading} = useUsers();
+  const {users, handleDeleteUser, loading, handleBanUser, handlePromoteUser} = useUsers();
   const {registeredCards} = useCardsProvider();
   const [count, setCount] = useState(10);
   const [search, setSearch] = useState('')
@@ -19,19 +19,13 @@ export default function AdminUsersPanel() {
   const [sortConfig, setSortConfig] = useState({column: '', direction: 'asc'});
   
   const handleSortTable = (column) => {
-    // first click:
-    // reset to asc, new column
     if(column !== sortConfig.column){
       setSortConfig({column: column, direction: 'asc'})
     }
-    
-    // second click:
-    // toggle direction
-    if(column === sortConfig.column){
+    else{
       setSortConfig({column:column ,direction: sortConfig.direction === 'asc' ? 'desc' : 'asc'})
     }
   }
-  
 
   // sorts
   const [ageSort, setAgeSort] = useState('');
@@ -76,7 +70,7 @@ export default function AdminUsersPanel() {
     }
 
     // sorts:
-    result.sort((a,b) => {
+    result = [...result].sort((a,b) => {
         let comparison = 0;
 
         // age sort:
@@ -243,33 +237,36 @@ export default function AdminUsersPanel() {
               <th onClick={() => handleSortTable('joined')} 
                   style={{cursor: 'pointer'}}
                   >
-                Joined
+                  Joined
                 {sortConfig.column === 'joined' ? 
                 (sortConfig.direction === 'asc' ? '▲': '▼')
-                : '▼'}
+                : ' ↕'}
               </th>
               <th 
                 onClick={() => handleSortTable('posts')} 
                 style={{cursor: 'pointer'}}
               >
+                Posts
                 {sortConfig.column === 'posts' ? 
                 (sortConfig.direction === 'asc' ? '▲' : '▼')
-                : '▼'
+                : ' ↕'
               }
-                Posts
               </th>
               <th 
                 onClick={() => handleSortTable('followers')}
                 style={{cursor: 'pointer'}}
               >
+                Followers
                 {sortConfig.column === 'followers' ? 
                   (sortConfig.direction === 'asc' ? '▲' : '▼')
-                  : '▼'
+                  : ' ↕'
                 }
-                  Followers
                 </th>
               <th>Role</th>
+              <th>Status</th>
               <th>Remove</th>
+              <th>Ban</th>
+              <th>Promote</th>
             </tr>
           </thead>
         <tbody>
@@ -304,12 +301,33 @@ export default function AdminUsersPanel() {
                     <td>{userCardsCount}</td>
                     <td>{userFollowersCount}</td>
                     <td>{userM.isAdmin ? "Admin" : "User"}</td>
+                    <td>{userM.isBanned ? "Banned" : "Not Banned"}</td>
                     <td>
                       {userM._id !== user._id ? (
                         <button onClick={(e) => {
                           e.stopPropagation();
                           handleDeleteUser(userM._id);
                         }}>Delete User</button>
+                      ):(
+                        <p>You Admin</p>
+                      )}
+                    </td>
+                    <td>
+                      {userM._id !== user._id ? (
+                        <button onClick={(e) => {
+                          e.stopPropagation();
+                          handleBanUser(userM._id);
+                        }}>{userM.isBanned ? "Unban User" : "Ban User"}</button>
+                      ):(
+                        <p>You Admin</p>
+                      )}
+                    </td>
+                    <td>
+                      {userM._id !== user._id ? (
+                        <button onClick={(e) => {
+                          e.stopPropagation();
+                          handlePromoteUser(userM._id);
+                        }}>{userM.isAdmin ? "Unpromote" : "Promote User"}</button>
                       ):(
                         <p>You Admin</p>
                       )}
