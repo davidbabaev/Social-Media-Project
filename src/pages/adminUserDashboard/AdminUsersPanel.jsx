@@ -4,6 +4,7 @@ import { useCardsProvider } from '../../providers/CardsProvider';
 import useDebounce from '../../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../providers/AuthProvider';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
 
 
 export default function AdminUsersPanel() {
@@ -14,6 +15,11 @@ export default function AdminUsersPanel() {
   const [search, setSearch] = useState('')
   const debounceSearch = useDebounce(search, 2000);
   const {user} = useAuth();
+
+  const [confirmUser, setConfirmUser] = useState(null);
+  const onClose = () => {
+    setIsOpen(false);
+  }
 
   // sort table
   const [sortConfig, setSortConfig] = useState({column: '', direction: 'asc'});
@@ -305,14 +311,10 @@ export default function AdminUsersPanel() {
                     <td>
                       {userM._id !== user._id ? (
                     <button 
-                      onClick={
-                        async(e) => {
-                          e.stopPropagation();
-                          await handleDeleteUser(userM._id);
-                          await getUsers();
-                          await fetchCards();
-                          await refreshFeed();
-                    }}>
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConfirmUser(userM)
+                        }}>
                       Delete User
                     </button>
                       ):(
@@ -344,7 +346,23 @@ export default function AdminUsersPanel() {
               </tbody>
             </table>
         </div>
+              {
+                confirmUser && (
+                  <ConfirmationDialog
+                      userM={confirmUser}
+                      onClose={() => setConfirmUser(null)}
+                      onConfirm={async () => {
+                          await handleDeleteUser(confirmUser._id);
+                          await getUsers();
+                          await fetchCards();
+                          await refreshFeed();
+                          setConfirmUser(null);
+                      }}
+                  />
+                )
+              }
     </div>
+    
         {count < filtred.length ? (<button onClick={() => setCount(count + 10)}>Load More</button>) : (<p>No More Users Found</p>)}
   </div>
   )
