@@ -49,7 +49,7 @@ export default function UserProfileFollowers() {
               onClick={
                 async() => {
                   await toggleFollow(follower._id)
-                  refreshFeed();
+                  await refreshFeed();
               }}
             >{isFollowByMe(follower._id) ? "Unfollow" : "Follow"}</button>
           )}

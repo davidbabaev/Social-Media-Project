@@ -75,7 +75,7 @@ export default function UserProfileLayout() {
       {user?._id !== userProfile._id && (
         <button onClick={async() => {
             await toggleFollow(userProfile._id)
-            refreshFeed();
+            await refreshFeed();
         }}>
             {isFollowByMe(userProfile._id) ? "Unfollow" : "Follow"}
         </button>

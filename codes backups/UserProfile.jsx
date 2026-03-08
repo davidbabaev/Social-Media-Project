@@ -86,7 +86,7 @@ export default function UserProfile() {
             console.log("1 - before toggle");
             await toggleFollow(userProfile._id)
             console.log("2 - after Toggle toggle");
-            refreshFeed();
+            await refreshFeed();
             console.log("3 - after refresh");
         }}>
             {isFollowByMe(userProfile._id) ? "Unfollow" : "Follow"}

@@ -8,8 +8,8 @@ import { useAuth } from '../../providers/AuthProvider';
 
 export default function AdminUsersPanel() {
 
-  const {users, handleDeleteUser, loading, handleBanUser, handlePromoteUser} = useUsers();
-  const {registeredCards} = useCardsProvider();
+  const {users, handleDeleteUser, loading, handleBanUser, handlePromoteUser, getUsers} = useUsers();
+  const {registeredCards, refreshFeed, fetchCards} = useCardsProvider();
   const [count, setCount] = useState(10);
   const [search, setSearch] = useState('')
   const debounceSearch = useDebounce(search, 2000);
@@ -304,10 +304,17 @@ export default function AdminUsersPanel() {
                     <td>{userM.isBanned ? "Banned" : "Not Banned"}</td>
                     <td>
                       {userM._id !== user._id ? (
-                        <button onClick={(e) => {
+                    <button 
+                      onClick={
+                        async(e) => {
                           e.stopPropagation();
-                          handleDeleteUser(userM._id);
-                        }}>Delete User</button>
+                          await handleDeleteUser(userM._id);
+                          await getUsers();
+                          await fetchCards();
+                          await refreshFeed();
+                    }}>
+                      Delete User
+                    </button>
                       ):(
                         <p>You Admin</p>
                       )}

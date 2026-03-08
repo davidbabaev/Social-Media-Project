@@ -148,7 +148,7 @@ export default function FeedPage() {
                                 onClick={
                                     async() => {
                                         await toggleFollow(userF._id)
-                                        refreshFeed();
+                                        await refreshFeed();
                                 }}
                                 >{isFollowByMe(userF._id) ? "Unfollow" : "Follow"}</button>
                             )}

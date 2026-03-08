@@ -10,17 +10,17 @@ const [registeredCards, setRegisteredCards] = useState([]);
 
 const [feedCards, setFeedCards] = useState([]);
 
+const fetchCards = async () => {
+    try{
+        const response = await getAllCards();
+        setRegisteredCards(response);
+    }
+    catch(err){
+        console.log(err.message);
+    }
+}
 // useEffect on mount
 useEffect(() => {
-    const fetchCards = async () => {
-        try{
-            const response = await getAllCards();
-            setRegisteredCards(response);
-        }
-        catch(err){
-            console.log(err.message);
-        }
-    }
     fetchCards();
 }, [])
 
@@ -185,7 +185,8 @@ const handleCardRegister = async (cardData) => {
         handleAddComment, 
         handleRemoveComment, 
         refreshFeed, 
-        feedCards
+        feedCards,
+        fetchCards,
     }}>
         {children}
     </CardsContext.Provider>
