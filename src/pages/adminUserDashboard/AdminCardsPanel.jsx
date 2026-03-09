@@ -20,9 +20,6 @@ export default function AdminCardsPanel() {
 
     const debounceSearchCard = useDebounce(searchCard, 2000);
 
-    // sort cards (newest/ oldest)
-    const [dateSort, setDateSort] = useState('');
-
     // favorite/ like cards
     const [favorites, setFavorites] = useState('')
 
@@ -64,21 +61,61 @@ export default function AdminCardsPanel() {
               result = result.filter(card => card.title.toLowerCase().includes(debounceSearchCard.toLowerCase()))
           }
   
-          if(dateSort !== ''){
-              if(dateSort === 'newest'){
-                  result.sort((a,b) => b.createdAt.localeCompare(a.createdAt))
-              }
-              else if (dateSort === 'oldest'){
-                  result.sort((a,b) => a.createdAt.localeCompare(b.createdAt))   
-              }
-          }
-  
           if(categoryFilter !== ''){
               result = result.filter(card => card.category === categoryFilter)
           }
+
+          result = [...result].sort((a,b) => {
+
+            if(sortConfig.column !== ''){
+              // createdAt
+              if(sortConfig.column === 'createdAt'){
+                if(sortConfig.direction === 'asc'){
+                    return new Date(a.createdAt) - new Date(b.createdAt)
+                  }
+                  else{
+                    return new Date(b.createdAt) - new Date(a.createdAt)
+                }
+              }
+
+              // likes
+              if(sortConfig.column === 'likes'){
+
+                if(sortConfig.direction === 'asc'){
+                  return a.likes.length - b.likes.length
+                }
+                else{
+                  return b.likes.length - a.likes.length
+                }
+              }
+              
+              // category
+              if(sortConfig.column === "categories"){
+                  if(sortConfig.direction === 'asc'){
+                      return (a.category).localeCompare(b.category);
+                    }
+                    else{
+                      return (b.category).localeCompare(a.category);
+                  }
+              }
+  
+              // creator name
+              if(sortConfig.column === "creators"){
+                  const aCreator = users.find(u => u._id === a.userId);
+                  const bCreator = users.find(u => u._id === b.userId);
+
+                  if(sortConfig.direction === 'asc'){
+                      return (aCreator?.name || '').localeCompare(bCreator?.name || '');
+                    }
+                    else{
+                      return (bCreator?.name || '').localeCompare(aCreator?.name || '');
+                  }
+              }
+            }
+          })
   
           return result;
-      }, [creatorId, registeredCards, debounceSearchCard, dateSort, categoryFilter, favorites])
+      }, [creatorId, registeredCards, debounceSearchCard, categoryFilter, favorites, sortConfig, users])
 
 
   
@@ -99,17 +136,6 @@ export default function AdminCardsPanel() {
                 {users.map((user) => (
                     <option key={user._id} value={user._id}>{user?.name}</option>
                 ))}
-            </select>
-        </div>
-
-        <div>
-            <select 
-                value={dateSort}
-                onChange={(e) => setDateSort(e.target.value)}
-            >
-                <option value="">All Dates</option>
-                <option value="newest">Newest first</option>
-                <option value="oldest">Oldest first</option>
             </select>
         </div>
 
@@ -153,19 +179,42 @@ export default function AdminCardsPanel() {
           <thead>
             <tr>
               <th>#Count</th>
-              <th>Creator</th>
-              <th>Thumbnail Image</th>
-              <th>Title</th>
-              <th>Category</th>
-              <th onClick={() => handleSortTable('joined')} 
+              <th
+                onClick={
+                  () => handleSortTable('creators')} 
                   style={{cursor: 'pointer'}}
-                  >
-                  Created Date
-                {sortConfig.column === 'joined' ? 
+              >
+                Creator
+                {sortConfig.column === 'creators' ? 
                 (sortConfig.direction === 'asc' ? '▲': '▼')
                 : ' ↕'}
               </th>
-              <th>Likes</th>
+              <th>Thumbnail Image</th>
+              <th>Title</th>
+              <th onClick={() => handleSortTable('categories')} 
+                  style={{cursor: 'pointer'}}
+                  >
+                  Category
+                {sortConfig.column === 'categories' ? 
+                (sortConfig.direction === 'asc' ? '▲': '▼')
+                : ' ↕'}
+              </th>
+              <th onClick={() => handleSortTable('createdAt')} 
+                  style={{cursor: 'pointer'}}
+                  >
+                  Created Date
+                {sortConfig.column === 'createdAt' ? 
+                (sortConfig.direction === 'asc' ? '▲': '▼')
+                : ' ↕'}
+              </th>
+              <th onClick={() => handleSortTable('likes')} 
+                  style={{cursor: 'pointer'}}
+                  >
+                  Likes
+                {sortConfig.column === 'likes' ? 
+                (sortConfig.direction === 'asc' ? '▲': '▼')
+                : ' ↕'}
+              </th>
               <th>Comments</th>
               <th>Delete</th>
               <th>Ban</th>
