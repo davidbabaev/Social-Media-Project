@@ -13,7 +13,7 @@ export default function UserProfileLayout() {
     const {id} = useParams();
     const{users} = useUsers();
     const {user} = useAuth();
-    const {refreshFeed} = useCardsProvider();
+    const {refreshFeed, registeredCards} = useCardsProvider();
     
     const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
     
@@ -21,6 +21,8 @@ export default function UserProfileLayout() {
     
     const mystyle = {marginRight: '8px'};
     const navigate = useNavigate();
+
+    const postsAmount = registeredCards.filter((card) => card.userId === id).length
     
     if(!userProfile){
         return <p>Loading..</p>
@@ -66,8 +68,13 @@ export default function UserProfileLayout() {
         </div>
 
         <div style={{display:'block', border: '1px solid black', padding: '10px', borderRadius: '10px'}}>
-            <p>following</p>
+            <p>Following</p>
             <p>{getFollowingCount(userProfile._id)}</p>
+        </div>
+
+        <div style={{display:'block', border: '1px solid black', padding: '10px', borderRadius: '10px'}}>
+            <p>Posts</p>
+            <p>{postsAmount}</p>
         </div>
 
         {user?._id === userProfile._id && (<button onClick={() => navigate(`/dashboard/myprofile`)}>Edit Your Profile</button>)}

@@ -17,10 +17,7 @@ export default function AdminUsersPanel() {
   const {user} = useAuth();
 
   const [confirmUser, setConfirmUser] = useState(null);
-  const onClose = () => {
-    setIsOpen(false);
-  }
-
+ 
   // sort table
   const [sortConfig, setSortConfig] = useState({column: '', direction: 'asc'});
   
@@ -45,7 +42,6 @@ export default function AdminUsersPanel() {
   const navigate = useNavigate();
 
   const countries = [...new Set(users.map(user => user.address?.country.toLowerCase()))]
-
 
   const filtred = useMemo(() => {
   
