@@ -9,8 +9,8 @@ import useFavoriteCards from '../../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../../constants/cardsCategories';
 export default function AdminCardsPanel() {
 
-  const {handleDeleteUser, loading, handleBanUser, getUsers} = useUsers();
-  const {registeredCards, refreshFeed, fetchCards} = useCardsProvider();
+  const {loading, getUsers} = useUsers();
+  const {registeredCards, refreshFeed, fetchCards, handleDeleteCard, handleBanCard} = useCardsProvider();
 
   // filter cards by creator
     const [creatorId, setCreatorId] = useState('')
@@ -34,7 +34,7 @@ export default function AdminCardsPanel() {
     const {favoriteCards} = useFavoriteCards();
 
 
-  const [confirmUser, setConfirmUser] = useState(null);
+  const [confirmCard, setConfirmCard] = useState(null);
  
   // sort table
   const [sortConfig, setSortConfig] = useState({column: '', direction: 'asc'});
@@ -215,7 +215,7 @@ export default function AdminCardsPanel() {
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
-                        setConfirmUser(creator)
+                        setConfirmCard(card)
                         }}>
                       Delete Post
                     </button>
@@ -224,29 +224,29 @@ export default function AdminCardsPanel() {
                       {creator?._id !== user._id ? (
                         <button onClick={(e) => {
                           e.stopPropagation();
-                          handleBanUser(creator?._id);
-                        }}>{creator?.isBanned ? "Unban User" : "Ban User"}</button>
+                          handleBanCard(card._id);
+                        }}>{card.isBanned ? "Unban Post" : "Ban Post"}</button>
                       ):(
                         <p>You Admin</p>
                       )}
                     </td>
-                    <td>{creator?.isBanned ? "Banned" : "Not Banned"}</td>
+                    <td>{card.isBanned ? "Banned" : "Not Banned"}</td>
                   </tr>  
               )})}
               </tbody>
             </table>
         </div>
               {
-                confirmUser && (
+                confirmCard && (
                   <ConfirmationDialog
-                      creator={confirmUser}
-                      onClose={() => setConfirmUser(null)}
+                      message={`Delete card: ${confirmCard.title}?`}
+                      onClose={() => setConfirmCard(null)}
                       onConfirm={async () => {
-                          await handleDeleteUser(confirmUser._id);
+                          await handleDeleteCard(confirmCard._id);
                           await getUsers();
                           await fetchCards();
                           await refreshFeed();
-                          setConfirmUser(null);
+                          setConfirmCard(null);
                       }}
                   />
                 )

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function ConfirmationDialog({userM,onClose, onConfirm}) {
+export default function ConfirmationDialog({message, onClose, onConfirm}) {
 
         const styleP = {
         position: 'fixed',
@@ -24,7 +24,7 @@ export default function ConfirmationDialog({userM,onClose, onConfirm}) {
         >
             
                 <div>
-                    <h3>Are you sure you want to do this action on {userM.name} {userM.lastName}?</h3>
+                    <h3>{message}</h3>
                     <button onClick={onConfirm}>Confirm</button>
                     <button onClick={onClose}>Close</button>
                 </div>

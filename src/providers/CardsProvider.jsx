@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { getAllCards, createCard, deleteCard, updateCard, likeUnlikeCard, addComment, removeComment, getFeedCards} from '../services/apiService';
+import { getAllCards, createCard, deleteCard, updateCard, likeUnlikeCard, addComment, removeComment, getFeedCards, banCard} from '../services/apiService';
 
 const CardsContext = createContext();
 
@@ -63,7 +63,6 @@ const handleCardRegister = async (cardData) => {
         }
     }
 }
-
 
     const handleDeleteCard = async (cardId) => {
         try{
@@ -173,7 +172,26 @@ const handleCardRegister = async (cardData) => {
             }
         }
     }
-    
+
+    const handleBanCard = async (cardId) => {
+        try{
+            const response = await banCard(cardId)
+            setRegisteredCards(prev => prev.map((card) => {
+                return card._id === cardId ? response : card 
+            }));
+
+            return{
+                success: true,
+                message: 'Card banned successfully'
+            }
+        }
+        catch(err){
+            return{
+                success: false,
+                message: err.message
+            }
+        }
+    }
     
   return (
     <CardsContext.Provider value={{
@@ -187,6 +205,7 @@ const handleCardRegister = async (cardData) => {
         refreshFeed, 
         feedCards,
         fetchCards,
+        handleBanCard,
     }}>
         {children}
     </CardsContext.Provider>

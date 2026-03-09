@@ -345,7 +345,7 @@ export default function AdminUsersPanel() {
               {
                 confirmUser && (
                   <ConfirmationDialog
-                      userM={confirmUser}
+                      message={`Delete user ${confirmUser.name} ${confirmUser.lastName}?`}
                       onClose={() => setConfirmUser(null)}
                       onConfirm={async () => {
                           await handleDeleteUser(confirmUser._id);
