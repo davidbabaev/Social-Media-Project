@@ -232,7 +232,7 @@ export default function AdminUsersPanel() {
         <table>
           <thead>
             <tr>
-              <th>#count</th>
+              <th>#Count</th>
               <th>Profile</th>
               <th>Name</th>
               <th>Email</th>
