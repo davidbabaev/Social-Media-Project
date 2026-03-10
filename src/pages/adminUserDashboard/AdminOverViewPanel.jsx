@@ -84,6 +84,14 @@ export default function AdminOverViewPanel() {
   }).sort((a,b) => new Date(a.month) - new Date(b.month))
 
 
+  const ageRange = (age) => {
+    if(age >= 18 && age <= 24) return "18-24"
+    if(age >= 25 && age <= 34) return "25-34"
+    if(age >= 35 && age <= 44) return "35-44"
+    if(age >= 45 && age <= 54) return "45-54"
+    if(age >= 55 && age <= 64) return "55-64"
+    if(age > 64) return "65+"
+  }
 
   const countPerGender = users.reduce((acc, user) => {
     if(acc[user.gender]){
@@ -95,16 +103,28 @@ export default function AdminOverViewPanel() {
 
     return acc;
   }, {})
-
   // [Male: 1]
   // [0] - [1]
+
+/*   const genderByAge = users.reduce((acc, user) => {
+    const range = ageRange(user.age)
+
+    // if this range doesn't exist yet, create it
+    if(!acc[range]){
+      acc[range] = {Male: 0, female: 0}
+    }
+
+    // now add 1 to the correct gender inside this range
+    acc[range] 
+
+  }, {}) */
 
   const arrayGroup_countPerGender = Object.entries(countPerGender).map((item) => {
     return {gender: item[0], count: item[1]}
   })
   // [{gender: 'Male', count: 7}, {gender: 'Female', count: 5}]
 
-
+  
 
 
   return (
@@ -277,7 +297,7 @@ export default function AdminOverViewPanel() {
                 dataKey="count"
                 label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}>
                 {arrayGroup_countPerGender.map((entry, index) => (
-                  <Cell key={index} fill={COLORS[index % COLORS.length]}/>
+                  <Cell key={index} fill={entry.gender === 'Male' ? '#E44687' : '#0088FE'}/>
                 ))}
                 </Pie>
               <Tooltip />
