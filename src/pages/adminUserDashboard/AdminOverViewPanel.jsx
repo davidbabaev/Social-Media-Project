@@ -83,6 +83,30 @@ export default function AdminOverViewPanel() {
     return{month: item[0], users: item[1]}
   }).sort((a,b) => new Date(a.month) - new Date(b.month))
 
+
+
+  const countPerGender = users.reduce((acc, user) => {
+    if(acc[user.gender]){
+      acc[user.gender] = acc[user.gender] + 1
+    }
+    else{
+      acc[user.gender] = 1
+    }
+
+    return acc;
+  }, {})
+
+  // [Male: 1]
+  // [0] - [1]
+
+  const arrayGroup_countPerGender = Object.entries(countPerGender).map((item) => {
+    return {gender: item[0], count: item[1]}
+  })
+  // [{gender: 'Male', count: 7}, {gender: 'Female', count: 5}]
+
+
+
+
   return (
     <div>
       <h1>Overview</h1>
@@ -237,6 +261,22 @@ export default function AdminOverViewPanel() {
                 dataKey="posts"
                 label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}>
                 {topTenCategories.map((entry, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]}/>
+                ))}
+                </Pie>
+              <Tooltip />
+        </PieChart>
+      </div>
+
+      <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+        <h2>Gender</h2>
+        <PieChart  width={700} height={400} style={{outline: 'none'}}>
+              <Pie 
+                data={arrayGroup_countPerGender} 
+                nameKey="gender" 
+                dataKey="count"
+                label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                {arrayGroup_countPerGender.map((entry, index) => (
                   <Cell key={index} fill={COLORS[index % COLORS.length]}/>
                 ))}
                 </Pie>
