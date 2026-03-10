@@ -13,7 +13,7 @@ export default function AdminCardsPanel() {
   const {registeredCards, refreshFeed, fetchCards, handleDeleteCard, handleBanCard} = useCardsProvider();
 
   const PAGE_SIZE = 10;
-  const [currentPage, setCurretPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // filter cards by creator
     const [creatorId, setCreatorId] = useState('')
@@ -142,7 +142,7 @@ export default function AdminCardsPanel() {
                 value={creatorId}
                 onChange={(e) => {
                   setCreatorId(e.target.value)
-                  setCurretPage(1)
+                  setCurrentPage(1)
                 }}    
             >
                 <option value="">All Users</option>
@@ -157,7 +157,7 @@ export default function AdminCardsPanel() {
                 value={categoryFilter}
                 onChange={(e) => {
                   setCategoryFilter(e.target.value)
-                  setCurretPage(1)
+                  setCurrentPage(1)
                 }}
             >
                 <option value="">All Categories</option>
@@ -174,7 +174,7 @@ export default function AdminCardsPanel() {
                 value={favorites}
                 onChange={(e) => {
                   setFavorites(e.target.value)
-                  setCurretPage(1)
+                  setCurrentPage(1)
                 }}
             >
                 <option value="">All / Favorites</option>
@@ -188,7 +188,7 @@ export default function AdminCardsPanel() {
                 value={searchCard}
                 onChange={(e) => {
                   setSearchCard(e.target.value)
-                  setCurretPage(1)
+                  setCurrentPage(1)
                 }}
             />
         </div>
@@ -323,18 +323,27 @@ export default function AdminCardsPanel() {
                 )
               }
     </div>
-    <div style={{display: 'flex', width: '100px'}}>
-      {/* <p>paigination</p> */}
+    <div style={{display: 'flex', width: '100%'}}>
+      <button 
+        disabled = {currentPage === 1}
+        style={{margin: '4px', padding: '8px 20px'}}
+        onClick={() => setCurrentPage(currentPage - 1)}
+      >◀ Previous</button>
       {pagesNumbers.map((page) => (
         <div>
             <button 
-              style={{margin: '4px'}} 
+              style={{margin: '4px', padding: '8px 10px'}} 
               disabled = {currentPage === page}
               key={page}
-              onClick={() => setCurretPage(page)}
+              onClick={() => setCurrentPage(page)}
             >{page}</button>
         </div>
       ))}
+      <button 
+        disabled = {currentPage === totalPages}
+        style={{margin: '4px', padding: '8px 20px'}}
+        onClick={() => setCurrentPage(currentPage + 1)}
+      >Next ▶</button>
     </div>
   </div>
   )

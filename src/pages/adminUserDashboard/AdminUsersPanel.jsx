@@ -11,10 +11,12 @@ export default function AdminUsersPanel() {
 
   const {users, handleDeleteUser, loading, handleBanUser, handlePromoteUser, getUsers} = useUsers();
   const {registeredCards, refreshFeed, fetchCards} = useCardsProvider();
-  const [count, setCount] = useState(10);
   const [search, setSearch] = useState('')
   const debounceSearch = useDebounce(search, 2000);
   const {user} = useAuth();
+
+  const PAGE_SIZE = 10;
+  const [currentPage, setCurrentPage] = useState(1)
 
   const [confirmUser, setConfirmUser] = useState(null);
  
@@ -130,11 +132,19 @@ export default function AdminUsersPanel() {
         return comparison;
     });
 
+    
     return result;
-}, [debounceSearch, users, ageSort, nameSort, genderFilter, countryFilter, roleFilter,sortConfig])
+  }, [debounceSearch, users, ageSort, nameSort, genderFilter, countryFilter, roleFilter,sortConfig])
+  
+  
+  const totalPages = Math.ceil(filtred.length / PAGE_SIZE);
 
+  const numbersArray = (num) => {
+    return Array.from({length: num}, (_, i) => i + 1);
+  }
+  const pagesNumbers = numbersArray(totalPages)
 
-  const visibleUsers = filtred.slice(0, count)
+  const sliced = filtred.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   
   if(loading){
       return <p>Loading...</p>
@@ -148,7 +158,10 @@ export default function AdminUsersPanel() {
             <input 
                 type="text" 
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value)
+                  setCurrentPage(1)
+                }}
             />
             </div>
             <select 
@@ -160,7 +173,10 @@ export default function AdminUsersPanel() {
                   padding: '8px',
               }}
               value={ageSort} 
-              onChange={(e) => setAgeSort(e.target.value)}>
+              onChange={(e) => {
+                setAgeSort(e.target.value)
+                setCurrentPage(1)  
+              }}>
                   <option value="">All Ages</option>
                   <option value="low">Low → High</option>
                   <option value="high">High → Low</option>
@@ -175,7 +191,10 @@ export default function AdminUsersPanel() {
                   padding: '8px',
               }}
               value={nameSort} 
-              onChange={(e) => setNameSort(e.target.value)}>
+              onChange={(e) => {
+                setNameSort(e.target.value)
+                setCurrentPage(1)  
+              }}>
                   <option value="">A-Z Default</option>
                   <option value="az">A → Z</option>
                   <option value="za">Z → A</option>
@@ -189,7 +208,10 @@ export default function AdminUsersPanel() {
                   padding: '8px',
               }}
               value={genderFilter} 
-              onChange={(e) => setGenderFilter(e.target.value)}>
+              onChange={(e) => {
+                setGenderFilter(e.target.value)
+                setCurrentPage(1)  
+              }}>
                   <option value="">All Genders</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -203,7 +225,10 @@ export default function AdminUsersPanel() {
                   padding: '8px',
               }}
               value={roleFilter} 
-              onChange={(e) => setRoleFilter(e.target.value)}>
+              onChange={(e) => {
+                setRoleFilter(e.target.value)
+                setCurrentPage(1)  
+              }}>
                   <option value="">All Roles</option>
                   <option value="admin">Admin</option>
                   <option value="user">User</option>
@@ -217,7 +242,10 @@ export default function AdminUsersPanel() {
                   padding: '8px',
               }}
               value={countryFilter} 
-              onChange={(e) => setCountryFilter(e.target.value)}>
+              onChange={(e) => {
+                setCountryFilter(e.target.value)
+                setCurrentPage(1)  
+              }}>
                   <option value="">All countries</option>
                   {countries.map((c) => (
                       <option key={c} value={c}>{c}</option>
@@ -273,7 +301,7 @@ export default function AdminUsersPanel() {
           </thead>
         <tbody>
 
-        {visibleUsers.map((userM, indexM) => {
+        {sliced.map((userM, indexM) => {
           const userCardsCount = registeredCards.filter((card) => {
             return card.userId === userM._id
           }).length;
@@ -286,7 +314,7 @@ export default function AdminUsersPanel() {
                   <tr 
                     key={userM._id} 
                     onClick={() => navigate(`/profiledashboard/${userM._id}/profilemain`)}>
-                    <td>{indexM + 1}</td>
+                    <td>{indexM + (currentPage - 1) * PAGE_SIZE + 1}</td>
                     <td>
                       <img src={userM.profilePicture} style={{
                           width: '40px',
@@ -359,7 +387,28 @@ export default function AdminUsersPanel() {
               }
     </div>
     
-        {count < filtred.length ? (<button onClick={() => setCount(count + 10)}>Load More</button>) : (<p>No More Users Found</p>)}
+    <div>
+      <button 
+        disabled = {currentPage === 1}
+        style={{margin: '4px', padding: '8px 20px'}}
+        onClick={() => setCurrentPage(currentPage - 1)}
+      >◀ Previous</button>
+      {pagesNumbers.map((page) => (
+        <button 
+          style={{margin: '4px', padding: '8px 10px'}}
+          key={page}
+          onClick={() => setCurrentPage(page)}
+          disabled = {currentPage === page}
+        >
+          {page}
+        </button>
+      ))}
+      <button 
+        disabled = {currentPage === totalPages}
+        style={{margin: '4px', padding: '8px 20px'}}
+        onClick={() => setCurrentPage(currentPage + 1)}
+      >Next ▶</button>
+    </div>
   </div>
   )
 }
