@@ -12,6 +12,9 @@ export default function AdminCardsPanel() {
   const {loading, getUsers} = useUsers();
   const {registeredCards, refreshFeed, fetchCards, handleDeleteCard, handleBanCard} = useCardsProvider();
 
+  const PAGE_SIZE = 10;
+  const [currentPage, setCurretPage] = useState(1);
+
   // filter cards by creator
     const [creatorId, setCreatorId] = useState('')
 
@@ -49,75 +52,82 @@ export default function AdminCardsPanel() {
 
   const filteredCards = useMemo(() => {
   
-          // Step 1: Choose starting data based on favorites filter:
-          let result = 
-          favorites === 'myFavorites' ? [...favoriteCards] : [...registeredCards];
-          
-          if(creatorId !== ''){
-              result = result.filter(card => card.userId === creatorId)
-          }
-  
-          if(debounceSearchCard !== ''){
-              result = result.filter(card => card.title.toLowerCase().includes(debounceSearchCard.toLowerCase()))
-          }
-  
-          if(categoryFilter !== ''){
-              result = result.filter(card => card.category === categoryFilter)
-          }
+    // Step 1: Choose starting data based on favorites filter:
+    let result = 
+    favorites === 'myFavorites' ? [...favoriteCards] : [...registeredCards];
+    
+    if(creatorId !== ''){
+        result = result.filter(card => card.userId === creatorId)
+    }
 
-          result = [...result].sort((a,b) => {
+    if(debounceSearchCard !== ''){
+        result = result.filter(card => card.title.toLowerCase().includes(debounceSearchCard.toLowerCase()))
+    }
 
-            if(sortConfig.column !== ''){
-              // createdAt
-              if(sortConfig.column === 'createdAt'){
-                if(sortConfig.direction === 'asc'){
-                    return new Date(a.createdAt) - new Date(b.createdAt)
-                  }
-                  else{
-                    return new Date(b.createdAt) - new Date(a.createdAt)
-                }
-              }
+    if(categoryFilter !== ''){
+        result = result.filter(card => card.category === categoryFilter)
+    }
 
-              // likes
-              if(sortConfig.column === 'likes'){
+    result = [...result].sort((a,b) => {
 
-                if(sortConfig.direction === 'asc'){
-                  return a.likes.length - b.likes.length
-                }
-                else{
-                  return b.likes.length - a.likes.length
-                }
-              }
-              
-              // category
-              if(sortConfig.column === "categories"){
-                  if(sortConfig.direction === 'asc'){
-                      return (a.category).localeCompare(b.category);
-                    }
-                    else{
-                      return (b.category).localeCompare(a.category);
-                  }
-              }
-  
-              // creator name
-              if(sortConfig.column === "creators"){
-                  const aCreator = users.find(u => u._id === a.userId);
-                  const bCreator = users.find(u => u._id === b.userId);
-
-                  if(sortConfig.direction === 'asc'){
-                      return (aCreator?.name || '').localeCompare(bCreator?.name || '');
-                    }
-                    else{
-                      return (bCreator?.name || '').localeCompare(aCreator?.name || '');
-                  }
-              }
+      if(sortConfig.column !== ''){
+        // createdAt
+        if(sortConfig.column === 'createdAt'){
+          if(sortConfig.direction === 'asc'){
+              return new Date(a.createdAt) - new Date(b.createdAt)
             }
-          })
+            else{
+              return new Date(b.createdAt) - new Date(a.createdAt)
+          }
+        }
+
+        // likes
+        if(sortConfig.column === 'likes'){
+
+          if(sortConfig.direction === 'asc'){
+            return a.likes.length - b.likes.length
+          }
+          else{
+            return b.likes.length - a.likes.length
+          }
+        }
+        
+        // category
+        if(sortConfig.column === "categories"){
+            if(sortConfig.direction === 'asc'){
+                return (a.category).localeCompare(b.category);
+              }
+              else{
+                return (b.category).localeCompare(a.category);
+            }
+        }
+
+        // creator name
+        if(sortConfig.column === "creators"){
+            const aCreator = users.find(u => u._id === a.userId);
+            const bCreator = users.find(u => u._id === b.userId);
+
+            if(sortConfig.direction === 'asc'){
+                return (aCreator?.name || '').localeCompare(bCreator?.name || '');
+              }
+              else{
+                return (bCreator?.name || '').localeCompare(aCreator?.name || '');
+            }
+        }
+      }
+    })
   
-          return result;
-      }, [creatorId, registeredCards, debounceSearchCard, categoryFilter, favorites, sortConfig, users])
+      return result;
+  }, [creatorId, registeredCards, debounceSearchCard, categoryFilter, favorites, sortConfig, users])
 
+  const totalPages = Math.ceil(filteredCards.length / PAGE_SIZE);
 
+  const numbersArray = (num) => {
+    return Array.from({length: num}, (_, i) => i + 1);
+  }
+  const pagesNumbers = numbersArray(totalPages) // [1,2,3]
+
+  const sliced = filteredCards.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   
   if(loading){
       return <p>Loading...</p>
@@ -130,7 +140,10 @@ export default function AdminCardsPanel() {
         <div>
             <select 
                 value={creatorId}
-                onChange={(e) => setCreatorId(e.target.value)}    
+                onChange={(e) => {
+                  setCreatorId(e.target.value)
+                  setCurretPage(1)
+                }}    
             >
                 <option value="">All Users</option>
                 {users.map((user) => (
@@ -142,7 +155,10 @@ export default function AdminCardsPanel() {
         <div>
             <select
                 value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
+                onChange={(e) => {
+                  setCategoryFilter(e.target.value)
+                  setCurretPage(1)
+                }}
             >
                 <option value="">All Categories</option>
                 {CARD_CATEGORIES.map((category, index) => (
@@ -156,7 +172,10 @@ export default function AdminCardsPanel() {
         <div>
             <select 
                 value={favorites}
-                onChange={(e) => setFavorites(e.target.value)}
+                onChange={(e) => {
+                  setFavorites(e.target.value)
+                  setCurretPage(1)
+                }}
             >
                 <option value="">All / Favorites</option>
                 <option value="myFavorites">My Favorites Cards</option>
@@ -167,7 +186,10 @@ export default function AdminCardsPanel() {
             <input 
                 type="text" 
                 value={searchCard}
-                onChange={(e) => setSearchCard(e.target.value)}
+                onChange={(e) => {
+                  setSearchCard(e.target.value)
+                  setCurretPage(1)
+                }}
             />
         </div>
         
@@ -223,7 +245,7 @@ export default function AdminCardsPanel() {
           </thead>
         <tbody>
 
-        {filteredCards.map((card, indexM) => {
+        {sliced.map((card, indexM) => {
           
           const creator = users.find(user => user._id === card.userId);
           
@@ -231,7 +253,7 @@ export default function AdminCardsPanel() {
                   <tr 
                     key={card._id} 
                     onClick={() => navigate(`/carddetails/${card._id}`)}>
-                    <td>{indexM + 1}</td>
+                    <td>{indexM + (currentPage - 1) * PAGE_SIZE + 1}</td>
                       <td><img
                       src={creator?.profilePicture} style={{
                             width: '40px',
@@ -300,6 +322,19 @@ export default function AdminCardsPanel() {
                   />
                 )
               }
+    </div>
+    <div style={{display: 'flex', width: '100px'}}>
+      {/* <p>paigination</p> */}
+      {pagesNumbers.map((page) => (
+        <div>
+            <button 
+              style={{margin: '4px'}} 
+              disabled = {currentPage === page}
+              key={page}
+              onClick={() => setCurretPage(page)}
+            >{page}</button>
+        </div>
+      ))}
     </div>
   </div>
   )
