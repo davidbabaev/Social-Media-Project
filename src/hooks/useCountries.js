@@ -8,15 +8,21 @@ function useCountries() {
     const fetchCountriesList = async () => {
         setApiCountriesListLoading('loading')
         try{
-            const response = await fetch('https://restcountries.com/v3.1/all?fields=name')
+            const response = await fetch('https://restcountries.com/v3.1/all?fields=name,cca2,flags')
             const data = await response.json();
 
             const countryName = data
-                .map(country => country.name.common)
-                .sort((a,b) => a.localeCompare(b));
+                .map(country => 
+                    ({
+                        name: country.name.common, 
+                        flag: country.flags.png, 
+                        code: country.cca2
+                    })
+                )
+                .sort((a,b) => a.name.localeCompare(b.name));
 
             setApiCountriesList(countryName)
-            localStorage.setItem('apiCountriesList', JSON.stringify(countryName))
+            localStorage.setItem('apiCountriesListV2', JSON.stringify(countryName))
 
             console.log(countryName);
         }
@@ -26,7 +32,7 @@ function useCountries() {
     }
 
     useEffect(() => {
-        const saved = JSON.parse(localStorage.getItem('apiCountriesList'))
+        const saved = JSON.parse(localStorage.getItem('apiCountriesListV2'))
 
         if(saved && saved.length > 0){
             setApiCountriesList(saved)

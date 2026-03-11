@@ -152,7 +152,7 @@ export default function RegisteredPage() {
                 >
                     <option value="">all countries</option>
                     {apiCountriesList.map((country) => (
-                        <option key={country} value={country}>{country}</option>
+                        <option key={country.code} value={country.name}>{country.name}</option>
                     ))}
                 </select>
             </div>

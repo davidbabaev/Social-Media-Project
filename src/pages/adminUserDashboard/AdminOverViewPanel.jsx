@@ -4,10 +4,12 @@ import useUsers from '../../hooks/useUsers';
 import { useNavigate } from 'react-router-dom';
 
 
-import { LineChart, Line, ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar ,PieChart, Pie, Cell, CartesianGrid} from 'recharts';
+import { LineChart, Line, ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar ,PieChart, Pie, Cell, CartesianGrid, Legend} from 'recharts';
+import useCountries from '../../hooks/useCountries';
 
 export default function AdminOverViewPanel() {
 
+  const {apiCountriesList} = useCountries(); 
   const {registeredCards} = useCardsProvider();
   const {users} = useUsers();
   const navigate = useNavigate();
@@ -131,6 +133,28 @@ export default function AdminOverViewPanel() {
   // item 0 -> the key
   // item 1 -> the value
 
+
+  const countCountriesPerUsers = users.reduce((acc, user) => {
+    if(acc[user.address.country]){
+      acc[user.address.country] = acc[user.address.country] + 1;
+    }
+    else{
+      acc[user.address.country] = 1;
+    }
+    return acc;
+  },{})
+
+  const group_countCountriesPerUsers = 
+  Object.entries(countCountriesPerUsers).map((item) => {
+    const foundCountry = apiCountriesList.find(f => f.name === item[0])
+
+    return {
+      country: item[0], 
+      count: item[1],
+      percent: (item[1] / users.length * 100).toFixed(0),
+      flag: foundCountry?.flag
+    }
+  }).sort((a,b) => b.count - a.count)
 
   return (
     <div>
@@ -294,7 +318,7 @@ export default function AdminOverViewPanel() {
       </div>
 
       <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-        <h2>Gender</h2>
+        <h2>Gender & Ages Analytics</h2>
         <div>
           <PieChart  width={700} height={400} style={{outline: 'none'}}>
                 <Pie 
@@ -320,6 +344,7 @@ export default function AdminOverViewPanel() {
                   bottom: 5,
                 }}
               >
+                <Legend />
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="ages" niceTicks="snap125" />
                 <YAxis niceTicks="snap125" />
@@ -349,9 +374,39 @@ export default function AdminOverViewPanel() {
         </ResponsiveContainer>
       </div>
 
-
-
-
+      <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+        <h2>Countries</h2>
+        {group_countCountriesPerUsers.map((item, index) => (
+          <div key={index} style={{display: 'flex'}}>
+            <p style={{margin: '10px 0px'}}>{item.country}</p>
+            <img 
+              style={{
+                width: '40px', 
+                height: '25px', 
+                borderRadius: '5px', 
+                objectFit:'cover',
+                margin: '10px'
+              }} 
+              src={item.flag} 
+            />
+            <div 
+              style={{
+                backgroundColor: 'lightgray', 
+                width: '100%',
+                height: '20%', 
+                borderRadius: '5px',
+                margin: '10px 0px'
+              }}
+            >
+              <div 
+                style={{backgroundColor: '#00C49F', width:`${item.percent}%`, borderRadius: '5px'}}>
+                <p style={{color: 'white',margin: '0px', minWidth: '40px', padding: '10px'}}>{item.percent}%</p>
+              </div>
+            </div>
+            <p style={{margin: '10px'}}>{item.count} {item.count < 2 ? "user" : "users"}</p>
+          </div>
+        ))}
+      </div>
 
     </div>
 )

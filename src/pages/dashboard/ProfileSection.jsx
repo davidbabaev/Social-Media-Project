@@ -127,7 +127,7 @@ return (
             >
                 <option value="">All</option>
                 {apiCountriesList.map((country) => (
-                    <option key={country} value={country}>{country}</option>
+                    <option key={country.code} value={country.name}>{country.name}</option>
                 ))}
             </select>
             </div>
