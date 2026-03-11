@@ -5,12 +5,14 @@ import useDebounce from '../../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../providers/AuthProvider';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
+import useCountries from '../../hooks/useCountries';
 
 
 export default function AdminUsersPanel() {
 
   const {users, handleDeleteUser, loading, handleBanUser, handlePromoteUser, getUsers} = useUsers();
   const {registeredCards, refreshFeed, fetchCards} = useCardsProvider();
+  const {apiCountriesList} = useCountries(); 
   const [search, setSearch] = useState('')
   const debounceSearch = useDebounce(search, 2000);
   const {user} = useAuth();
@@ -264,6 +266,7 @@ export default function AdminUsersPanel() {
               <th>Profile</th>
               <th>Name</th>
               <th>Email</th>
+              <th>country</th>
               <th onClick={() => handleSortTable('joined')} 
                   style={{cursor: 'pointer'}}
                   >
@@ -309,6 +312,8 @@ export default function AdminUsersPanel() {
           const userFollowersCount = users.filter((userF) => {
             return userF.following.includes(userM._id)
           }).length;
+
+          const userFlag = apiCountriesList.find(f => f.name === userM.address.country)
           
           return(
                   <tr 
@@ -327,6 +332,17 @@ export default function AdminUsersPanel() {
                     </td>
                     <td>{userM.name} {userM.lastName}</td>
                     <td>{userM.email}</td>
+                    <td><img 
+                      style={{
+                          width: '35px',
+                          height: '35px',
+                          borderRadius: '50%',
+                          border: '2px, solid, white',
+                          objectFit: 'cover',
+                          cursor: 'pointer'
+                      }}
+                      src={userFlag.flag}
+                    /></td>
                     <td>{userM.createdAt.split("T")[0]}</td>
                     <td>{userCardsCount}</td>
                     <td>{userFollowersCount}</td>

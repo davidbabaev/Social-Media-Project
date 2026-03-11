@@ -51,7 +51,7 @@ export default function AdminOverViewPanel() {
   
   
   const lastFiveUsers = users.sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0,5)
-  const lstFiveCards = registeredCards.sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0,5)
+  const lastFiveCards = registeredCards.sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0,5)
 
   const countPerCategory = registeredCards.reduce((acc, card) => {
     if(acc[card.category]){
@@ -156,6 +156,19 @@ export default function AdminOverViewPanel() {
     }
   }).sort((a,b) => b.count - a.count)
 
+  const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).toFixed(1);
+
+
+  const topFiveCards = [...registeredCards]
+
+  .sort((a,b) => {
+      const aEng = a.likes.length + a.comments.length
+      const bEng = b.likes.length + b.comments.length
+      return bEng - aEng;
+  }).slice(0,5)
+
+
+
   return (
     <div>
       <h1>Overview</h1>
@@ -194,6 +207,76 @@ export default function AdminOverViewPanel() {
           </div>
           
       </div>
+      <div style={{display: 'flex'}}>
+        <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
+              <h2>{avgEngagement}</h2>
+              <p>Posts Avg. Engagement</p>
+        </div>
+
+          <div style={{width: "60%",border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+            <h2>Top 5 cards</h2>
+            {topFiveCards.map((card) => {
+              const cardCreator = users.find(u => u._id === card.userId)
+
+              return(
+                <div 
+                  key={card._id}
+                  style={{display:'flex', gap: '10px', alignItems: 'center', marginBottom: '15px'}}  
+                >
+                  <img 
+                    src={card.image}
+                    style={{width: '200px', height: '120px',borderRadius: '10px', objectFit: 'cover', cursor: 'pointer'}}
+                    onClick={() => navigate(`/carddetails/${card._id}`)}
+                  />
+                  <div>
+                      <div style={{display:'flex'}}>
+                        <img style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '50%',
+                          border: '2px, solid, white',
+                          objectFit: 'cover',
+                          cursor: 'pointer'
+                        }} 
+                        src={cardCreator?.profilePicture}
+                        onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
+                        />
+
+                        <div style={{display: 'flex', flexDirection:'column'}}>
+                          <p 
+                            style={{margin: '5px 0px', cursor: 'pointer'}}
+                            onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
+                            >{cardCreator?.name} {cardCreator?.lastName}  
+                          </p>
+                          <p style={{color: 'gray', fontSize:'12px', margin: 0}}>{card.createdAt.split("T")[0]}</p>
+                        </div>
+                      </div>
+                      <p 
+                        style={{fontWeight: 'bold', margin: 0, cursor: 'pointer'}}
+                        onClick={() => navigate(`/carddetails/${card._id}`)}
+                        >{card.title}</p>
+                      <p 
+                        onClick={() => navigate(`/carddetails/${card._id}`)}
+                        style={{
+                          cursor: 'pointer',
+                          margin: '5px 0px',
+                          margin: 0,
+                          whiteSpace: 'nowrap',        // prevent text from wrapping
+                          overflow: 'hidden',          // hide overflow
+                          textOverflow: 'ellipsis',    // show "..." at the end
+                          maxWidth: '200px'
+                        }}>{card.content}</p>
+                      <p>
+                        {card.comments.length + card.likes.length} 
+                         {(card.comments + card.likes).length < 2 ? " Interactions" : " Interaction"}
+                      </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+      </div>
       <br />
 
       <div style={{display: 'flex', gap:'15px'}}>
@@ -220,7 +303,7 @@ export default function AdminOverViewPanel() {
 
           <div style={{width: "40%",border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>Last 5 created posts</h2>
-            {lstFiveCards.map((cardF) => {
+            {lastFiveCards.map((cardF) => {
               const cardCreator = users.find(u => u._id === cardF.userId)
 
               return(
