@@ -3,7 +3,8 @@ import { useCardsProvider } from '../../providers/CardsProvider'
 import useUsers from '../../hooks/useUsers';
 import { useNavigate } from 'react-router-dom';
 
-import { LineChart, Line, ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar ,PieChart, Pie, Cell} from 'recharts';
+
+import { LineChart, Line, ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar ,PieChart, Pie, Cell, CartesianGrid} from 'recharts';
 
 export default function AdminOverViewPanel() {
 
@@ -105,26 +106,30 @@ export default function AdminOverViewPanel() {
   }, {})
   // [Male: 1]
   // [0] - [1]
-
-/*   const genderByAge = users.reduce((acc, user) => {
-    const range = ageRange(user.age)
-
-    // if this range doesn't exist yet, create it
-    if(!acc[range]){
-      acc[range] = {Male: 0, female: 0}
-    }
-
-    // now add 1 to the correct gender inside this range
-    acc[range] 
-
-  }, {}) */
-
   const arrayGroup_countPerGender = Object.entries(countPerGender).map((item) => {
     return {gender: item[0], count: item[1]}
   })
-  // [{gender: 'Male', count: 7}, {gender: 'Female', count: 5}]
 
-  
+  const genderByAge = users.reduce((acc, user) => {
+    const range = ageRange(user.age); // "25-34"
+
+    if(!acc[range]){
+      acc[range] = {Male: 0, Female: 0}
+    }
+    acc[range][user.gender] = acc[range][user.gender] + 1
+    return acc;
+  }, {}) 
+  // [
+  // {ages:'18-24', Male: 2, Female: 1}
+  // {ages:'25-34', Male: 0, Female: 1}
+  // ]
+
+  const group_genderByAge = Object.entries(genderByAge).map((item) => {
+    return { ages: item[0], ...item[1]}
+  }).sort((a,b) => a.ages[0] - b.ages[0])
+
+  // item 0 -> the key
+  // item 1 -> the value
 
 
   return (
@@ -290,18 +295,40 @@ export default function AdminOverViewPanel() {
 
       <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
         <h2>Gender</h2>
-        <PieChart  width={700} height={400} style={{outline: 'none'}}>
-              <Pie 
-                data={arrayGroup_countPerGender} 
-                nameKey="gender" 
-                dataKey="count"
-                label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                {arrayGroup_countPerGender.map((entry, index) => (
-                  <Cell key={index} fill={entry.gender === 'Male' ? '#E44687' : '#0088FE'}/>
-                ))}
-                </Pie>
-              <Tooltip />
-        </PieChart>
+        <div>
+          <PieChart  width={700} height={400} style={{outline: 'none'}}>
+                <Pie 
+                  data={arrayGroup_countPerGender} 
+                  nameKey="gender" 
+                  dataKey="count"
+                  label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                  {arrayGroup_countPerGender.map((entry, index) => (
+                    <Cell key={index} fill={entry.gender === 'Male' ? '#E44687' : '#0088FE'}/>
+                  ))}
+                  </Pie>
+                <Tooltip />
+          </PieChart>
+        </div>
+        <div>
+          <ResponsiveContainer width="90%" height={400}>
+              <BarChart
+                data={group_genderByAge}
+                margin={{
+                  top: 20,
+                  right: 0,
+                  left: 0,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="ages" niceTicks="snap125" />
+                <YAxis niceTicks="snap125" />
+                <Tooltip />
+                <Bar dataKey="Male" stackId="a" fill="#0088FE" background />
+                <Bar dataKey="Female" stackId="a" fill="#E44687" background />
+             </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
     
