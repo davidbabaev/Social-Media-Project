@@ -19,7 +19,7 @@ export default function AdminOverViewPanel() {
     '#FFBB28', 
     '#FF8042', 
     '#8884d8', 
-    '#82ca9d', 
+    '#6BCB77', 
     '#ff6b6b', 
     '#ffd93d', 
     '#6bcb77', 
@@ -241,6 +241,43 @@ export default function AdminOverViewPanel() {
   const weekLoginGrowth = (weeklyActiveUsersCount - moreThenSevenDaysCount) / moreThenSevenDaysCount * 100
 
 
+  const retentionUsers = newRegisteredUsers_LastWeek.filter((user) => {
+    return WeeklyActiveUsers.some(userS => userS._id === user._id)
+  })
+
+  const retentionUsersCount = retentionUsers.length;
+
+  const retention = 
+  newRegisteredUsers_LastWeek_count === 0 ? 0 :
+  (retentionUsersCount / newRegisteredUsers_LastWeek_count) * 100
+
+
+
+  const thertyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+  const dateThertyDays = date.getTime() - thertyDaysInMs;
+  
+  const loggedInTheryDays = users.filter((user) => {
+    const userDate = new Date(user.lastLoginAt).getTime();
+
+    const ThertyDays = userDate > dateThertyDays
+    return ThertyDays;
+  }) 
+
+    const groupUsersLoginActivity = loggedInTheryDays.reduce((acc, user) => {
+    const userLoginDate = user.lastLoginAt.slice(0,10);
+    if(acc[userLoginDate]){
+          acc[userLoginDate] = acc[userLoginDate] + 1
+      }
+      else{
+        acc[userLoginDate] = 1
+      }
+      return acc
+  }, {})
+
+  const arrayGroupUsersLoginActivity = 
+  Object.entries(groupUsersLoginActivity).map((item) => {
+    return{day: item[0], users: item[1]}
+  }).sort((a,b) => new Date(a.day) - new Date(b.day))
 
   return (
     <div>
@@ -294,13 +331,13 @@ export default function AdminOverViewPanel() {
               Registered This Week
             </p>
             <p
-              style={{color: newRegisteredUsers_ThisWeek_count > 0 ? 'green' : 'red'}}
+              style={{color: newRegisteredUsers_ThisWeek_count > 0 ? '#6BCB77' : '#FF6B6B'}}
             >
               {newRegisteredUsers_ThisWeek_count > newRegisteredUsers_LastWeek_count ? '+' : ''}
               {newRegisteredUsers_ThisWeek_count - newRegisteredUsers_LastWeek_count}
               VS previous week
             </p>
-            <p style={{color: registeredGrowthRate > 0 ? 'green' : 'red'}}>
+            <p style={{color: registeredGrowthRate > 0 ? '#6BCB77' : '#FF6B6B'}}>
               {registeredGrowthRate > 0 && '+'}
               {registeredGrowthRate.toFixed(1)}
               % Than Last Week
@@ -309,25 +346,55 @@ export default function AdminOverViewPanel() {
 
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>{weeklyActiveUsersCount}</h2>
-            <p>Logged In Last Week</p>
+            <p>Logged In this Week</p>
             <p
-              style={{color: weeklyActiveUsersCount > moreThenSevenDaysCount ? 'green' : 'red'}}
+              style={{color: weeklyActiveUsersCount > moreThenSevenDaysCount ? '#6BCB77' : '#FF6B6B'}}
             >
               {weeklyActiveUsersCount > moreThenSevenDaysCount ? "+" : "-"}
               {weeklyActiveUsersCount - moreThenSevenDaysCount}
                VS Previous Week
             </p>
             <p 
-              style={{color: weekLoginGrowth > 0 ? 'green' : 'red'}}>
+              style={{color: weekLoginGrowth > 0 ? '#6BCB77' : '#FF6B6B'}}>
               {weekLoginGrowth > 0 && '+'}
               {weekLoginGrowth.toFixed(1)}
               % Than Last Week
             </p>
           </div>
 
+          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+            <h2>{loggedInTheryDays.length}</h2>
+            <p>Logged In this Month</p>
+
+            <div>
+              <ResponsiveContainer width={'100%'} height={60}>
+                <LineChart
+                  data={arrayGroupUsersLoginActivity}
+                >
+                  <Line
+                    type="monotone"
+                    dataKey="users"
+                    stroke={"#6BCB77"}
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+              </div>
+          </div>
+
           <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
               <h2>{avgEngagement}</h2>
               <p>Posts Avg. Engagement</p>
+           </div>
+
+          <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
+              <h2>{retention}%</h2>
+              <p>Retention Users</p>
+              <p>Logged In This week</p>
+              <p>{weeklyActiveUsersCount}</p>
+              <p>Registered Last Week</p>
+              <p>{newRegisteredUsers_LastWeek_count}</p>
            </div>
           
       </div>

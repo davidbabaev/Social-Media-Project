@@ -17,7 +17,8 @@ export default function AdminUsersPanel() {
   const debounceSearch = useDebounce(search, 2000);
   const {user} = useAuth();
 
-  const PAGE_SIZE = 10;
+  // const pageSize = 10;
+  const [pageSize, setPageSize] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
 
   const [confirmUser, setConfirmUser] = useState(null);
@@ -139,14 +140,14 @@ export default function AdminUsersPanel() {
   }, [debounceSearch, users, ageSort, nameSort, genderFilter, countryFilter, roleFilter,sortConfig])
   
   
-  const totalPages = Math.ceil(filtred.length / PAGE_SIZE);
+  const totalPages = Math.ceil(filtred.length / pageSize);
 
   const numbersArray = (num) => {
     return Array.from({length: num}, (_, i) => i + 1);
   }
   const pagesNumbers = numbersArray(totalPages)
 
-  const sliced = filtred.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const sliced = filtred.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   
   if(loading){
       return <p>Loading...</p>
@@ -320,7 +321,7 @@ export default function AdminUsersPanel() {
                   <tr 
                     key={userM._id} 
                     onClick={() => navigate(`/profiledashboard/${userM._id}/profilemain`)}>
-                    <td>{indexM + (currentPage - 1) * PAGE_SIZE + 1}</td>
+                    <td>{indexM + (currentPage - 1) * pageSize + 1}</td>
                     <td>
                       <img src={userM.profilePicture} style={{
                           width: '40px',
@@ -424,8 +425,18 @@ export default function AdminUsersPanel() {
       <button 
         disabled = {currentPage === totalPages}
         style={{margin: '4px', padding: '8px 20px'}}
-        onClick={() => setCurrentPage(currentPage + 1)}
+        onClick={() => setCurrentPage(1)}
       >Next ▶</button>
+
+      <select
+        style={{margin: '4px', padding: '8px 20px'}}
+        onChange={(e) => setCurrentPage(e.target.value)}
+      >
+        <option value={10}>10</option>
+        <option value={25}>25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
     </div>
   </div>
   )
