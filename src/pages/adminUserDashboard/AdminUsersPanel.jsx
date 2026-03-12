@@ -266,6 +266,7 @@ export default function AdminUsersPanel() {
               <th>Profile</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Last Logged In</th>
               <th>country</th>
               <th onClick={() => handleSortTable('joined')} 
                   style={{cursor: 'pointer'}}
@@ -313,8 +314,8 @@ export default function AdminUsersPanel() {
             return userF.following.includes(userM._id)
           }).length;
 
-          const userFlag = apiCountriesList.find(f => f.name === userM.address.country)
-          
+          const userFlag = apiCountriesList.find(f => f.name === userM.address.country);
+
           return(
                   <tr 
                     key={userM._id} 
@@ -332,6 +333,7 @@ export default function AdminUsersPanel() {
                     </td>
                     <td>{userM.name} {userM.lastName}</td>
                     <td>{userM.email}</td>
+                    <td>{userM.lastLoginAt.split("T")[0]}</td>
                     <td><img 
                       style={{
                           width: '35px',

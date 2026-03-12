@@ -52,6 +52,40 @@ export default function RecallReduce() {
 
 
 
+
+
+
+
+
+
+
+const engaged = [...result]
+.map((card) => {
+    return {...card, cardEngagemnet: card.comments.length + card.likes.length}
+})
+.sort((a,b) => {
+    return b.cardEngagemnet - a.cardEngagemnet
+}).slice(0,5)
+
+
+
+const ageGender = users.reduce((acc, user) => {
+    const ageRangeUser = ageRange(user.age)
+
+    if(!acc[ageRangeUser]){
+        acc[ageRangeUser] = {Male: 0, Female: 0}
+    }
+    acc[ageRangeUser][user.gender] = acc[ageRangeUser][user.gender] + 1
+
+    return acc;
+}, {}) 
+
+
+
+
+
+
+
     
   return (
     <div>

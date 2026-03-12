@@ -72,12 +72,12 @@ export default function AdminOverViewPanel() {
   const topTenCategories = arrayCountPerCategory.sort((a,b) => b.posts - a.posts).slice(0,10)
   
   const groupUsersRegistarationByMonth = users.reduce((acc, user) => {
-    const userCrestedDate = user.createdAt.slice(0,10);
-    if(acc[userCrestedDate]){
-          acc[userCrestedDate] = acc[userCrestedDate] + 1
+    const userCreatedDate = user.createdAt.slice(0,10);
+    if(acc[userCreatedDate]){
+          acc[userCreatedDate] = acc[userCreatedDate] + 1
       }
       else{
-        acc[userCrestedDate] = 1
+        acc[userCreatedDate] = 1
       }
       return acc
   }, {})
@@ -168,11 +168,84 @@ export default function AdminOverViewPanel() {
   }).slice(0,5)
 
 
+  const date = new Date();
+
+  const DailyActiveUsers = users.filter((user) => {
+    const todayLoggedInDate = date.toISOString().split("T")[0] === user.lastLoginAt?.split("T")[0];
+
+    return todayLoggedInDate;
+  })
+
+  // logged in today
+  const dailyActiveUsersCount = DailyActiveUsers.length;
+
+
+  const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+  const fourteenDaysInMs = 14 * 24 * 60 * 60 * 1000;
+  const dateInSevenDays = date.getTime() - sevenDaysInMs
+  const dateInFourteenDays = date.getTime() - fourteenDaysInMs
+  
+  const WeeklyActiveUsers = users.filter((user) => {
+    const userDate = new Date(user.lastLoginAt).getTime();
+    const loggedIn = userDate >= dateInSevenDays
+    return loggedIn
+  })
+  
+  // logged in this week
+  const weeklyActiveUsersCount = WeeklyActiveUsers.length;
+  
+  const moreThenSevenDays = users.filter((user) => {
+    const userDate = new Date(user.lastLoginAt).getTime();
+    const loggedIn = userDate >= dateInFourteenDays && userDate < dateInSevenDays
+
+    return loggedIn
+  })
+
+  const newRegisteredUsers_ThisWeek = users.filter((user) => {
+    const userDate = new Date(user.createdAt);
+    const created = userDate >= dateInSevenDays
+    return created
+  })
+
+  const newRegisteredUsers_ThisWeek_count = newRegisteredUsers_ThisWeek.length;
+  
+  const newRegisteredUsers_LastWeek = users.filter((user) => {
+    const userDate = new Date(user.createdAt);
+    const created = userDate >= dateInFourteenDays && userDate < dateInSevenDays
+    
+    return created;
+  })
+
+  const newRegisteredUsers_LastWeek_count = newRegisteredUsers_LastWeek.length;
+  
+  const registeredGrowthRate = 
+  newRegisteredUsers_LastWeek_count === 0 ? 0 : 
+  (newRegisteredUsers_ThisWeek_count - newRegisteredUsers_LastWeek_count) / newRegisteredUsers_LastWeek_count * 100;
+
+  const moreThenSevenDaysCount = moreThenSevenDays.length;
+  
+  const oneDayInMs = 1 * 24 * 60 * 60 * 1000;
+  const twoDaysInMs = 2 * 24 * 60 * 60 * 1000;
+  const dateInOneDay = date.getTime() - oneDayInMs;
+  const dateInTwoDays = date.getTime() - twoDaysInMs;
+  
+  const loggedInYesterday = users.filter((user) => {
+    const userDate = new Date(user.lastLoginAt).getTime();
+    const Yesterday = userDate < dateInOneDay && userDate >= dateInTwoDays
+    return Yesterday;
+  }) 
+  
+  // logged in yesterday
+  const loggedInYesterdayCount = loggedInYesterday.length;
+  
+  const weekLoginGrowth = (weeklyActiveUsersCount - moreThenSevenDaysCount) / moreThenSevenDaysCount * 100
+
+
 
   return (
     <div>
       <h1>Overview</h1>
-      <div style={{width: '80vw', display: 'flex', gap:'15px'}}>
+      <div style={{width: '80vw', display: 'flex', flexWrap: 'wrap', gap:'15px'}}>
           <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
             <h2>{commentsCount}</h2>
             <p>Total Comments</p>
@@ -205,13 +278,60 @@ export default function AdminOverViewPanel() {
             <h2>{registeredCards.length}</h2>
             <p>total Posts</p>
           </div>
-          
-      </div>
-      <div style={{display: 'flex'}}>
-        <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
+
+          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+            <h2>{dailyActiveUsersCount}</h2>
+            <p>Logged In Today</p>
+            <p>
+              +
+              {dailyActiveUsersCount - loggedInYesterdayCount} 
+              VS Yesterday</p>
+          </div>
+
+          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+            <h2>{newRegisteredUsers_ThisWeek_count}</h2>
+            <p>
+              Registered This Week
+            </p>
+            <p
+              style={{color: newRegisteredUsers_ThisWeek_count > 0 ? 'green' : 'red'}}
+            >
+              {newRegisteredUsers_ThisWeek_count > newRegisteredUsers_LastWeek_count ? '+' : ''}
+              {newRegisteredUsers_ThisWeek_count - newRegisteredUsers_LastWeek_count}
+              VS previous week
+            </p>
+            <p style={{color: registeredGrowthRate > 0 ? 'green' : 'red'}}>
+              {registeredGrowthRate > 0 && '+'}
+              {registeredGrowthRate.toFixed(1)}
+              % Than Last Week
+            </p>
+          </div>
+
+          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+            <h2>{weeklyActiveUsersCount}</h2>
+            <p>Logged In Last Week</p>
+            <p
+              style={{color: weeklyActiveUsersCount > moreThenSevenDaysCount ? 'green' : 'red'}}
+            >
+              {weeklyActiveUsersCount > moreThenSevenDaysCount ? "+" : "-"}
+              {weeklyActiveUsersCount - moreThenSevenDaysCount}
+               VS Previous Week
+            </p>
+            <p 
+              style={{color: weekLoginGrowth > 0 ? 'green' : 'red'}}>
+              {weekLoginGrowth > 0 && '+'}
+              {weekLoginGrowth.toFixed(1)}
+              % Than Last Week
+            </p>
+          </div>
+
+          <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
               <h2>{avgEngagement}</h2>
               <p>Posts Avg. Engagement</p>
-        </div>
+           </div>
+          
+      </div>
+      <div style={{display: 'flex', flexWrap: 'wrap'}}>
 
           <div style={{width: "60%",border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>Top 5 cards</h2>
@@ -278,7 +398,6 @@ export default function AdminOverViewPanel() {
 
       </div>
       <br />
-
       <div style={{display: 'flex', gap:'15px'}}>
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>Last 5 joined users</h2>
