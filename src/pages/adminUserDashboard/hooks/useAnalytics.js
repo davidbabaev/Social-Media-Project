@@ -11,9 +11,25 @@ function useAnalytics() {
   const registeredCardsLength = registeredCards.length;
   const usersLength = users.length;
 
+
+// =========================================================   
+// Totals Simple Analytics:
+
   const commentsCount = registeredCards.reduce((sum, card) => sum + (card.comments || []).length, 0);
+
   const likesCount = registeredCards.reduce((sum, card) => sum + (card.likes || []).length, 0);
   
+
+// =========================================================
+// - Posts Avg. Engagement
+
+const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).toFixed(1);
+
+// =========================================================
+// Active user/ users calculations (users with most cards) - Logics:   
+// - Most Active User
+// - Top 10 Active Users
+
   const usersC = users.map((user) => {
     const maxCardsUser = registeredCards.filter((card) => {
       const usersCards = card.userId === user._id
@@ -21,22 +37,37 @@ function useAnalytics() {
     })
     return {name: user.name + ' ' + user.lastName, posts: (maxCardsUser || []).length}
   }) 
-  // look like:
-  // [{user: {...}, cardCount: 3}, {user: {...}, cardCount: 1}]
-  
+
   const topTenUsers = [...usersC].sort((a,b) => b.posts - a.posts).slice(0,10)
   
   const mostActiveUser = usersC.length > 0
   ? usersC.reduce((max, current) => current.posts > max.posts ? current : max)
   : null;
   
+  
+// =========================================================
+// Cards with most likes - Logics:
+// - Most Liked Card
+// - Top 10 Liked Cards
+
+  const topTenlikedCards = [...registeredCards].sort((a,b) => b.likes.length- a.likes.length).slice(0, 10)
+
   const mostLikesCard = registeredCards.length > 0
   ? registeredCards.reduce((max, current) => current.likes.length > max.likes.length ? current : max)
   : null;
   
+
+// =========================================================
   
   const lastFiveUsers = [...users].sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0,5)
+
   const lastFiveCards = [...registeredCards].sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0,5)
+
+
+// =========================================================
+// Categories calculations - Logics:
+// - Posts by categories (list) "Technology - 4 Posts":
+// - 10 Most popular categories (Pie Chart)
 
   const countPerCategory = registeredCards.reduce((acc, card) => {
     if(acc[card.category]){
@@ -46,16 +77,20 @@ function useAnalytics() {
     }
     return acc
   }, {})
-  // looks like:
-  // { tech: 3, sport: 1, food: 1 }
+
   
   const arrayCountPerCategory = Object.entries(countPerCategory).map((item) => {
     return {name: item[0], posts: item[1]}
   });
-  // {[ ["tech": 3], ["sport": 1], ["food": 1] ]}
-  
+
   const topTenCategories = [...arrayCountPerCategory].sort((a,b) => b.posts - a.posts).slice(0,10)
   
+
+// =========================================================
+// Users Registrations - Logics
+// - Users registration (Line Chart)
+// - 
+
   const groupUsersRegistarationByMonth = users.reduce((acc, user) => {
     const userCreatedDate = user.createdAt.slice(0,10);
     if(acc[userCreatedDate]){
@@ -71,6 +106,11 @@ function useAnalytics() {
     return{month: item[0], users: item[1]}
   }).sort((a,b) => new Date(a.month) - new Date(b.month))
 
+
+
+// =========================================================
+// - Gender percents Male 50% / female 50% (Pie Chart)
+// - gender & ages - percents of male/ female per renges of ages (Bar Chart)
 
   const ageRange = (age) => {
     if(age >= 18 && age <= 24) return "18-24"
@@ -88,11 +128,9 @@ function useAnalytics() {
     else{
       acc[user.gender] = 1
     }
-
     return acc;
   }, {})
-  // [Male: 1]
-  // [0] - [1]
+
   const arrayGroup_countPerGender = Object.entries(countPerGender).map((item) => {
     return {gender: item[0], count: item[1]}
   })
@@ -106,18 +144,17 @@ function useAnalytics() {
     acc[range][user.gender] = acc[range][user.gender] + 1
     return acc;
   }, {}) 
-  // [
-  // {ages:'18-24', Male: 2, Female: 1}
-  // {ages:'25-34', Male: 0, Female: 1}
-  // ]
 
   const group_genderByAge = Object.entries(genderByAge).map((item) => {
     return { ages: item[0], ...item[1]}
   }).sort((a,b) => a.ages[0] - b.ages[0])
 
-  // item 0 -> the key
-  // item 1 -> the value
 
+
+// =========================================================
+// - count user per country (USA: 8,000 users)
+// - percent progress bar how many percents take each country of the whole app users
+//  (60% of the users in our app is from USA)
 
   const countCountriesPerUsers = users.reduce((acc, user) => {
     if(acc[user.address.country]){
@@ -141,17 +178,21 @@ function useAnalytics() {
     }
   }).sort((a,b) => b.count - a.count)
 
-  const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).toFixed(1);
 
+// =========================================================
+// - Top 5 cards with most likes + cards
 
   const topFiveCards = [...registeredCards]
-
   .sort((a,b) => {
       const aEng = a.likes.length + a.comments.length
       const bEng = b.likes.length + b.comments.length
       return bEng - aEng;
   }).slice(0,5)
 
+
+// =========================================================   
+// Daily Login - Logics: 
+// - Logged In Today
 
   const date = new Date();
 
@@ -161,9 +202,27 @@ function useAnalytics() {
     return todayLoggedInDate;
   })
 
-  // logged in today
   const dailyActiveUsersCount = DailyActiveUsers.length;
 
+// =========================================================   
+// Login one day VS yesterday logics:
+// - logged in testerday
+
+  const oneDayInMs = 1 * 24 * 60 * 60 * 1000;
+  const twoDaysInMs = 2 * 24 * 60 * 60 * 1000;
+  const dateInOneDay = date.getTime() - oneDayInMs;
+  const dateInTwoDays = date.getTime() - twoDaysInMs;
+  
+  const loggedInYesterday = users.filter((user) => {
+    const userDate = new Date(user.lastLoginAt).getTime();
+    const Yesterday = userDate < dateInOneDay && userDate >= dateInTwoDays
+    return Yesterday;
+  }) 
+  
+  const loggedInYesterdayCount = loggedInYesterday.length;
+
+// =========================================================   
+// Logged-in (Activity) weekly - logics:
 
   const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
   const fourteenDaysInMs = 14 * 24 * 60 * 60 * 1000;
@@ -176,7 +235,6 @@ function useAnalytics() {
     return loggedIn
   })
   
-  // logged in this week
   const weeklyActiveUsersCount = WeeklyActiveUsers.length;
   
   const moreThenSevenDays = users.filter((user) => {
@@ -185,6 +243,10 @@ function useAnalytics() {
 
     return loggedIn
   })
+
+
+// =========================================================   
+// RegisteredUser Per Weeks - Logics:  
 
   const newRegisteredUsers_ThisWeek = users.filter((user) => {
     const userDate = new Date(user.createdAt);
@@ -208,21 +270,11 @@ function useAnalytics() {
   (newRegisteredUsers_ThisWeek_count - newRegisteredUsers_LastWeek_count) / newRegisteredUsers_LastWeek_count * 100;
 
   const moreThenSevenDaysCount = moreThenSevenDays.length;
-  
-  const oneDayInMs = 1 * 24 * 60 * 60 * 1000;
-  const twoDaysInMs = 2 * 24 * 60 * 60 * 1000;
-  const dateInOneDay = date.getTime() - oneDayInMs;
-  const dateInTwoDays = date.getTime() - twoDaysInMs;
-  
-  const loggedInYesterday = users.filter((user) => {
-    const userDate = new Date(user.lastLoginAt).getTime();
-    const Yesterday = userDate < dateInOneDay && userDate >= dateInTwoDays
-    return Yesterday;
-  }) 
-  
-  // logged in yesterday
-  const loggedInYesterdayCount = loggedInYesterday.length;
-  
+
+
+// =========================================================   
+// Retention users -> Register + Loggings - Logics:
+
   const weekLoginGrowth = (weeklyActiveUsersCount - moreThenSevenDaysCount) / moreThenSevenDaysCount * 100
 
 
@@ -235,8 +287,10 @@ function useAnalytics() {
   const retention = 
   newRegisteredUsers_LastWeek_count === 0 ? 0 :
   (retentionUsersCount / newRegisteredUsers_LastWeek_count) * 100
+  
 
-
+// =========================================================   
+// thirty days (Month) Loggings analytics (Chart) - "users monthly activity":
 
   const thertyDaysInMs = 30 * 24 * 60 * 60 * 1000;
   const dateThertyDays = date.getTime() - thertyDaysInMs;
@@ -264,6 +318,9 @@ function useAnalytics() {
     return{day: item[0], users: item[1]}
   }).sort((a,b) => new Date(a.day) - new Date(b.day))
 
+
+// =========================================================
+
   return{
     commentsCount,
     likesCount,
@@ -285,6 +342,7 @@ function useAnalytics() {
     group_countCountriesPerUsers,
     avgEngagement,
     topFiveCards,
+    topTenlikedCards,
     dailyActiveUsersCount,
     registeredGrowthRate,
     loggedInYesterdayCount,
