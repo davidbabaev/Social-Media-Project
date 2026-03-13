@@ -333,14 +333,38 @@ export default function AdminOverViewPanel() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>{dailyActiveUsersCount}</h2>
             <p>Logged In Today</p>
-            <p>
-              {/* {dailyActiveUsersCount > loggedInYesterdayCount ? "+" : "-"} */}
+            <p
+              style={{color: loggedInYesterdayCount < dailyActiveUsersCount ? '#6BCB77' : '#FF6B6B'}}
+            >
+              {dailyActiveUsersCount > loggedInYesterdayCount && "+"}
               {dailyActiveUsersCount - loggedInYesterdayCount} 
+              {' '}
               VS Yesterday</p>
           </div>
+
+
 
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>{newRegisteredUsers_ThisWeek_count}</h2>
@@ -361,6 +385,9 @@ export default function AdminOverViewPanel() {
             </p>
           </div>
 
+
+
+
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>{weeklyActiveUsersCount}</h2>
             <p>Logged In this Week</p>
@@ -378,6 +405,35 @@ export default function AdminOverViewPanel() {
               % Than Last Week
             </p>
           </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>{loggedInTheryDays.length}</h2>

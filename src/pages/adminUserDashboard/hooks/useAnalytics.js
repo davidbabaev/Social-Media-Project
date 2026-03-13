@@ -207,6 +207,7 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
 // =========================================================   
 // Login one day VS yesterday logics:
 // - logged in testerday
+// - % Than yesterday
 
   const oneDayInMs = 1 * 24 * 60 * 60 * 1000;
   const twoDaysInMs = 2 * 24 * 60 * 60 * 1000;
@@ -220,6 +221,10 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
   }) 
   
   const loggedInYesterdayCount = loggedInYesterday.length;
+
+  const loginGrowthRate = 
+  loggedInYesterdayCount === 0 ? 0 :
+  (dailyActiveUsersCount - loggedInYesterdayCount) / loggedInYesterdayCount * 100; 
 
 // =========================================================   
 // Logged-in (Activity) weekly - logics:
@@ -347,6 +352,7 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
     registeredGrowthRate,
     loggedInYesterdayCount,
     weekLoginGrowth,
+    loginGrowthRate,
     retention,
     arrayGroupUsersLoginActivity,
     registeredCardsLength,
