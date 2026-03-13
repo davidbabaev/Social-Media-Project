@@ -1,11 +1,11 @@
 import React from 'react'
 import { useCardsProvider } from '../../providers/CardsProvider'
 import useUsers from '../../hooks/useUsers';
+import useCountries from '../../hooks/useCountries';
 import { useNavigate } from 'react-router-dom';
 
 
 import { LineChart, Line, ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar ,PieChart, Pie, Cell, CartesianGrid, Legend} from 'recharts';
-import useCountries from '../../hooks/useCountries';
 
 export default function AdminOverViewPanel() {
 
@@ -299,11 +299,28 @@ export default function AdminOverViewPanel() {
           </div>
 
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+            <h2>{registeredCards.length}</h2>
+            <p>total Posts</p>
+          </div>
+
+          <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
+            <h2>{avgEngagement}</h2>
+            <p>Posts Avg. Engagement</p>
+          </div>
+
+
+
+
+
+
+
+          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>{mostActiveUser?.name}</h2>
             <p>Most Active User</p>
             <h2>{mostActiveUser?.posts}</h2>
             <p>total Posts</p>
           </div>
+
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>{mostLikesCard?.title}</h2>
             <p>Most like card</p>
@@ -311,16 +328,16 @@ export default function AdminOverViewPanel() {
             <p>Total likes</p>
           </div>
 
-          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-            <h2>{registeredCards.length}</h2>
-            <p>total Posts</p>
-          </div>
+
+
+
+
 
           <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
             <h2>{dailyActiveUsersCount}</h2>
             <p>Logged In Today</p>
             <p>
-              +
+              {/* {dailyActiveUsersCount > loggedInYesterdayCount ? "+" : "-"} */}
               {dailyActiveUsersCount - loggedInYesterdayCount} 
               VS Yesterday</p>
           </div>
@@ -380,13 +397,8 @@ export default function AdminOverViewPanel() {
                   />
                 </LineChart>
               </ResponsiveContainer>
-              </div>
+            </div>
           </div>
-
-          <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
-              <h2>{avgEngagement}</h2>
-              <p>Posts Avg. Engagement</p>
-           </div>
 
           <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
               <h2>{retention}%</h2>
@@ -400,68 +412,127 @@ export default function AdminOverViewPanel() {
       </div>
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
 
-          <div style={{width: "60%",border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-            <h2>Top 5 cards</h2>
-            {topFiveCards.map((card) => {
-              const cardCreator = users.find(u => u._id === card.userId)
+      <div style={{width: "60%",border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+        <h2>Top 5 cards</h2>
+        {topFiveCards.map((card) => {
+          const cardCreator = users.find(u => u._id === card.userId)
 
-              return(
-                <div 
-                  key={card._id}
-                  style={{display:'flex', gap: '10px', alignItems: 'center', marginBottom: '15px'}}  
-                >
-                  <img 
-                    src={card.image}
-                    style={{width: '200px', height: '120px',borderRadius: '10px', objectFit: 'cover', cursor: 'pointer'}}
-                    onClick={() => navigate(`/carddetails/${card._id}`)}
-                  />
-                  <div>
-                      <div style={{display:'flex'}}>
-                        <img style={{
-                          width: '40px',
-                          height: '40px',
-                          borderRadius: '50%',
-                          border: '2px, solid, white',
-                          objectFit: 'cover',
-                          cursor: 'pointer'
-                        }} 
-                        src={cardCreator?.profilePicture}
+          return(
+            <div 
+              key={card._id}
+              style={{display:'flex', gap: '10px', alignItems: 'center', marginBottom: '15px'}}  
+            >
+              <img 
+                src={card.image}
+                style={{width: '200px', height: '120px',borderRadius: '10px', objectFit: 'cover', cursor: 'pointer'}}
+                onClick={() => navigate(`/carddetails/${card._id}`)}
+              />
+              <div>
+                  <div style={{display:'flex'}}>
+                    <img style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: '2px, solid, white',
+                      objectFit: 'cover',
+                      cursor: 'pointer'
+                    }} 
+                    src={cardCreator?.profilePicture}
+                    onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
+                    />
+
+                    <div style={{display: 'flex', flexDirection:'column'}}>
+                      <p 
+                        style={{margin: '5px 0px', cursor: 'pointer'}}
                         onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
-                        />
-
-                        <div style={{display: 'flex', flexDirection:'column'}}>
-                          <p 
-                            style={{margin: '5px 0px', cursor: 'pointer'}}
-                            onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
-                            >{cardCreator?.name} {cardCreator?.lastName}  
-                          </p>
-                          <p style={{color: 'gray', fontSize:'12px', margin: 0}}>{card.createdAt.split("T")[0]}</p>
-                        </div>
-                      </div>
-                      <p 
-                        style={{fontWeight: 'bold', margin: 0, cursor: 'pointer'}}
-                        onClick={() => navigate(`/carddetails/${card._id}`)}
-                        >{card.title}</p>
-                      <p 
-                        onClick={() => navigate(`/carddetails/${card._id}`)}
-                        style={{
-                          cursor: 'pointer',
-                          margin: '5px 0px',
-                          margin: 0,
-                          whiteSpace: 'nowrap',        // prevent text from wrapping
-                          overflow: 'hidden',          // hide overflow
-                          textOverflow: 'ellipsis',    // show "..." at the end
-                          maxWidth: '200px'
-                        }}>{card.content}</p>
-                      <p>
-                        {card.comments.length + card.likes.length} 
-                         {(card.comments + card.likes).length < 2 ? " Interactions" : " Interaction"}
+                        >{cardCreator?.name} {cardCreator?.lastName}  
                       </p>
+                      <p style={{color: 'gray', fontSize:'12px', margin: 0}}>{card.createdAt.split("T")[0]}</p>
+                    </div>
                   </div>
-                </div>
-              )
-            })}
-          </div>
+                  <p 
+                    style={{fontWeight: 'bold', margin: 0, cursor: 'pointer'}}
+                    onClick={() => navigate(`/carddetails/${card._id}`)}
+                    >{card.title}</p>
+                  <p 
+                    onClick={() => navigate(`/carddetails/${card._id}`)}
+                    style={{
+                      cursor: 'pointer',
+                      margin: '5px 0px',
+                      margin: 0,
+                      whiteSpace: 'nowrap',        // prevent text from wrapping
+                      overflow: 'hidden',          // hide overflow
+                      textOverflow: 'ellipsis',    // show "..." at the end
+                      maxWidth: '200px'
+                    }}>{card.content}</p>
+                  <p>
+                    {card.comments.length + card.likes.length} 
+                      {(card.comments + card.likes).length < 2 ? " Interactions" : " Interaction"}
+                  </p>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <div style={{width: "40%",border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
+        <h2>Last 5 created posts</h2>
+        {lastFiveCards.map((cardF) => {
+          const cardCreator = users.find(u => u._id === cardF.userId)
+
+          return(
+            <div 
+              key={cardF._id}
+              style={{display:'flex', gap: '10px', alignItems: 'center', marginBottom: '15px'}}  
+            >
+              <img 
+                src={cardF.image}
+                style={{width: '100px', height: '80px',borderRadius: '10px', objectFit: 'cover', cursor: 'pointer'}}
+                onClick={() => navigate(`/carddetails/${cardF._id}`)}
+              />
+              <div>
+                  <div style={{display:'flex'}}>
+                    <img style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      border: '2px, solid, white',
+                      objectFit: 'cover',
+                      cursor: 'pointer'
+                    }} 
+                    src={cardCreator?.profilePicture}
+                    onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
+                    />
+
+                    <div style={{display: 'flex', flexDirection:'column'}}>
+                      <p 
+                        style={{margin: '5px 0px', cursor: 'pointer'}}
+                        onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
+                        >{cardCreator?.name} {cardCreator?.lastName}  
+                      </p>
+                      <p style={{color: 'gray', fontSize:'12px', margin: 0}}>{cardF.createdAt.split("T")[0]}</p>
+                    </div>
+                  </div>
+                  <p 
+                    style={{fontWeight: 'bold', margin: 0, cursor: 'pointer'}}
+                    onClick={() => navigate(`/carddetails/${cardF._id}`)}
+                    >{cardF.title}</p>
+                  <p 
+                    onClick={() => navigate(`/carddetails/${cardF._id}`)}
+                    style={{
+                      cursor: 'pointer',
+                      margin: '5px 0px',
+                      margin: 0,
+                      whiteSpace: 'nowrap',        // prevent text from wrapping
+                      overflow: 'hidden',          // hide overflow
+                      textOverflow: 'ellipsis',    // show "..." at the end
+                      maxWidth: '200px'
+                    }}>{cardF.content}</p>
+              </div>
+            </div>
+          )
+        })}
+      </div>
 
       </div>
       <br />
@@ -487,64 +558,6 @@ export default function AdminOverViewPanel() {
             ))}
           </div>
 
-          <div style={{width: "40%",border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-            <h2>Last 5 created posts</h2>
-            {lastFiveCards.map((cardF) => {
-              const cardCreator = users.find(u => u._id === cardF.userId)
-
-              return(
-                <div 
-                  key={cardF._id}
-                  style={{display:'flex', gap: '10px', alignItems: 'center', marginBottom: '15px'}}  
-                >
-                  <img 
-                    src={cardF.image}
-                    style={{width: '100px', height: '80px',borderRadius: '10px', objectFit: 'cover', cursor: 'pointer'}}
-                    onClick={() => navigate(`/carddetails/${cardF._id}`)}
-                  />
-                  <div>
-                      <div style={{display:'flex'}}>
-                        <img style={{
-                          width: '40px',
-                          height: '40px',
-                          borderRadius: '50%',
-                          border: '2px, solid, white',
-                          objectFit: 'cover',
-                          cursor: 'pointer'
-                        }} 
-                        src={cardCreator?.profilePicture}
-                        onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
-                        />
-
-                        <div style={{display: 'flex', flexDirection:'column'}}>
-                          <p 
-                            style={{margin: '5px 0px', cursor: 'pointer'}}
-                            onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
-                            >{cardCreator?.name} {cardCreator?.lastName}  
-                          </p>
-                          <p style={{color: 'gray', fontSize:'12px', margin: 0}}>{cardF.createdAt.split("T")[0]}</p>
-                        </div>
-                      </div>
-                      <p 
-                        style={{fontWeight: 'bold', margin: 0, cursor: 'pointer'}}
-                        onClick={() => navigate(`/carddetails/${cardF._id}`)}
-                        >{cardF.title}</p>
-                      <p 
-                        onClick={() => navigate(`/carddetails/${cardF._id}`)}
-                        style={{
-                          cursor: 'pointer',
-                          margin: '5px 0px',
-                          margin: 0,
-                          whiteSpace: 'nowrap',        // prevent text from wrapping
-                          overflow: 'hidden',          // hide overflow
-                          textOverflow: 'ellipsis',    // show "..." at the end
-                          maxWidth: '200px'
-                        }}>{cardF.content}</p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
           <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
             <h2>Posts by catrgories</h2>
             {arrayCountPerCategory.map((item, index) => (
@@ -602,6 +615,7 @@ export default function AdminOverViewPanel() {
                 <Tooltip />
           </PieChart>
         </div>
+
         <div>
           <ResponsiveContainer width="90%" height={400}>
               <BarChart
