@@ -92,7 +92,7 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
 // - 
 
   const groupUsersRegistarationByMonth = users.reduce((acc, user) => {
-    const userCreatedDate = user.createdAt.slice(0,10);
+    const userCreatedDate = user.createdAt.slice(0,7);
     if(acc[userCreatedDate]){
           acc[userCreatedDate] = acc[userCreatedDate] + 1
       }
@@ -323,6 +323,7 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
     return{day: item[0], users: item[1]}
   }).sort((a,b) => new Date(a.day) - new Date(b.day))
 
+  const loggedInThirtyDaysCount = loggedInThirtyDays.length;
 
 // =========================================================
 
@@ -334,6 +335,7 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
     weeklyActiveUsersCount,
     moreThenSevenDaysCount,
     loggedInThirtyDays,
+    loggedInThirtyDaysCount,
     arrayCountPerCategory,
     topTenUsers,
     mostActiveUser,
