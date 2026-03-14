@@ -12,7 +12,8 @@ export default function AdminCardsPanel() {
   const {loading, getUsers} = useUsers();
   const {registeredCards, refreshFeed, fetchCards, handleDeleteCard, handleBanCard} = useCardsProvider();
 
-  const PAGE_SIZE = 10;
+  // const pageSize = 10;
+  const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
   // filter cards by creator
@@ -120,14 +121,18 @@ export default function AdminCardsPanel() {
       return result;
   }, [creatorId, registeredCards, debounceSearchCard, categoryFilter, favorites, sortConfig, users])
 
-  const totalPages = Math.ceil(filteredCards.length / PAGE_SIZE);
+  const totalPages = Math.ceil(filteredCards.length / pageSize);
 
   const numbersArray = (num) => {
     return Array.from({length: num}, (_, i) => i + 1);
   }
   const pagesNumbers = numbersArray(totalPages) // [1,2,3]
 
-  const sliced = filteredCards.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const sliced = filteredCards.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const start = (currentPage - 1) * pageSize + 1;
+  const endPage = Math.min(currentPage * pageSize ,filteredCards.length)
+  const total = filteredCards.length
   
   if(loading){
       return <p>Loading...</p>
@@ -162,7 +167,7 @@ export default function AdminCardsPanel() {
             >
                 <option value="">All Categories</option>
                 {CARD_CATEGORIES.map((category, index) => (
-                    <option key={category} value={category}>
+                    <option key={index} value={category}>
                         {category}
                     </option>
                 ))}
@@ -253,7 +258,7 @@ export default function AdminCardsPanel() {
                   <tr 
                     key={card._id} 
                     onClick={() => navigate(`/carddetails/${card._id}`)}>
-                    <td>{indexM + (currentPage - 1) * PAGE_SIZE + 1}</td>
+                    <td>{indexM + (currentPage - 1) * pageSize + 1}</td>
                       <td><img
                       src={creator?.profilePicture} style={{
                             width: '40px',
@@ -329,12 +334,11 @@ export default function AdminCardsPanel() {
         style={{margin: '4px', padding: '8px 20px'}}
         onClick={() => setCurrentPage(currentPage - 1)}
       >◀ Previous</button>
-      {pagesNumbers.map((page) => (
-        <div>
+      {pagesNumbers.map((page, index) => (
+        <div key={page}>
             <button 
               style={{margin: '4px', padding: '8px 10px'}} 
               disabled = {currentPage === page}
-              key={page}
               onClick={() => setCurrentPage(page)}
             >{page}</button>
         </div>
@@ -344,7 +348,22 @@ export default function AdminCardsPanel() {
         style={{margin: '4px', padding: '8px 20px'}}
         onClick={() => setCurrentPage(currentPage + 1)}
       >Next ▶</button>
+
+    <select 
+      style={{margin: '4px', padding: '8px 20px'}}
+      onChange={(e) => {
+        setPageSize(Number(e.target.value))
+        setCurrentPage(1)
+      }}  
+    >
+        <option value={10}>10</option>
+        <option value={25}>25</option>
+        <option value={50}>50</option>
+        <option value={100}>100</option>
+      </select>
+      <p>{start} - {endPage} of {total}</p>
     </div>
+
   </div>
   )
 }

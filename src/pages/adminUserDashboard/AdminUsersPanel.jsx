@@ -134,8 +134,6 @@ export default function AdminUsersPanel() {
 
         return comparison;
     });
-
-    
     return result;
   }, [debounceSearch, users, ageSort, nameSort, genderFilter, countryFilter, roleFilter,sortConfig])
   
@@ -148,6 +146,11 @@ export default function AdminUsersPanel() {
   const pagesNumbers = numbersArray(totalPages)
 
   const sliced = filtred.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const startPage = (currentPage - 1) * pageSize + 1;
+  const endPage = Math.min(currentPage * pageSize, filtred.length);
+  const total = filtred.length 
+
   
   if(loading){
       return <p>Loading...</p>
@@ -425,18 +428,25 @@ export default function AdminUsersPanel() {
       <button 
         disabled = {currentPage === totalPages}
         style={{margin: '4px', padding: '8px 20px'}}
-        onClick={() => setCurrentPage(1)}
+        onClick={() => setCurrentPage(currentPage + 1)}
       >Next ▶</button>
 
       <select
         style={{margin: '4px', padding: '8px 20px'}}
-        onChange={(e) => setCurrentPage(e.target.value)}
-      >
+        onChange={
+          (e) => {
+            setPageSize(Number(e.target.value))
+            setCurrentPage(1)
+          }
+        }
+        >
         <option value={10}>10</option>
         <option value={25}>25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
+        <option value={50}>50</option>
+        <option value={100}>100</option>
       </select>
+        
+      <p>{startPage} - {endPage} of {total} results</p>
     </div>
   </div>
   )
