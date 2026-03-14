@@ -25,7 +25,7 @@ export default function UsersRetentionCardReuse({
         <p style={stylePercents}>
             {percentsValue > 0 && '+'}
             {percentsValue.toFixed(1)}
-            {pPercentsValue}
+            %{pPercentsValue}
         </p>
     </div>
   )

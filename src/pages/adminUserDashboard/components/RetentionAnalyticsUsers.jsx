@@ -47,7 +47,7 @@ export default function RetentionAnalyticsUsers() {
             percentsValue = {weekLoginGrowth}
             pFirstValue = {"Logged-in this week"}
             pVsValue = {" vs Previous week"}
-            pPercentsValue = {" Then previous week"}
+            pPercentsValue = {" Then previous week "}
         />
     </div>
   )

@@ -6,6 +6,9 @@ import { useNavigate } from 'react-router-dom';
 
 
 import { LineChart, Line, ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar ,PieChart, Pie, Cell, CartesianGrid, Legend} from 'recharts';
+import RetentionAnalyticsUsers from './components/RetentionAnalyticsUsers';
+import MostPopular from './components/MostPopular';
+import TotalAnalytics from './components/TotalAnalytics';
 
 export default function AdminOverViewPanel() {
 
@@ -283,7 +286,9 @@ export default function AdminOverViewPanel() {
     <div>
       <h1>Overview</h1>
       <div style={{width: '80vw', display: 'flex', flexWrap: 'wrap', gap:'15px'}}>
-          <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
+
+
+          {/* <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
             <h2>{commentsCount}</h2>
             <p>Total Comments</p>
           </div>
@@ -306,130 +311,16 @@ export default function AdminOverViewPanel() {
           <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
             <h2>{avgEngagement}</h2>
             <p>Posts Avg. Engagement</p>
-          </div>
+          </div> */}
 
 
 
 
 
 
-
-          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-            <h2>{mostActiveUser?.name}</h2>
-            <p>Most Active User</p>
-            <h2>{mostActiveUser?.posts}</h2>
-            <p>total Posts</p>
-          </div>
-
-          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-            <h2>{mostLikesCard?.title}</h2>
-            <p>Most like card</p>
-            <h2>{mostLikesCard?.likes.length}</h2>
-            <p>Total likes</p>
-          </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-            <h2>{dailyActiveUsersCount}</h2>
-            <p>Logged In Today</p>
-            <p
-              style={{color: loggedInYesterdayCount < dailyActiveUsersCount ? '#6BCB77' : '#FF6B6B'}}
-            >
-              {dailyActiveUsersCount > loggedInYesterdayCount && "+"}
-              {dailyActiveUsersCount - loggedInYesterdayCount} 
-              {' '}
-              VS Yesterday</p>
-          </div>
-
-
-
-          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-            <h2>{newRegisteredUsers_ThisWeek_count}</h2>
-            <p>
-              Registered This Week
-            </p>
-            <p
-              style={{color: newRegisteredUsers_ThisWeek_count > 0 ? '#6BCB77' : '#FF6B6B'}}
-            >
-              {newRegisteredUsers_ThisWeek_count > newRegisteredUsers_LastWeek_count ? '+' : ''}
-              {newRegisteredUsers_ThisWeek_count - newRegisteredUsers_LastWeek_count}
-              VS previous week
-            </p>
-            <p style={{color: registeredGrowthRate > 0 ? '#6BCB77' : '#FF6B6B'}}>
-              {registeredGrowthRate > 0 && '+'}
-              {registeredGrowthRate.toFixed(1)}
-              % Than Last Week
-            </p>
-          </div>
-
-
-
-
-          <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-            <h2>{weeklyActiveUsersCount}</h2>
-            <p>Logged In this Week</p>
-            <p
-              style={{color: weeklyActiveUsersCount > moreThenSevenDaysCount ? '#6BCB77' : '#FF6B6B'}}
-            >
-              {weeklyActiveUsersCount > moreThenSevenDaysCount ? "+" : "-"}
-              {weeklyActiveUsersCount - moreThenSevenDaysCount}
-               VS Previous Week
-            </p>
-            <p 
-              style={{color: weekLoginGrowth > 0 ? '#6BCB77' : '#FF6B6B'}}>
-              {weekLoginGrowth > 0 && '+'}
-              {weekLoginGrowth.toFixed(1)}
-              % Than Last Week
-            </p>
-          </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          <TotalAnalytics/>
+          <MostPopular/>
+          <RetentionAnalyticsUsers/>
 
 
 

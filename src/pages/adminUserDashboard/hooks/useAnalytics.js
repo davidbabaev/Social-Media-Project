@@ -1,6 +1,6 @@
-import { useCardsProvider } from '../../providers/CardsProvider'
-import useUsers from '../../hooks/useUsers';
-import useCountries from '../../hooks/useCountries';
+import { useCardsProvider } from '../../../providers/CardsProvider';
+import useUsers from '../../../hooks/useUsers';
+import useCountries from '../../../hooks/useCountries';
 
 function useAnalytics() {
 
