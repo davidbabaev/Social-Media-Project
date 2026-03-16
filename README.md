@@ -8,13 +8,33 @@
 
 | Date | Topic | Summary | Full Notes |
 |------|-------|---------|------------|
-| 5.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1r2jeuQqOoQALMwHNmY06OX3omDkoUU0q9F6y8VycbtY/edit?tab=t.0) |
-| 3.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1EPxxjNT79KgjMEL7X8mJ8VKTBNcCIPU78kpFX2ulB7I/edit?tab=t.0) |
-| 6.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1axmcRKHJ7zJ25dwte4qA7iSe8vzyPQ1-fvEG1tiUU8M/edit?tab=t.0) |
-| 12.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1CMN0nQfJ3fsslD61LxlcgcyCgIWnesg50NfX5MThWzc/edit?usp=sharing) |
-| 21.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/12jpDat7C8_F3Zvqz-UeCopDTS16mnr7XqDHR3QY6N2A/edit?usp=sharing) |
-| 22.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1DapOMDYLZ37C_yFqtDAtrK-7KmMCeQEiVOxivaVir1k/edit?usp=sharing) |
-| 28.1.2026 | React Project & NodeJS | [📄 Full Notes](https://docs.google.com/document/d/1DapOMDYLZ37C_yFqtDAtrK-7KmMCeQEiVOxivaVir1k/edit?usp=sharing) |
+| 2.1.2026  | React + Node | MongoDB Intro: Schema vs Schema-less, Connect, Schema, Model, new + save(), for...of Loop | [📄 Full Notes](https://docs.google.com/document/d/1roJFvN7jKe3iTh1jpDpqD_-4CuMwVjn0OGQnSAVDFvs/edit?usp=sharing) |
+| 3.1.2026  | React | Sort Logic: comparison = 0, Two-Sort Conflict, useMemo Filter Chain, Set() for Unique Countries | [📄 Full Notes](https://docs.google.com/document/d/1EPxxjNT79KgjMEL7X8mJ8VKTBNcCIPU78kpFX2ulB7I/edit?usp=sharing) |
+| 5.1.2026  | React | Load More + slice(), Sort States, disabled={} on Select, Auth Plan, Set() Country Select | [📄 Full Notes](https://docs.google.com/document/d/1r2jeuQqOoQALMwHNmY06OX3omDkoUU0q9F6y8VycbtY/edit?usp=sharing) |
+| 6.1.2026  | React | AuthProvider: handleRegister, handleLogin, generateID, registeredUsers, 2x useEffect, RegisterPage Form | [📄 Full Notes](https://docs.google.com/document/d/1axmcRKHJ7zJ25dwte4qA7iSe8vzyPQ1-fvEG1tiUU8M/edit?usp=sharing) |
+| 8.1.2026  | Node | Mongoose: Schema, Model, mongoose.model(), new + save(), module.exports, Error Reading | [📄 Full Notes](https://docs.google.com/document/d/1iTPCqo6iGbJzUCKPje1POREDG4vCWg_kxOYk4pbeynU/edit?usp=sharing) |
+| 9.1.2026  | Node | Schemas: default, enum, Array of Objects, module.exports, connectToDB, postNewUser | [📄 Full Notes](https://docs.google.com/document/d/1EO8H3M_LTe_qUQlp6a2_VgAtRTdRSclpn6GdHI0GcZg/edit?usp=sharing) |
+| 10.1.2026 | Node | MongoDB CRUD: find(), findById(), findByIdAndUpdate({new:true}), findByIdAndDelete(), for...of Loop | [📄 Full Notes](https://docs.google.com/document/d/1IB-b1rIlhdCaOlKprHE4wANnBfUBn2wYTqwT_zi1fy4/edit?usp=sharing) |
+| 11.1.2026 | React | CardsProvider, CardsRegisterPage, AllCards, Delete Card (filter), Edit Card (map + spread), GitHub Setup | [📄 Full Notes](https://docs.google.com/document/d/1JotLLSFpanSMw69EuPqlRaWmhQGmYiQMHTFa64ZvHLs/edit?usp=sharing) |
+| 12.1.2026 | React | Edit Card Deep Dive: editingCardId Pattern, ...spread Override, map() Transform, Save/Cancel Logic | [📄 Full Notes](https://docs.google.com/document/d/1CMN0nQfJ3fsslD61LxlcgcyCgIWnesg50NfX5MThWzc/edit?usp=sharing) |
+| 13.1.2026 | React | transformApiUser, useAllUsers (merge arrays), Flat vs Nested Objects, User Data Unification | [📄 Full Notes](https://docs.google.com/document/d/1rw4Z4MMALCh_PG3dlis4TyL0D_yAf_WBtogpIoHAy-0/edit?usp=sharing) |
+| 14.1.2026 | Node | MongoDB Queries: $gt, $in, $or, $elemMatch, select(), sort(), Pagination (skip + limit), countDocuments | [📄 Full Notes](https://docs.google.com/document/d/1bTat2aCAaLXLyQE6dXjsFMrXwH4IIavf4ET4ALZa6LM/edit?usp=sharing) |
+| 15.1.2026 | Node | findById, findByIdAndUpdate({new:true}), findByIdAndDelete, PUT vs PATCH Concept | [📄 Full Notes](https://docs.google.com/document/d/1oW9UH3_QN6phwf2S0bLDPgr75k5C8cFD5_fojjnRGLw/edit?usp=sharing) |
+| 16.1.2026 | Node | HTTP Request/Response Structure, Headers, Body, GET/POST/PUT/PATCH/DELETE Types | [📄 Full Notes](https://docs.google.com/document/d/1kYk-nvliTzT1y_PnLf1A5WZf5PZtslu5BS4bnSccGkA/edit?usp=sharing) |
+| 17.1.2026 | Node | Express Basics: express(), app object, get(), post(), listen(), req.body, res.send(), Postman Intro | [📄 Full Notes](https://docs.google.com/document/d/10uy8cQC3CAypJx36Y27ET4Jiopd5R366eLBcwFW2tC8/edit?usp=sharing) |
+| 18.1.2026 | Node | app.use(), express.json() Middleware, Route Handlers, app vs express, Request Lifecycle | [📄 Full Notes](https://docs.google.com/document/d/1yOlOOmTtXZ6SwF8vm473chyLcg5ikbJDyUixYGC6yxI/edit?usp=sharing) |
+| 19.1.2026 | Node | req, res Objects Deep Dive, req.params, Postman as Client, app.get vs app.post Clarification | [📄 Full Notes](https://docs.google.com/document/d/1TkkONbiz9-DAM3HwPLKRhHQLoW8vw3G6vQueX2FNyyk/edit?usp=sharing) |
+| 20.1.2026 | React | allUsers Merge, UsersPage Migration from API-only to Combined Source | [📄 Full Notes](https://docs.google.com/document/d/1MjuzxJ1eZvs1PvgY4adkW2WrMED63sGjGqh3tuH_aMo/edit?usp=sharing) |
+| 21.1.2026 | React | useCountries Hook, localStorage Cache Pattern, useMemo vs useCallback, prev Pattern Intro | [📄 Full Notes](https://docs.google.com/document/d/12jpDat7C8_F3Zvqz-UeCopDTS16mnr7XqDHR3QY6N2A/edit?usp=sharing) |
+| 22.1.2026 | React | useFavoriteCards: User-Specific localStorage Keys, Stale Closure, prev Pattern, Early Return Guard | [📄 Full Notes](https://docs.google.com/document/d/1DapOMDYLZ37C_yFqtDAtrK-7KmMCeQEiVOxivaVir1k/edit?usp=sharing) |
+| 23.1.2026 | Node | Project Architecture Plan, Express + Mongoose Overview, CRUD Data Structure, File Separation Principles | [📄 Full Notes](https://docs.google.com/document/d/1vPJykYbspbdwQZN9aAA0hNUuzRVvUY9grPdLUqrqXiU/edit?usp=sharing) |
+| 24.1.2026 | Node | Validators File, Card.js Schema, cardsSvc.js: createNewCard + getCards + getCard, app.js Full Build | [📄 Full Notes](https://docs.google.com/document/d/1IBmpXUcXOG92COkT40IsbZIpSSIlircJpWSb5Jp7FOI/edit?usp=sharing) |
+| 25.1.2026 | Node | CRUD Recall: get, getById, app.js Routes, req.params.id, res.status(400), cardsSvc Pattern | [📄 Full Notes](https://docs.google.com/document/d/14z2_Kl6lWzF2O3v90CZFc9hgO-DyIadV4Z-Rlw7nX6E/edit?usp=sharing) |
+| 26.1.2026 | Node | put(), delete(), patch() + likeCard (includes, push, filter), Router(), cardsRoutes.js, router.js | [📄 Full Notes](https://docs.google.com/document/d/1qm5BA2t1IAhpHq9S9_AeWyjCmBmQ0Qxcif7MZl86-Zc/edit?usp=sharing) |
+| 27.1.2026 | React | useSelectedUsers: handleRemove (filter only), useCallback Empty Deps + prev, Closure Concept, Login Bug Fix | [📄 Full Notes](https://docs.google.com/document/d/1I902NDGZQzURyUupvKStNoG02uMW6xZfyWXrVt9DBOQ/edit?usp=sharing) |
+| 28.1.2026 | React + Node | Sort by Date ([...spread] Fix), allUsers Login Fix, Users Module Plan, updateUser + likeUser Routes | [📄 Full Notes](https://docs.google.com/document/d/1JcRjcxZSdcRXtPodEUSLGRIpjNxka_MmxvHdNH5vsTw/edit?usp=sharing) |
+| 30.1.2026 | Node | CORS, JWT, Options Request, Middleware, Morgan, New Tools List | [📄 Full Notes](https://docs.google.com/document/d/1RjEnZyh5W6Ad-yNkcfq4o8FJN5b_6_1f1stQdlPvMNQ/edit?usp=sharing) |
+| 31.1.2026 | React + Node | CORS Deep Dive, Headers, JWT Intro, Card Categories (hardcoded array), constants/ folder, Category Filter Plan | [📄 Full Notes](https://docs.google.com/document/d/1a5QSsqWTvonkMRGVHqI7RtRbSnN0WfFrLeFzOsezi1I/edit?usp=sharing) |
 ---
 
 **February**
