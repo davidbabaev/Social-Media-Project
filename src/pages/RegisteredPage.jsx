@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import useCountries from '../hooks/useCountries';
 import { JOB_INDUSTRIES } from '../constants/usersJobIndustries';
 import getMaxBirthDate from '../utils/getMaxBirthDate';
+import GoogleIcon from '@mui/icons-material/Google';
+import { Button } from '@mui/material';
 
 export default function RegisteredPage() {
     
@@ -252,10 +254,15 @@ export default function RegisteredPage() {
         <br />
         <hr />
         <h2>already user?</h2>
-        <button 
-        onClick={() => navigate('/dashboard/myprofile')}>
-            login to your account
-        </button>
+        <Button variant="outlined" onClick={() => navigate('/dashboard/myprofile')}>login With Email/Pssword</Button>
+        <Button 
+            sx={{margin:'10px'}} 
+            variant="outlined" 
+            startIcon={<GoogleIcon/>}
+            href='http://localhost:8181/auth/google'
+        >
+            Login With Google
+        </Button>
     </div>
 
   )

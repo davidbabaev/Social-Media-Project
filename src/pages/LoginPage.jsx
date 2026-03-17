@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { useAuth } from '../providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
+
 
 export default function LoginPage() {
 
@@ -55,9 +58,21 @@ export default function LoginPage() {
           />
         </div>
         {error && <p style={{color: 'red'}}>{error}</p>}
-
+         <br />
         <button type='submit'>Login</button>
+        
       </form>
+      <br />
+      <hr />
+      <br />
+      <Button 
+        variant="outlined" 
+        startIcon={<GoogleIcon/>}
+        sx={{margin:'10px'}} 
+        href='http://localhost:8181/auth/google'  
+      >
+        Login With Google
+      </Button>
     </div>
   )
 }

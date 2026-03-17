@@ -56,7 +56,7 @@ return (
             <p>Job: {user.job}</p>
             <p>Gender: {user.gender}</p>
             <p>Phone: {user.phone}</p>
-            <p>Birth Date: {user.birthDate.split("T")[0]}</p>
+            <p>Birth Date: {user.birthDate?.split("T")[0]}</p>
             <p>Registered At: {user.createdAt.split("T")[0]}</p>
 
             <button onClick={() => {

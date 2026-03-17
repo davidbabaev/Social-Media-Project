@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { followUnfollowUser, loginUser, registerUser, updateUser } from '../services/apiService';
+import { followUnfollowUser, loginUser, registerUser, updateUser, getSingleUser } from '../services/apiService';
+import { jwtDecode } from 'jwt-decode';
 
 const UseAuthCheck = createContext();
 
@@ -10,22 +11,40 @@ export function AuthProvider({children}) {
     const [isUserLoaded , setIsUserLoaded] = useState(false)
 
     useEffect(() => {
-        const savedLoggedInUser = JSON.parse(localStorage.getItem('loggedInUser'))
-
-        if(savedLoggedInUser){
-            setUser(savedLoggedInUser)
-            setIsLoggedIn(true) 
-        } else{
-            setIsLoggedIn(false) 
+        const handleAuth = async () => {
+            // NEW: check if google just redirected here with a token
+            const params = new URLSearchParams(window.location.search);
+            const googleToken = params.get('token')
+    
+            if(googleToken){
+                // handle Google login
+                localStorage.setItem('auth-token', googleToken);
+                const decoded = jwtDecode(googleToken);
+                const userGoogle = await getSingleUser(decoded.userId)
+                setUser(userGoogle);
+                setIsLoggedIn(true);
+                window.history.replaceState({}, document.title, '/')
+            }
+            else{
+                // existing code stays here exactly as it is
+                const savedLoggedInUser = JSON.parse(localStorage.getItem('loggedInUser'))
+    
+                if(savedLoggedInUser){
+                    setUser(savedLoggedInUser)
+                    setIsLoggedIn(true) 
+                } else{
+                    setIsLoggedIn(false) 
+                }
+            }
+            setIsUserLoaded(true);
         }
-        setIsUserLoaded(true);
+        handleAuth();
     }, [])
 
     useEffect(() => {
         if(!isUserLoaded) return;
         localStorage.setItem('loggedInUser', JSON.stringify(user))
     }, [user, isUserLoaded])
-
 
     const handleRegister = async (user) => {
         try{
