@@ -264,7 +264,6 @@ export default function RegisteredPage() {
             Login With Google
         </Button>
     </div>
-
   )
 }
 
