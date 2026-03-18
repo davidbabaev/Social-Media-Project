@@ -170,7 +170,6 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
   const group_countCountriesPerUsers = 
   Object.entries(countCountriesPerUsers).map((item) => {
     const foundCountry = apiCountriesList.find(f => f.name === item[0])
-
     return {
       country: item[0], 
       count: item[1],

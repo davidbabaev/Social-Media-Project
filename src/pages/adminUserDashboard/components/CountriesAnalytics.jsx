@@ -19,6 +19,7 @@ export default function CountriesAnalytics() {
                 objectFit:'cover',
                 margin: '10px'
               }} 
+              onError= {(e) => e.target.src = "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"}
               src={item.flag} 
             />
             <div 
