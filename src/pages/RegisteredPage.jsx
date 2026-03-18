@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useAuth } from '../providers/AuthProvider'
 import { useNavigate } from 'react-router-dom';
 import useCountries from '../hooks/useCountries';
 import { JOB_INDUSTRIES } from '../constants/usersJobIndustries';
-import getMaxBirthDate from '../utils/getMaxBirthDate';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Button } from '@mui/material';
 import useCities from '../hooks/useCities';
-import { DisabledVisible } from '@mui/icons-material';
+import { getAgeByDate, getMaxBirthDate } from '../utils/getAgeByBirthDate';
+
 
 export default function RegisteredPage() {
 
@@ -19,7 +19,6 @@ export default function RegisteredPage() {
     const [password, setPassword] = useState('');
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
-    const [age, setAge] = useState('');
     const [job, setJob] = useState('');
     const [gender, setGender] = useState('');
     const [birthDate, setBirthDate] = useState('');
@@ -40,12 +39,12 @@ export default function RegisteredPage() {
     const navigate = useNavigate();
 
     // BirthDate function, handling
-    const maxDate = useMemo(() => getMaxBirthDate(), []);
+    const maxDate = useMemo(() => getMaxBirthDate(13), []);
 
+    
     // handle form submit
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         
         if(name.trim() === ''){
             setError('Name is required');
@@ -77,8 +76,15 @@ export default function RegisteredPage() {
             return;
         }
 
-        if(age === '' || age < 16){
-            setError("Age required and must be 16 or older")
+        if(birthDate === ''){
+            setError('Birth date required')
+            return;
+        }
+
+        const calculatedAge = getAgeByDate(birthDate);
+
+        if(calculatedAge < 13){
+            setError("Age required and must be 13 or older")
             return;
         }
 
@@ -91,7 +97,7 @@ export default function RegisteredPage() {
                     country: country, 
                     city: city,
                 },
-                age: age, 
+                age: calculatedAge, 
                 gender: gender, 
                 phone: phone, 
                 lastName: lastName, 
@@ -194,19 +200,6 @@ export default function RegisteredPage() {
             </div>
 
             <div>
-                <label>Age:</label>
-                <br />
-                <input 
-                    type="number" 
-                    value={age}
-                    min={16}
-                    max={100}
-                    onChange={(e) => setAge(e.target.value)}
-                    placeholder='24'
-                    />
-            </div>
-
-            <div>
                 <label>Job:</label>
                 <br />
                 <select 
@@ -242,7 +235,7 @@ export default function RegisteredPage() {
                     max={maxDate}
                     />
                     <br />
-                    <small>You must be at least 5 years old</small>
+                    <small>You must be at least 13+ years old</small>
             </div>
 
             <div>
@@ -251,7 +244,6 @@ export default function RegisteredPage() {
                 <input 
                     type="text" 
                     value={phone}
-                    // min={16}
                     maxLength={10}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder='051-234-5670'

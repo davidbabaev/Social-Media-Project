@@ -2,7 +2,8 @@ import React, { useMemo, useState } from 'react'
 import { useAuth } from '../../providers/AuthProvider';
 import useCountries from '../../hooks/useCountries';
 import { JOB_INDUSTRIES } from '../../constants/usersJobIndustries';
-import getMaxBirthDate from '../../utils/getMaxBirthDate';
+import useCities from '../../hooks/useCities';
+import { getMaxBirthDate, getAgeByDate } from '../../utils/getAgeByBirthDate';
 
 export default function ProfileSection() {
 
@@ -22,11 +23,14 @@ export default function ProfileSection() {
     const [editGender, setEditGender] = useState('');
     const [editBirthDate, setEditBirthDate] = useState('');
     const [editPhone, setEditPhone] = useState('');
-    const [editAboutMe, setEditAboutMe] = useState('');    
+    const [editAboutMe, setEditAboutMe] = useState('');   
+    
+    const {cities, isCitiesLoading} = useCities(editCountry);
+    
 
     const [editMode, setEditMode] = useState(false);
 
-    const maxDate = useMemo(() => getMaxBirthDate(), []);
+    const maxDate = useMemo(() => getMaxBirthDate(13), []);
     
     // import edit function that we need to initial in the AuthProvider page
 
@@ -68,8 +72,8 @@ return (
                 setEditCity(user.address?.city);
                 setEditprofilePicture(user.profilePicture);
                 setEditCoverImage(user.coverImage);
-                setEditAge(user.age);
                 setEditJob(user.job);
+                setEditAge(user.age)
                 setEditGender(user.gender);
                 setEditBirthDate(user.birthDate.split("T")[0]);
                 setEditPhone(user.phone);
@@ -135,12 +139,22 @@ return (
             <div>
                 <label>Edit City:</label>
                 <br />
-                <input 
-                    type="text" 
+                <select 
                     value={editCity}
                     onChange={(e) => setEditCity(e.target.value)}
-                    placeholder={editCity}
-                />
+                    // wrong--> {...country === '' && disabled}
+                    disabled = {editCountry === '' || isCitiesLoading}
+                >
+                    <option value="">All</option>
+                    {cities.map((cityApi) => (
+                        <option
+                            key={cityApi} 
+                            value={cityApi}
+                        >
+                            {cityApi}
+                        </option>
+                    ))}
+                </select>
             </div>
 
             <div>
@@ -160,16 +174,6 @@ return (
                 value={editCoverImage}
                 onChange={(e) => setEditCoverImage(e.target.value)}
                 placeholder= {editCoverImage}
-                />
-            </div>
-
-            <div>
-            <label>Edit Age:</label>
-            <br />
-            <input type="number" 
-                value={editAge}
-                onChange={(e) => setEditAge(e.target.value)}
-                placeholder= {editAge}
                 />
             </div>
 
@@ -210,7 +214,7 @@ return (
                     max={maxDate}
                     />
                     <br />
-                    <small>You must be at least 5 years old</small>
+                    <small>You must be at least 13+ years old</small>
             </div>
 
             <div>
@@ -250,7 +254,7 @@ return (
                         },
                         profilePicture: editprofilePicture,
                         coverImage: editCoverImage,
-                        age: editAge,
+                        age: getAgeByDate(editBirthDate),
                         gender: editGender,
                         phone: editPhone,
                         job: editJob,
