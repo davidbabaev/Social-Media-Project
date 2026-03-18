@@ -37,7 +37,7 @@ export default function RetentionAnalyticsUsers() {
             secondValue = {newRegisteredUsers_LastWeek_count}
             percentsValue = {registeredGrowthRate}
             pFirstValue = {"Registered This Week"}
-            pVsValue = {" vs Previous week"}
+            pVsValue = {"  New users on this week"}
             pPercentsValue = {" Than previous week"}
         />
 

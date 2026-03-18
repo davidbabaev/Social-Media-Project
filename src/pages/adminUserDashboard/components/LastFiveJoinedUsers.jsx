@@ -1,11 +1,14 @@
 import React from 'react'
 import useAnalytics from '../hooks/useAnalytics'
+import { useNavigate } from 'react-router-dom';
 
 export default function LastFiveJoinedUsers() {
 
     const {
         lastFiveUsers
     } = useAnalytics();
+
+    const navigate = useNavigate();
 
   return (
     <div 

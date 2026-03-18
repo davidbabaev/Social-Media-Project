@@ -18,7 +18,7 @@ export default function GenderAndAgesAnalytics() {
                 dataKey="count"
                 label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}>
                 {arrayGroup_countPerGender.map((entry, index) => (
-                <Cell key={index} fill={entry.gender === 'Male' ? '#E44687' : '#0088FE'}/>
+                <Cell key={index} fill={entry.gender === 'Male' ? '#0088FE' : ' #E44687'}/>
                 ))}
             </Pie>
             <Tooltip />

@@ -113,6 +113,7 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
 // - gender & ages - percents of male/ female per renges of ages (Bar Chart)
 
   const ageRange = (age) => {
+    if(age >= 13 && age <= 17) return "13-17"
     if(age >= 18 && age <= 24) return "18-24"
     if(age >= 25 && age <= 34) return "25-34"
     if(age >= 35 && age <= 44) return "35-44"
