@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../providers/AuthProvider'
 import { useNavigate } from 'react-router-dom';
 import useCountries from '../hooks/useCountries';
@@ -6,11 +6,13 @@ import { JOB_INDUSTRIES } from '../constants/usersJobIndustries';
 import getMaxBirthDate from '../utils/getMaxBirthDate';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Button } from '@mui/material';
+import useCities from '../hooks/useCities';
+import { DisabledVisible } from '@mui/icons-material';
 
 export default function RegisteredPage() {
+
     
     const [error, setError] = useState('');
-
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -23,7 +25,13 @@ export default function RegisteredPage() {
     const [birthDate, setBirthDate] = useState('');
     const [phone, setPhone] = useState('');
     const [aboutMe, setAboutMe] = useState('');
+    
+    const {cities, isCitiesLoading} = useCities(country);
 
+    const handleCountryChange = (e) => {
+        setCountry(e.target.value);
+        setCity('')
+    }
 
     const {handleRegister} = useAuth();
     const {apiCountriesList} = useCountries();
@@ -56,6 +64,11 @@ export default function RegisteredPage() {
 
         if(country === ''){
             setError('Country is Required');
+            return;
+        }
+
+        if(city === ''){
+            setError('City is Required');
             return;
         }
 
@@ -150,7 +163,7 @@ export default function RegisteredPage() {
                 <br />
                 <select
                     value={country}
-                    onChange={(e) => setCountry(e.target.value)}  
+                    onChange={handleCountryChange}  
                 >
                     <option value="">all countries</option>
                     {apiCountriesList.map((country) => (
@@ -162,12 +175,22 @@ export default function RegisteredPage() {
             <div>
                 <label>city:</label>
                 <br />
-                <input 
-                    type="text" 
+                <select 
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    placeholder='Viena'
-                />
+                    // wrong--> {...country === '' && disabled}
+                    disabled = {country === '' || isCitiesLoading}
+                >
+                    <option value="">All</option>
+                    {cities.map((cityApi) => (
+                        <option
+                            key={cityApi} 
+                            value={cityApi}
+                        >
+                            {cityApi}
+                        </option>
+                    ))}
+                </select>
             </div>
 
             <div>
