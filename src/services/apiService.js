@@ -56,3 +56,9 @@ export const addComment = (id, cardData) => httpRequest(`/cards/${id}/comments`,
 export const removeComment = (id, commentId) => httpRequest(`/cards/${id}/comments/${commentId}`, 'PATCH');
 export const getFeedCards = () => httpRequest(`/cards/feed`, 'GET');
 export const banCard = (id) => httpRequest(`/cards/${id}/ban`, 'PATCH');
+
+
+// Notifications Requests
+export const getNotifications = () => httpRequest(`/notifications`, 'GET');
+export const markNotificationsAsRead = () => httpRequest(`/notifications`, 'PATCH');
+export const deleteOneNotification = (id) => httpRequest(`/notifications/${id}`, 'DELETE');
