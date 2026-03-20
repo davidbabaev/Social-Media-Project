@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { getAllCards, createCard, deleteCard, updateCard, likeUnlikeCard, addComment, removeComment, getFeedCards, banCard} from '../services/apiService';
+import { useAuth } from './AuthProvider';
 
 const CardsContext = createContext();
 
@@ -9,6 +10,7 @@ export function CardsProvider({children}) {
 const [registeredCards, setRegisteredCards] = useState([]);
 
 const [feedCards, setFeedCards] = useState([]);
+const {isLoggedIn} = useAuth();
 
 const fetchCards = async () => {
     try{
@@ -30,7 +32,7 @@ useEffect(() => {
     if(token){
         refreshFeed();
     }
-}, []);
+}, [isLoggedIn]);
 
 // can be called anytime you need to re-fetch
 const refreshFeed = async () => {

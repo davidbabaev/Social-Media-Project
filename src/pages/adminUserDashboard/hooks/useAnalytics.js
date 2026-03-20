@@ -157,7 +157,11 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
 // - percent progress bar how many percents take each country of the whole app users
 //  (60% of the users in our app is from USA)
 
-  const countCountriesPerUsers = users.reduce((acc, user) => {
+  const filteredUsers = users.filter((user) => {
+    return user.address.country !== "" && user.address.country !== "Not Defined"
+  })
+
+  const countCountriesPerUsers = filteredUsers.reduce((acc, user) => {
     if(acc[user.address.country]){
       acc[user.address.country] = acc[user.address.country] + 1;
     }
@@ -173,8 +177,8 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
     return {
       country: item[0], 
       count: item[1],
-      percent: (item[1] / users.length * 100).toFixed(0),
-      flag: foundCountry?.flag
+      percent: (item[1] / filteredUsers.length * 100).toFixed(0),
+      flag: foundCountry?.flag || "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
     }
   }).sort((a,b) => b.count - a.count)
 

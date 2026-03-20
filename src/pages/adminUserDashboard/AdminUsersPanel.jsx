@@ -318,7 +318,8 @@ export default function AdminUsersPanel() {
             return userF.following.includes(userM._id)
           }).length;
 
-          const userFlag = apiCountriesList.find(f => f.name === userM.address.country);
+          if(!apiCountriesList) return;
+          const userFlag = apiCountriesList.find(f => f.name === userM.address?.country);
 
           return(
                   <tr 
@@ -338,7 +339,8 @@ export default function AdminUsersPanel() {
                     <td>{userM.name} {userM.lastName}</td>
                     <td>{userM.email}</td>
                     <td>{userM.lastLoginAt.split("T")[0]}</td>
-                    <td><img 
+                    <td>
+                      <img 
                       style={{
                           width: '35px',
                           height: '35px',
@@ -347,7 +349,10 @@ export default function AdminUsersPanel() {
                           objectFit: 'cover',
                           cursor: 'pointer'
                       }}
-                      src={userFlag.flag}
+                      src={userFlag?.flag || "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"}
+                      onError={(e) => {
+                        e.target.src = "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                      }}
                     /></td>
                     <td>{userM.createdAt.split("T")[0]}</td>
                     <td>{userCardsCount}</td>
@@ -356,13 +361,13 @@ export default function AdminUsersPanel() {
                     <td>{userM.isBanned ? "Banned" : "Not Banned"}</td>
                     <td>
                       {userM._id !== user._id ? (
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setConfirmUser(userM)
-                        }}>
-                      Delete User
-                    </button>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setConfirmUser(userM)
+                            }}>
+                          Delete User
+                        </button>
                       ):(
                         <p>You Admin</p>
                       )}
