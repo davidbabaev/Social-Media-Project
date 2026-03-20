@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function ConfirmationDialog({message, onClose, onConfirm}) {
 
-        const styleP = {
+    const styleP = {
         position: 'fixed',
         top: '0',
         left: '0',

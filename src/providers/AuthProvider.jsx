@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { followUnfollowUser, loginUser, registerUser, updateUser, getSingleUser } from '../services/apiService';
 import { jwtDecode } from 'jwt-decode';
+// import { useCardsProvider } from './CardsProvider';
 
 const UseAuthCheck = createContext();
+// const {refreshFeed} = useCardsProvider();
 
 export function AuthProvider({children}) {
 
@@ -22,6 +24,8 @@ export function AuthProvider({children}) {
                 const decoded = jwtDecode(googleToken);
                 const userGoogle = await getSingleUser(decoded.userId)
                 setUser(userGoogle);
+                console.log(userGoogle);
+                
                 setIsLoggedIn(true);
                 window.history.replaceState({}, document.title, '/')
             }

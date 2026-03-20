@@ -18,6 +18,7 @@ import AdminDashboardLayout from './pages/adminUserDashboard/AdminDashboardLayou
 import AdminProtectedRoute from './components/AdminProtectedRoute'
 import RecallReduce from '../codes backups/RecallReduce'
 import PaginationDiagram from '../codes backups/Paigination'
+import Notifications from './components/Notifications'
 
 
 export default function App(){
