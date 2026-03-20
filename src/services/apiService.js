@@ -3,7 +3,6 @@ const BASE_URL = 'http://localhost:8181';
 const getToken = () => localStorage.getItem('auth-token');
 
 const httpRequest = async (endpoint, method, body) => {
-    
     const token = getToken();
 
     // headers
@@ -30,7 +29,6 @@ const httpRequest = async (endpoint, method, body) => {
     if(!response.ok){
         throw new Error(response.statusText);
     }
-
     return await response.json();
 }
 
