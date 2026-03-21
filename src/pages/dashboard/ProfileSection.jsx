@@ -21,8 +21,7 @@ export default function ProfileSection() {
         handleLogout();
         navigate('/login');
     }
-      
-
+    
     // edit logged-in user values states:
     const [editName, setEditName] = useState('');
     const [editLastName, setEditLastName] = useState('');
@@ -37,7 +36,12 @@ export default function ProfileSection() {
     const [editBirthDate, setEditBirthDate] = useState('');
     const [editPhone, setEditPhone] = useState('');
     const [editAboutMe, setEditAboutMe] = useState('');   
-    
+
+     const handleCountryChange = (e) => {
+        setEditCountry(e.target.value);
+        setEditCity('');
+    }
+
     const {cities, isCitiesLoading} = useCities(editCountry);
 
     const [confirmDeleteUser, setConfirmDeleteUser] = useState(null);
@@ -111,7 +115,7 @@ return (
                 setEditJob(user.job);
                 setEditAge(user.age)
                 setEditGender(user.gender);
-                setEditBirthDate(user.birthDate.split("T")[0]);
+                setEditBirthDate(user.birthDate?.split("T")[0]);
                 setEditPhone(user.phone);
                 setEditAboutMe(user.aboutMe);
             }
@@ -173,7 +177,7 @@ return (
             <br />
             <select 
                 value={editCountry}
-                onChange={(e) => setEditCountry(e.target.value)}  
+                onChange={handleCountryChange}  
             >
                 <option value="">All</option>
                 {apiCountriesList.map((country) => (
@@ -288,6 +292,14 @@ return (
 
             <button
             onClick={async() => {
+                if(editCountry === ''){
+                    alert('Country is required')
+                    return;
+                }
+                if(editCity === 'Not Defined' || editCity === ''){
+                    alert('City is required')
+                    return;
+                }
                 const result = await editUser(
                     user._id,
                     {

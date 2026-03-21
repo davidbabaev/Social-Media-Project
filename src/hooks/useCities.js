@@ -28,6 +28,7 @@ export default function useCities(countryName) {
         }
         catch(err){
             console.log(err.message);
+            setCities([]);
         }
         finally{
             setIsCitiesLoading(false)

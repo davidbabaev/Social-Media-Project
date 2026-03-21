@@ -75,7 +75,8 @@ export default function Notifications({notificationsValue, handleDeleteNotificat
                     color: 'gray', 
                     fontSize:'13px', 
                     margin: 0,
-                }}>
+                }}
+                >
                 {getTimeAgo(notification.createdAt)}
               </p>
 
