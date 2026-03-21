@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../../providers/AuthProvider';
 import useCountries from '../../hooks/useCountries';
 import { JOB_INDUSTRIES } from '../../constants/usersJobIndustries';
 import useCities from '../../hooks/useCities';
 import { getMaxBirthDate, getAgeByDate } from '../../utils/getAgeByBirthDate';
+import { useLocation } from 'react-router-dom';
 
 export default function ProfileSection() {
 
@@ -27,10 +28,31 @@ export default function ProfileSection() {
     
     const {cities, isCitiesLoading} = useCities(editCountry);
     
-
     const [editMode, setEditMode] = useState(false);
 
     const maxDate = useMemo(() => getMaxBirthDate(13), []);
+
+    // the state will be the data object you passed {editMode: true}
+    const location = useLocation();
+    const {state} = location;
+    useEffect(() => {
+        if(state?.editMode === true){
+            setEditMode(true);
+            setEditName(user.name);
+            setEditLastName(user.lastName);
+            setEditEmail(user.email);
+            setEditCountry(user.address?.country === 'Not Defined' ? '' : user.address?.country);
+            setEditCity(user.address?.city);
+            setEditprofilePicture(user.profilePicture);
+            setEditCoverImage(user.coverImage);
+            setEditJob(user.job);
+            setEditAge(user.age)
+            setEditGender(user.gender);
+            setEditBirthDate(user.birthDate?.split("T")[0]);
+            setEditPhone(user.phone);
+            setEditAboutMe(user.aboutMe);
+        }
+    }, [state])
     
     // import edit function that we need to initial in the AuthProvider page
 

@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CardItem from '../components/CardItem'
 import { useCardsProvider } from '../providers/CardsProvider';
 import { useAuth } from '../providers/AuthProvider';
 import useUsers from '../hooks/useUsers';
 import useFollowUser from '../hooks/useFollowUser';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import CreateCardForm from '../components/CreateCardForm';
 
@@ -18,7 +18,33 @@ export default function FeedPage() {
     const navigate = useNavigate();
     const debounceFollowing = useDebounce(user?.following, 3000)
     const {refreshFeed} = useCardsProvider();
+
+    // ----------------------------------------------------
     
+    const [isFilled, setIsFilled] = useState(false)
+
+    const isUserDataFill = () => {
+        if(
+            user?.address.country === "Not Defined" ||
+            user?.phone === null ||
+            user?.age === null ||
+            user?.job === "Not Defined" ||
+            user?.gender === "Unknown" ||
+            user?.birthDate === null ||
+            user?.aboutMe === "Not Defined"
+        ){
+            return setIsFilled(true);
+        }
+        return setIsFilled(false)
+    }
+    
+    useEffect(() => {
+        if(!user) return;
+        isUserDataFill();
+    }, [])
+    
+    
+    // ----------------------------------------------------
 
     const userFollowing = users.filter(userU => debounceFollowing?.includes(userU._id))
 
@@ -37,9 +63,6 @@ export default function FeedPage() {
     
     const uniqueFriendsOfFriends = 
     [...new Map(friendsOfFriends.map((u => {return [u._id, u]}))).values()]
-
-
-    
 
   return (
     <div style={{display: 'flex', width:"100%"}}>
@@ -93,7 +116,19 @@ export default function FeedPage() {
         </div>
 
         <div style={{padding: '5px', width:"100%", margin: '5px'}}>
-            <div style={{padding: '5px', border: '1px solid lightGray', borderRadius:'10px'}}>
+                    {/* Popup for edit profile */}
+            {isFilled === true && (
+                <div>
+                    <p>Complete you profile data</p>
+                    <button
+                        onClick={() => 
+                            navigate(`/dashboard/myprofile`, { state: {editMode: true} })}
+                    >
+                        Edit Profile 📝
+                    </button>
+                </div>
+            )}
+            <div style={{padding: '5px', border: '1px solid lightGray',     borderRadius:'10px'}}>
                 <CreateCardForm
                     onSuccess = {() => refreshFeed()}
                 />    
@@ -155,7 +190,7 @@ export default function FeedPage() {
                     </div>
                 ))}
             </div>
-        </div>
+        </div>        
     </div>
   )
 }
