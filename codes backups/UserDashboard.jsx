@@ -5,6 +5,7 @@ import { CARD_CATEGORIES } from '../constants/cardsCategories';
 import useUsers from '../hooks/useUsers';
 
 import useCountries from '../hooks/useCountries';
+import getTimeAgo from '../src/utils/getTimeAgo';
 
 export default function UserDashboard() {
 
@@ -237,7 +238,13 @@ export default function UserDashboard() {
                         <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}/>
                         <p>{currentUser.name}</p>
                         <p>|</p>
-                        <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
+                        <p
+                          style={{
+                              color: 'gray', 
+                              fontSize:'13px', 
+                              margin: 0,
+                          }}
+                        >{getTimeAgo(card.createdAt)}</p>
                         <button onClick={() => handleDeleteCard(card.cardId)}>Remove</button>
                         <button onClick={() => {
                           setEditingCardId(card.cardId);

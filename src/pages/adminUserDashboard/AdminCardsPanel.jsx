@@ -7,6 +7,7 @@ import { useAuth } from '../../providers/AuthProvider';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 import useFavoriteCards from '../../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../../constants/cardsCategories';
+import getTimeAgo from '../../utils/getTimeAgo';
 export default function AdminCardsPanel() {
 
   const {loading, getUsers} = useUsers();
@@ -284,7 +285,7 @@ export default function AdminCardsPanel() {
                     </td>
                     <td>{card.title}</td>
                     <td>{card.category}</td>
-                    <td>{card.createdAt.split("T")[0]}</td>
+                    <td>{getTimeAgo(card.createdAt)}</td>
                     <td>{card.likes.length}</td>
                     <td>{card.comments.length}</td>
                     <td>

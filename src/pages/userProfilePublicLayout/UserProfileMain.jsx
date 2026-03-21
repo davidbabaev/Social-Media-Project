@@ -8,6 +8,7 @@ import useLikedCards from '../../hooks/useLikedCards';
 import useFavoriteCards from '../../hooks/useFavoriteCards';
 import CardsComments from '../../components/CardsComments';
 import LoginPopup from '../../components/LoginPopup';
+import getTimeAgo from '../../utils/getTimeAgo';
 
 export default function UserProfileMain() {
 
@@ -82,7 +83,12 @@ return (
                             </span>
                         </p>
                         <p>|</p>
-                        <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
+                        <p
+                        style={{
+                            color: 'gray', 
+                            fontSize:'13px', 
+                        }}
+                        >{getTimeAgo(card.createdAt)}</p>
                         <p>|</p>
                         {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {card.category}</p>)}
                         <p>|</p>

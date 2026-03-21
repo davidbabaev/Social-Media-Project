@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import useCommentsCards from '../hooks/useCommentsCards';
 import CardsComments from './CardsComments';
 import LoginPopup from './LoginPopup';
+import getTimeAgo from '../utils/getTimeAgo';
 
 export default function CardItem({card}) {
 
@@ -68,9 +69,15 @@ export default function CardItem({card}) {
                   </span>
               </p>
               <p>|</p>
-              <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
+              <p
+                style={{
+                    color: 'gray', 
+                    fontSize:'13px', 
+                    margin: 0,
+                }}
+              >{getTimeAgo(card.createdAt)}</p>
               <p>|</p>
-              {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {card.category}</p>)}
+              {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>{card.category}</p>)}
               <p>|</p>
               <p>{getLikeCount(card._id)} likes</p>
               <p>|</p>

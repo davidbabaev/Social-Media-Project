@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useCardsProvider } from '../../providers/CardsProvider';
 import { useAuth } from '../../providers/AuthProvider';
 import { CARD_CATEGORIES } from '../../constants/cardsCategories';
+import getTimeAgo from '../../utils/getTimeAgo';
 export default function MyCardsSection() {
 
     const {registeredCards, handleDeleteCard, handleEditCard} = useCardsProvider();
@@ -100,7 +101,13 @@ return (
                     <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={user?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}/>
                     <p>{user?.name} {user?.lastName}</p>
                     <p>|</p>
-                    <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
+                    <p
+                    style={{
+                        color: 'gray', 
+                        fontSize:'13px', 
+                        margin: 0,
+                    }}
+                    >{getTimeAgo(card.createdAt)}</p>
                     <button onClick={() => handleDeleteCard(card._id)}>Remove</button>
                     <button onClick={() => {
                         setEditingCardId(card._id);

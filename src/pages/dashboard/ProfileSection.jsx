@@ -4,12 +4,24 @@ import useCountries from '../../hooks/useCountries';
 import { JOB_INDUSTRIES } from '../../constants/usersJobIndustries';
 import useCities from '../../hooks/useCities';
 import { getMaxBirthDate, getAgeByDate } from '../../utils/getAgeByBirthDate';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useUsers from '../../hooks/useUsers';
+import { useCardsProvider } from '../../providers/CardsProvider';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
 
 export default function ProfileSection() {
 
-    const {user, editUser} = useAuth(); // only works for registered
+    const {user, editUser, handleLogout} = useAuth(); // only works for registered
     const {apiCountriesList} = useCountries(); 
+    const {handleDeleteUser, getUsers} = useUsers();
+    const {refreshFeed, fetchCards} = useCardsProvider();
+    const navigate = useNavigate();
+
+    const onLogOut = () => {
+        handleLogout();
+        navigate('/login');
+    }
+      
 
     // edit logged-in user values states:
     const [editName, setEditName] = useState('');
@@ -27,6 +39,8 @@ export default function ProfileSection() {
     const [editAboutMe, setEditAboutMe] = useState('');   
     
     const {cities, isCitiesLoading} = useCities(editCountry);
+
+    const [confirmDeleteUser, setConfirmDeleteUser] = useState(null);
     
     const [editMode, setEditMode] = useState(false);
 
@@ -102,6 +116,16 @@ return (
                 setEditAboutMe(user.aboutMe);
             }
             }>Edit Profile</button>
+
+            {!user.isAdmin && (
+                <button
+                    onClick={() => {
+                        setConfirmDeleteUser(user);
+                    }}
+                >
+                    Delete User
+                </button>
+            )}
 
         </div>
 
@@ -292,8 +316,22 @@ return (
                 }}
             >Save Edits</button>
             <button onClick={() => setEditMode(!editMode)}>Cancel Edit Mode</button>
-
         </div>
+    )}
+
+    {confirmDeleteUser && (
+        <ConfirmationDialog
+            message={`Delete user ${confirmDeleteUser.name} ${confirmDeleteUser.lastName}?`}
+            onClose={() => setConfirmDeleteUser(null)}
+            onConfirm={async () => {
+                await handleDeleteUser(confirmDeleteUser._id);
+                await getUsers();
+                await fetchCards();
+                await refreshFeed();
+                setConfirmDeleteUser(null);
+                onLogOut();
+            }}
+        />
     )}
 </div>
 )

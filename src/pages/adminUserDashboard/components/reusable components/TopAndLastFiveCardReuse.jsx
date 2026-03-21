@@ -1,4 +1,5 @@
 import React from 'react'
+import getTimeAgo from '../../../../utils/getTimeAgo'
 
 export default function TopAndLastFiveCardReuse({topFiveValue, usersArrayValue, mainTitle, showInteractions}) {
   return (
@@ -44,14 +45,13 @@ export default function TopAndLastFiveCardReuse({topFiveValue, usersArrayValue, 
                         >
                             {cardCreator?.name} {cardCreator?.lastName}  
                         </p>
-                        <p 
+                        <p
                             style={{
                                 color: 'gray', 
-                                fontSize:'12px', 
-                                margin: 0
-                            }}>
-                            {card.createdAt.split("T")[0]}
-                        </p>
+                                fontSize:'13px', 
+                                margin: 0,
+                            }}
+                        >{getTimeAgo(card.createdAt)}</p>
                         </div>
                     </div>
                     <p 

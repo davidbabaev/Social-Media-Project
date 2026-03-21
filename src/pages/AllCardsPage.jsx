@@ -11,6 +11,7 @@ import useLikedCards from '../hooks/useLikedCards';
 import LoginPopup from '../components/LoginPopup';
 import CardsComments from '../components/CardsComments';
 import useCommentsCards from '../hooks/useCommentsCards';
+import getTimeAgo from '../utils/getTimeAgo';
 
 export default function AllCardsPage() {
 
@@ -191,7 +192,12 @@ export default function AllCardsPage() {
                             </span>
                         </p>
                         <p>|</p>
-                        <p>Created at: {new Date(card.createdAt).toLocaleDateString()}</p>
+                        <p
+                        style={{
+                            color: 'gray', 
+                            fontSize:'13px',
+                        }}
+                        >{getTimeAgo(card.createdAt)}</p>
                         <p>|</p>
                         {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {card.category}</p>)}
                         <p>|</p>

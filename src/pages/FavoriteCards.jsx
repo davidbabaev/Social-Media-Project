@@ -2,6 +2,7 @@ import React from 'react'
 import useFavoriteCards from '../hooks/useFavoriteCards'
 import { useNavigate } from 'react-router-dom';
 import useUsers from '../hooks/useUsers';
+import getTimeAgo from '../utils/getTimeAgo';
 export default function FavoriteCards() {
 
     const {favoriteCards, handleRemoveCard} = useFavoriteCards();
@@ -42,7 +43,12 @@ export default function FavoriteCards() {
                             <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}/>
                             <p>{currentUser.name}</p>
                             <p>|</p>
-                            <p>Created at: {new Date(favCard.createdAt).toLocaleDateString()}</p>
+                            <p
+                            style={{
+                                color: 'gray', 
+                                fontSize:'13px', 
+                            }}
+                            >{getTimeAgo(favCard.createdAt)}</p>
                             <p>|</p>
                             {!favCard.category ? (<p>Don't Have Categoty</p>) : (<p>Category: {favCard.category}</p>)}
                             

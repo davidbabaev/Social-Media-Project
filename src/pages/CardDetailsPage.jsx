@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import useLikedCards from '../hooks/useLikedCards';
 import LoginPopup from '../components/LoginPopup';
 import useCommentsCards from '../hooks/useCommentsCards';
+import getTimeAgo from '../utils/getTimeAgo';
 
 export default function CardDetailsPage() {
 
@@ -78,7 +79,12 @@ export default function CardDetailsPage() {
                     </span>
                 </p>
                 <p>|</p>
-                <p>Created at: {new Date(currentCard.createdAt).toLocaleDateString()}</p>
+                <p
+                style={{
+                    color: 'gray', 
+                    fontSize:'13px', 
+                }}
+                >{getTimeAgo(currentCard.createdAt)}</p>
                 <p>|</p>
                 {!currentCard.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {currentCard.category}</p>)}
                 <p>|</p>
