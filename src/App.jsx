@@ -16,9 +16,8 @@ import UsersPage from './pages/UsersPage'
 import FeedPage from './pages/FeedPage'
 import AdminDashboardLayout from './pages/adminUserDashboard/AdminDashboardLayout'
 import AdminProtectedRoute from './components/AdminProtectedRoute'
-import RecallReduce from '../codes backups/RecallReduce'
 import PaginationDiagram from '../codes backups/Paigination'
-import Notifications from './components/Notifications'
+import PublicOnlyRoute from './components/PublicOnlyRoute'
 
 
 export default function App(){
@@ -43,7 +42,11 @@ export default function App(){
                   <AdminDashboardLayout/>
                 </AdminProtectedRoute>
               }/>
-              <Route path='/login' element={<LoginPage/>}/>
+              <Route path='/login' element={
+                <PublicOnlyRoute>
+                  <LoginPage/>
+                </PublicOnlyRoute>
+              }/>
               <Route path='/dashboard/*' element={
                 <ProtectedRoute>
                   <DashboardLayout/>
@@ -57,7 +60,11 @@ export default function App(){
               }/>
               <Route path='/allusers' element ={<UsersPage/>}/>
               <Route path='/recall' element ={<PaginationDiagram/>}/>
-              <Route path='/registered' element ={<RegisteredPage/>}/>
+              <Route path='/registered' element ={
+                <PublicOnlyRoute>
+                  <RegisteredPage/>
+                </PublicOnlyRoute>
+              }/>
               <Route path='/allcards' element ={<AllCardsPage/>}/>
               <Route path='/carddetails/:id' element ={<CardDetailsPage/>}/>
             </Routes>
