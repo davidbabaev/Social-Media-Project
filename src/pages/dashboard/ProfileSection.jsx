@@ -115,7 +115,7 @@ return (
                 setEditJob(user.job);
                 setEditAge(user.age)
                 setEditGender(user.gender);
-                setEditBirthDate(user.birthDate?.split("T")[0]);
+                setEditBirthDate(user.birthDate.split("T")[0]);
                 setEditPhone(user.phone);
                 setEditAboutMe(user.aboutMe);
             }
@@ -163,10 +163,11 @@ return (
             </div>
 
             <div>
-            <label>Edit Email:</label>
+            <label>Your Email:</label>
             <br />
             <input type="text" 
                 value={editEmail}
+                disabled
                 onChange={(e) => setEditEmail(e.target.value)}
                 placeholder= {editEmail}
                 />
@@ -305,7 +306,7 @@ return (
                     {
                         name: editName,
                         lastName: editLastName,
-                        email: editEmail,
+                        email: user.email,
                         address: {
                             country: editCountry,
                             city: editCity,
