@@ -52,7 +52,7 @@ export default function LoginPage() {
         <div>
           <label>Password:</label><br/>
           <input
-            type="password" 
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -69,7 +69,7 @@ export default function LoginPage() {
         variant="outlined" 
         startIcon={<GoogleIcon/>}
         sx={{margin:'10px'}} 
-        href='http://localhost:8181/auth/google'  
+        href='/auth/google'  
       >
         Login With Google
       </Button>

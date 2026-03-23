@@ -18,6 +18,7 @@ import AdminDashboardLayout from './pages/adminUserDashboard/AdminDashboardLayou
 import AdminProtectedRoute from './components/AdminProtectedRoute'
 import PaginationDiagram from '../codes backups/Paigination'
 import PublicOnlyRoute from './components/PublicOnlyRoute'
+import { Box } from '@mui/material'
 
 
 export default function App(){
@@ -28,9 +29,14 @@ export default function App(){
     <AuthProvider>
       <ThemeProvider>
         <CardsProvider>
-          {!location.pathname.includes('/admindashboard') && (
+          {!(
+            location.pathname.includes('/admindashboard') ||
+            location.pathname.includes('/login') ||
+            location.pathname.includes('/register')
+          ) && (
             <NavBar/>
           )}
+          <Box sx={{minHeight: '100vh', bgcolor: 'Background.default'}}>
             <Routes>
               <Route path='/' element={
                 <ProtectedRoute>
@@ -68,6 +74,7 @@ export default function App(){
               <Route path='/allcards' element ={<AllCardsPage/>}/>
               <Route path='/carddetails/:id' element ={<CardDetailsPage/>}/>
             </Routes>
+          </Box>
         </CardsProvider>
       </ThemeProvider>
     </AuthProvider>  

@@ -274,7 +274,7 @@ export default function RegisteredPage() {
             sx={{margin:'10px'}} 
             variant="outlined" 
             startIcon={<GoogleIcon/>}
-            href='http://localhost:8181/auth/google'
+            href='/auth/google'
         >
             Login With Google
         </Button>
