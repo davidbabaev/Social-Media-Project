@@ -3,15 +3,21 @@ import { useAuth } from '../providers/AuthProvider'
 import { useNavigate } from 'react-router-dom';
 import useCountries from '../hooks/useCountries';
 import { JOB_INDUSTRIES } from '../constants/usersJobIndustries';
-import GoogleIcon from '@mui/icons-material/Google';
-import { Button } from '@mui/material';
 import useCities from '../hooks/useCities';
 import { getAgeByDate, getMaxBirthDate } from '../utils/getAgeByBirthDate';
+import { Alert, Box, Button, Divider, MenuItem, Stack, TextField, Typography, useTheme } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
+import MirageLogo from '../assets/MirageLogo';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+import { useThemeContext } from '../providers/ThemeProvider';
 
 
 export default function RegisteredPage() {
 
-    
+    const bgcImg = 'https://4kwallpapers.com/images/walls/thumbs_3t/2557.jpg'
+    const theme = useTheme();
+
     const [error, setError] = useState('');
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -116,169 +122,261 @@ export default function RegisteredPage() {
 
 
   return (
-    <div>
-        <br />
-        <h1>Register</h1>
-        <form onSubmit = {handleSubmit}>
-            <div>
-                <label>Name:</label>
-                <br />
-                <input 
-                    type="text" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder='Alon..'
-                />
-            </div>
+        <Box sx={{
+      display: 'flex',
+      minHeight: '100vh',
+      width: '100%'
+    }}>
 
-            <div>
-                <label>Last Name:</label>
-                <br />
-                <input 
-                    type="text" 
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    placeholder='Levi..'
-                />
-            </div>
+      {/* Lest side image */}
+      <Box sx={{
+        flex: 1,
+        minHeight: '100vh',
+        backgroundImage: `url(${bgcImg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}/>
 
-            <div>
-                <label>Email:</label>
-                <br />
-                <input 
-                    type="text" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder='email@gmail.com'
-                />
-            </div>
+      {/* Right side form */}
+      <Box sx={{
+        flex: 0.8,
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: 'background.paper',
+        borderRadius: '24px 0 0 24px',
+        ml: '-24px',
+        zIndex: 1,
+        overflowY: 'auto'
+      }}>
+        {/* Form Card */}
+        <Box sx={{
+            width: 400,
+            p: 4,
+            bgcolor: 'background.paper',
+            '& input:-webkit-autofill': {
+                // theme.palette.background.paper
+                // reads the actual color value from the theme, switches automatically between dark/light
+                // theme.palette.text.primary: same for text color
+                WebkitBoxShadow: `0 0 0 1000px ${theme.palette.background.paper} inset`,
+                WebkitTextFillColor: theme.palette.text.primary,
+                transition: 'background-color 5000s ease-in-out 0s'
+            }
 
-            <div>
-                <label>Password:</label>
-                <br />
-                <input 
-                    type="password" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder='123*****'
-                />
-            </div>
+        }}>
+          <MirageLogo/>
 
-            <div>
-                <label>Country:</label>
-                <br />
-                <select
-                    value={country}
-                    onChange={handleCountryChange}  
-                >
-                    <option value="">all countries</option>
-                    {apiCountriesList.map((country) => (
-                        <option key={country.code} value={country.name}>{country.name}</option>
-                    ))}
-                </select>
-            </div>
+          <Typography
+            variant='h4'
+            fontWeight={600}
+            sx={{mt: 3, mb: 0.5}}
+          >
+            Create Account
+          </Typography>
+          <Typography 
+            fontSize={16} 
+            color='text.secondary'>
+              Join Mirage today
+          </Typography>
 
-            <div>
-                <label>city:</label>
-                <br />
-                <select 
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    // wrong--> {...country === '' && disabled}
-                    disabled = {country === '' || isCitiesLoading}
-                >
-                    <option value="">All</option>
-                    {cities.map((cityApi) => (
-                        <option
-                            key={cityApi} 
-                            value={cityApi}
-                        >
-                            {cityApi}
-                        </option>
-                    ))}
-                </select>
-            </div>
+          {/* Name Row */}
+          <Stack direction='row' spacing={2} sx={{ mt: 3, mb: 2}}>
+            <TextField
+                fullWidth
+                variant='outlined'
+                label='First Name'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+            />
+            
+            <TextField
+                fullWidth
+                variant='outlined'
+                label='Last Name'
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+            />
+          </Stack>
 
-            <div>
-                <label>Job:</label>
-                <br />
-                <select 
-                    value={job}
-                    onChange={(e) => setJob(e.target.value)}
-                >
-                    <option value="">All</option>
-                    {JOB_INDUSTRIES.map((job) => (
-                        <option key={job} value={job}>{job}</option>
-                    ))}
-                </select>
-            </div>
+        <TextField
+            fullWidth
+            variant='outlined'
+            label='Email'
+            type='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete='off'
+            sx={{mb: 2}}
+          />
 
-            <div>
-                <label>Gender:</label>
-                <br />
-                <select
-                    value={gender} 
-                    onChange={(e) => setGender(e.target.value)}>
-                        <option value="">All Genders</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                </select>
-            </div>
+          <TextField
+            fullWidth
+            label='Password'
+            type='password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete='new-password'
+            sx={{mb: 2}}
+            variant='outlined'
+          />
 
-            <div>
-                <label>Birth Date:</label>
-                <br />
-                <input 
-                    type="date" 
-                    value={birthDate}
-                    onChange={(e) => setBirthDate(e.target.value)}
-                    max={maxDate}
-                    />
-                    <br />
-                    <small>You must be at least 13+ years old</small>
-            </div>
+          <Stack direction='row' spacing={2} sx={{mb: 2}}>
+            <TextField
+                fullWidth
+                select
+                variant='outlined'
+                label='Country'
+                value={country}
+                onChange={handleCountryChange}
+            >
+                {apiCountriesList.map((country) => (
+                    <MenuItem 
+                        key={country.code} 
+                        value={country.name}
+                    >
+                        {country.name}
+                    </MenuItem>
+                ))}
+            </TextField>
 
-            <div>
-                <label>Phone:</label>
-                <br />
-                <input 
-                    type="text" 
-                    value={phone}
-                    maxLength={10}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder='051-234-5670'
-                    />
-            </div>
+            <TextField
+                fullWidth
+                select
+                variant='outlined'
+                label='City'
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                disabled={country === '' || isCitiesLoading}
+            >
+                {cities.map((cityApi) => (
+                    <MenuItem 
+                        key={cityApi} 
+                        value={cityApi}
+                    >
+                        {cityApi}
+                    </MenuItem>
+                ))}
+            </TextField>
+          </Stack>
 
-            <div>
-                <label>About Me:</label>
-                <br />
-                <textarea
-                    value={aboutMe}
-                    onChange={(e) => setAboutMe(e.target.value)}
-                    style={{resize: 'none'}}
-                    rows={4}
-                />
-            </div>
+          <Stack direction='row' spacing={2} sx={{mb:2}}>
+            <TextField
+                fullWidth
+                select
+                variant='outlined'
+                label='Job Industry'
+                value={job}
+                onChange={(e) => setJob(e.target.value)}
+            >
+                {JOB_INDUSTRIES.map((job) => (
+                    <MenuItem 
+                        key={job} 
+                        value={job}
+                    >
+                        {job}
+                    </MenuItem>
+                ))}
+            </TextField>
+
+            <TextField
+                fullWidth
+                select
+                variant='outlined'
+                label='Gender'
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+            >
+                <MenuItem value='Male'>Male</MenuItem>
+                <MenuItem value='Female'>Female</MenuItem>
+            </TextField>
+          </Stack>
+
+          <Stack direction='row' spacing={2} sx={{mb:2}}>
+            <DatePicker
+                label='Birth Date'
+                value={birthDate ? dayjs(birthDate) : null}
+                onChange={(newValue) => setBirthDate(newValue ? newValue.format('YYYY-MM-DD') : '')}
+                maxDate={dayjs(maxDate)}
+                slotProps={{
+                    textField:{
+                        fullWidth: true,
+                        variant: 'outlined'
+                    }
+                }}
+            />
+
+            <TextField
+                fullWidth
+                variant='outlined'
+                label="Phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                slotProps={{
+                    htmlInput: {maxLength: 10}
+                }}
+            />
+          </Stack>
+
+          <TextField
+            fullWidth
+            label='About Me'
+            value={aboutMe}
+            onChange={(e) => setAboutMe(e.target.value)}
+            multiline
+            sx={{mb: 2}}
+            rows={3}
+            variant='outlined'
+          />
 
 
-            {error && <p style={{color: 'red'}}>{error}</p>}
-            <br />
-            <button type='submit'>Register</button>
-        </form>
-        <br />
-        <hr />
-        <h2>already user?</h2>
-        <Button variant="outlined" onClick={() => navigate('/dashboard/myprofile')}>login With Email/Pssword</Button>
-        <Button 
-            sx={{margin:'10px'}} 
-            variant="outlined" 
+
+          {error && (
+            <Alert severity='error' sx={{mb: 2}}>
+              {error}
+            </Alert>
+          )}
+          
+          {/* Login Button */}
+          <Button
+            fullWidth
+            variant='contained'
+            size='large'
+            onClick={handleSubmit}
+          >
+            Sign Up
+          </Button>
+
+          {/* Divider */}
+          <Divider sx={{my: 2}}>
+            <Typography fontSize={12} color='text.secondary'>or continue with</Typography>
+          </Divider>
+
+          {/* Google button */}
+          <Button
+            fullWidth
+            variant='outlined'
             startIcon={<GoogleIcon/>}
             href='/auth/google'
-        >
-            Login With Google
-        </Button>
-    </div>
+            sx={{mb: 3}}
+          >
+            Continue with Google
+          </Button>
+
+          {/* rgistered link */}
+          <Typography fontSize={13} color='text.secondary' textAlign='center'>
+              Already have an account?{' '}
+              <span
+                style={{color: '#7F77DD', cursor: 'pointer', fontWeight: 600}}
+                onClick={() => navigate('/login')}
+              >
+                Login
+              </span>
+          </Typography>
+
+        </Box>
+      </Box>
+    </Box>
   )
 }
 
