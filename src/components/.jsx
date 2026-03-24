@@ -1,165 +1,246 @@
   return (
+    <div style={{display: 'flex', width:"100%"}}>
+
+
+
+
+
+        <div style={{width:"100%", margin: '5px', textAlign:'center'}}>
+            <img 
+                style={{width: '100%', borderRadius: '10px', height: '100px'}}
+                src= {user?.coverImage}
+            />
+            <img 
+                style={{width: '40%', borderRadius: '50%', marginTop:'-50px', border: '2px solid white'}}
+                src= {user?.profilePicture}    
+            />
+            <p style={{fontSize: '20px', fontWeight:'bold'}}>{user?.name} {user?.lastName}</p>
+            <p style={{}}>{user?.job}</p>
+            <p style={{}}>{user?.address?.country}, {user?.address?.city}</p>
+            <div style={{display:'flex', justifyContent: 'center'}}>
+                {userFollowing.slice(0,6).map((followedUser) => (
+                    <img 
+                        key= {followedUser._id} 
+                        src= {followedUser.profilePicture}
+                        style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '50%',
+                            border: '2px, solid, white',
+                            marginLeft: '-20px',
+                            objectFit: 'cover',
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => navigate(`/profiledashboard/${followedUser._id}/profilemain`)}
+                    />
+                ))}
+
+            </div>
+
+            <div style={{display: 'flex', gap: '10px'}}>
+              <p>followers - {getFollowersCount(user?._id)}</p>
+              <p>following - {getFollowingCount(user?._id)}</p>
+              <p>posts - {myCardsCount}</p>
+            </div>
+            <button 
+                style={{border: '1px solid lightGray', padding: '10px', borderRadius: '10px', cursor: 'pointer'}}
+                onClick={() => navigate(`/dashboard/myfavorites`)}  
+            >Favorite Users</button>
+            <br />
+            <br />
+            <button 
+                style={{border: '1px solid lightGray', padding: '10px', borderRadius: '10px', cursor: 'pointer'}}
+                onClick={() => navigate(`/dashboard/myfavoritescards`)}  
+            >Favorite Posts</button>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div style={{padding: '5px', width:"100%", margin: '5px'}}>
+
+
+
+            {/* Popup for edit profile */}
+            {isFilled === true && (
+                <div>
+                    <p>Complete you profile data</p>
+                    <button
+                        onClick={() => 
+                            navigate(`/dashboard/myprofile`, { state: {editMode: true} })}
+                    >
+                        Edit Profile 📝
+                    </button>
+                </div>
+            )}
+
+
+
+
+
+
+
+            <div style={{padding: '5px', border: '1px solid lightGray',     borderRadius:'10px'}}>
+                <CreateCardForm
+                    onSuccess = {() => refreshFeed()}
+                />    
+            </div>
+            <div style={{padding: '5px'}}>
+                {countedRegisterCards.map((card) => (
+                    <CardItem key={card._id} card={card}/>
+                ))}
+                <div>
+                    {count >= feedCards.length ? (<p>No More Cards</p>) : (
+                    <button onClick={() => setCount(count + 2)}>Read more</button>
+                    )} 
+
+                </div>
+            </div>
+        </div>
+
+
+{/* ====================================================== */}
+
+  return (
     <div>
-        <br />
-        <h1>Register</h1>
-        <form onSubmit = {handleSubmit}>
-            <div>
-                <label>Name:</label>
+        <div 
+            style={{
+            padding: '10px', 
+            borderRadius: '20px', 
+            }}
+        >
+        <h3>Start a post</h3>
+        <form onSubmit={handleSubmitNewCard}>
+            <div >
+                <label>Title</label>
                 <br />
                 <input 
                     type="text" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder='Alon..'
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                 />
             </div>
-
             <div>
-                <label>Last Name:</label>
+                <label>Text</label>
                 <br />
-                <input 
+                <textarea 
+                rows={3}
+                style={{resize: 'none'}}
                     type="text" 
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    placeholder='Levi..'
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
                 />
             </div>
-
             <div>
-                <label>Email:</label>
+                <label>Image</label>
                 <br />
                 <input 
+                    value={img}
                     type="text" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder='email@gmail.com'
+                    onChange={(e) => setImg(e.target.value)}
                 />
             </div>
 
             <div>
-                <label>Password:</label>
-                <br />
-                <input 
-                    type="password" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder='123*****'
-                />
-            </div>
-
-            <div>
-                <label>Country:</label>
-                <br />
-                <select
-                    value={country}
-                    onChange={handleCountryChange}  
-                >
-                    <option value="">all countries</option>
-                    {apiCountriesList.map((country) => (
-                        <option key={country.code} value={country.name}>{country.name}</option>
-                    ))}
-                </select>
-            </div>
-
-            <div>
-                <label>city:</label>
+                <label>Category:</label>
                 <br />
                 <select 
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    // wrong--> {...country === '' && disabled}
-                    disabled = {country === '' || isCitiesLoading}
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
                 >
-                    <option value="">All</option>
-                    {cities.map((cityApi) => (
-                        <option
-                            key={cityApi} 
-                            value={cityApi}
-                        >
-                            {cityApi}
-                        </option>
-                    ))}
+                    <option value="">All Categories</option>
+                    {CARD_CATEGORIES.map((category) => (
+                        <option key={category} value={category}>{category}</option>
+                    )
+                    )}
                 </select>
             </div>
-
-            <div>
-                <label>Job:</label>
-                <br />
-                <select 
-                    value={job}
-                    onChange={(e) => setJob(e.target.value)}
-                >
-                    <option value="">All</option>
-                    {JOB_INDUSTRIES.map((job) => (
-                        <option key={job} value={job}>{job}</option>
-                    ))}
-                </select>
-            </div>
-
-            <div>
-                <label>Gender:</label>
-                <br />
-                <select
-                    value={gender} 
-                    onChange={(e) => setGender(e.target.value)}>
-                        <option value="">All Genders</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                </select>
-            </div>
-
-            <div>
-                <label>Birth Date:</label>
-                <br />
-                <input 
-                    type="date" 
-                    value={birthDate}
-                    onChange={(e) => setBirthDate(e.target.value)}
-                    max={maxDate}
-                    />
-                    <br />
-                    <small>You must be at least 13+ years old</small>
-            </div>
-
-            <div>
-                <label>Phone:</label>
-                <br />
-                <input 
-                    type="text" 
-                    value={phone}
-                    maxLength={10}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder='051-234-5670'
-                    />
-            </div>
-
-            <div>
-                <label>About Me:</label>
-                <br />
-                <textarea
-                    value={aboutMe}
-                    onChange={(e) => setAboutMe(e.target.value)}
-                    style={{resize: 'none'}}
-                    rows={4}
-                />
-            </div>
-
 
             {error && <p style={{color: 'red'}}>{error}</p>}
             <br />
-            <button type='submit'>Register</button>
+            <button type='submit'>Post Your Card</button>
+            <p>{successMessage}</p>
         </form>
-        <br />
-        <hr />
-        <h2>already user?</h2>
-        <Button variant="outlined" onClick={() => navigate('/dashboard/myprofile')}>login With Email/Pssword</Button>
-        <Button 
-            sx={{margin:'10px'}} 
-            variant="outlined" 
-            startIcon={<GoogleIcon/>}
-            href='/auth/google'
-        >
-            Login With Google
-        </Button>
+        </div>
+    </div>
+  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div style={{padding: '5px', border: '1px solid lightGray', borderRadius:'10px', width:"100%", margin: '5px'}}>
+            <p>New Friends Suggestions</p>
+            <hr style={{border: '1px solid lightgray'}}/>
+            {uniqueFriendsOfFriends.length === 0 && (<p>No Suggestion</p>)}
+            <div 
+                style={{
+                    padding: '5px', 
+                    borderRadius:'10px',
+                }}>
+                    {uniqueFriendsOfFriends.map((userF) => (
+                           <div key={userF._id} style={{display:'flex', gap: '10px', marginBottom: '15px'}}>
+                            <img style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                border: '2px, solid, white',
+                                objectFit: 'cover',
+                                cursor: 'pointer',
+                            }} src={userF.profilePicture}/>
+                            <p>
+                                <span
+                                    style={{cursor: 'pointer'}}
+                                    onClick={() => navigate(`/profiledashboard/${userF._id}/profilemain`)}
+                                >
+                                {userF.name} {userF.lastName}
+                                </span>
+                            </p>
+                            {user?._id !== userF._id && (
+                                <button
+                                style={{
+                                    border: '1px solid lightGray', padding: '5px', 
+                                    borderRadius: '10px', 
+                                    cursor: 'pointer'
+                                }}
+                                onClick={
+                                    async() => {
+                                        await toggleFollow(userF._id)
+                                        await refreshFeed();
+                                }}
+                                >{isFollowByMe(userF._id) ? "Unfollow" : "Follow"}</button>
+                            )}
+                    </div>
+                ))}
+            </div>
+        </div>  
+
+
+
+
+
+
+
     </div>
   )

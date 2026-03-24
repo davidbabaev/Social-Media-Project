@@ -70,7 +70,7 @@ export default function NavBar() {
             borderColor: 'divider'
         }}
     >
-        <Container maxWidth="xl">
+        <Container maxWidth="lg">
             <Toolbar disableGutters>
                 <Box 
                     onClick={() => navigate('/')} 
