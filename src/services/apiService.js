@@ -5,7 +5,6 @@ const getToken = () => localStorage.getItem('auth-token');
 const httpRequest = async (endpoint, method, body) => {
     const token = getToken();
 
-    // headers
     const headers = {
         "Content-Type": "application/json"
     }
@@ -14,7 +13,6 @@ const httpRequest = async (endpoint, method, body) => {
         headers['auth-token'] = token;
     }
 
-    // options
     const options = {
         method,
         headers,
@@ -22,6 +20,32 @@ const httpRequest = async (endpoint, method, body) => {
 
     if(body){
         options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(BASE_URL + endpoint, options)
+
+    if(!response.ok){
+        throw new Error(response.statusText);
+    }
+    return await response.json();
+}
+
+const httpRequestFormData = async (endpoint, method, body) => {
+    const token = getToken();
+
+    const headers = {};
+
+    if(token){
+        headers['auth-token'] = token;
+    }
+
+    const options = {
+        method,
+        headers,
+    }
+
+    if(body){
+        options.body = body;
     }
 
     const response = await fetch(BASE_URL + endpoint, options)
