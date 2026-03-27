@@ -6,6 +6,7 @@ import useUsers from '../hooks/useUsers';
 
 import useCountries from '../hooks/useCountries';
 import getTimeAgo from '../src/utils/getTimeAgo';
+import MediaDisplay from '../src/components/MediaDisplay';
 
 export default function UserDashboard() {
 
@@ -228,7 +229,11 @@ export default function UserDashboard() {
                     <h2>{card.title}</h2>
                     <p>{card.content}</p>
                     <p><span style={{fontWeight: 'bold'}}>Category: </span>{card.category}</p>
-                    <img src={card.image} style={{width: '90%', borderRadius: '20px'}}/>
+                    <MediaDisplay
+                        mediaUrl={card.mediaUrl}
+                        mediaType={card.mediaType}
+                        style={{width: '500px', borderRadius: '20px'}}
+                    />
                     <hr />
                     <div style={{
                         display: 'flex', 

@@ -3,6 +3,7 @@ import useFavoriteCards from '../hooks/useFavoriteCards'
 import { useNavigate } from 'react-router-dom';
 import useUsers from '../hooks/useUsers';
 import getTimeAgo from '../utils/getTimeAgo';
+import MediaDisplay from '../components/MediaDisplay';
 export default function FavoriteCards() {
 
     const {favoriteCards, handleRemoveCard} = useFavoriteCards();
@@ -30,10 +31,11 @@ export default function FavoriteCards() {
 
                         <h2>{favCard.title}</h2>
                         <p>{favCard.content}</p>
-                        <img src={favCard.image} style={{
-                            width: '500px',
-                            borderRadius: '20px'
-                        }}/>
+                        <MediaDisplay
+                            mediaUrl={favCard.mediaUrl}
+                            mediaType={favCard.mediaType}
+                            style={{width: '500px', borderRadius: '20px'}}
+                        />
                         <hr />
                         <div style={{
                             display: 'flex', 

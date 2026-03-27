@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
 import { useCardsProvider } from '../providers/CardsProvider';
+import EmojiPicker from 'emoji-picker-react';
+import MediaDisplay from './MediaDisplay';
 
 export default function CreateCardForm({onSuccess}) {
 
@@ -8,18 +10,27 @@ export default function CreateCardForm({onSuccess}) {
     const [text, setText] = useState('');
     const [mediaFile, setMediaFile] = useState(null);
     const [category, setCategory] = useState('');
+    const [webUrl, setWebUrl] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const {handleCardRegister} = useCardsProvider();
     const [isLoading, setIsLoading] = useState(false);
-    
+    const [isEmojiOpen, setIsEmojiOpen] = useState(false);
+    const fileInputRef = useRef(null);
+    const [isLinkFieldShown, setIsLinkFieldShown] = useState(false);
 
+    const onEmojiClick = (emojiData) => {
+        setText(prev => prev + emojiData.emoji);
+        setIsEmojiOpen(false);
+    }
+
+    const previewMediaFile = mediaFile ? URL.createObjectURL(mediaFile) : null
 
     const handleSubmitNewCard = async (e) => {
         e.preventDefault();
 
-        setError('')
-        setSuccessMessage('')
+        setError('');
+        setSuccessMessage('');
 
         if(title.trim() === ''){
             setError('Title is required')
@@ -41,6 +52,7 @@ export default function CreateCardForm({onSuccess}) {
         formData.append('title', title);
         formData.append('content', text);
         formData.append('category', category);
+        formData.append('web', webUrl);
         formData.append('media', mediaFile);
         
         try{
@@ -55,7 +67,9 @@ export default function CreateCardForm({onSuccess}) {
             setTitle('');
             setMediaFile(null);
             setCategory('');
+            setWebUrl('');
             setSuccessMessage('Your card created successfully')
+            setIsLinkFieldShown(false)
     
             // then hand control back to parent
             onSuccess();
@@ -100,11 +114,27 @@ return (
                 <label>Upload Your Image/ Video </label>
                 <br />
                 <input 
+                    ref={fileInputRef}
                     type="file"
                     accept='image/*,video/*' 
                     onChange={(e) => setMediaFile(e.target.files[0])}
                 />
             </div>
+
+
+            <button type='button' onClick={() => setIsLinkFieldShown(!isLinkFieldShown)}>Add Link 🔗</button>
+
+            {isLinkFieldShown && (
+                <div>
+                    <label>Url</label>
+                    <br />
+                    <input 
+                        value={webUrl}
+                        type="url"
+                        onChange={(e) => setWebUrl(e.target.value)}
+                    />
+                </div>
+            )}
 
             <div>
                 <label>Category:</label>
@@ -120,9 +150,31 @@ return (
                     )}
                 </select>
             </div>
+            
+
+            {previewMediaFile && (
+                <>
+                    <MediaDisplay
+                    mediaUrl={previewMediaFile}
+                    mediaType={mediaFile.type.startsWith('video/') ? 'video' : 'image'}
+                    style={{width: '20%', borderRadius: '10px'}}
+                    />
+                    <button 
+                        type='button' 
+                        onClick={() => {
+                            setMediaFile(null);
+                            fileInputRef.current.value = '';
+                        }}
+                    >remove</button>
+                </>
+            )}
 
             {error && <p style={{color: 'red'}}>{error}</p>}
             <br />
+
+            <button type='button' onClick={() => setIsEmojiOpen(!isEmojiOpen)}>😊</button>
+
+            {isEmojiOpen && <EmojiPicker onEmojiClick={onEmojiClick}/>}
 
             <button disabled={isLoading} type='submit'>
                 {isLoading ? "Loading..." : "Post Your Card"}

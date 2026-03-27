@@ -94,8 +94,6 @@ return (
                 <p>{card.content}</p>
                 <p><span style={{fontWeight: 'bold'}}>Category: </span>{card.category}</p>
 
-                {/* <img src={card.image} style={{width: '90%', borderRadius: '20px'}}/> */}
-
                 <MediaDisplay
                     mediaUrl={card.mediaUrl}
                     mediaType={card.mediaType}

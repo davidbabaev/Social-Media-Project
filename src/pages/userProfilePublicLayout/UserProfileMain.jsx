@@ -9,6 +9,7 @@ import useFavoriteCards from '../../hooks/useFavoriteCards';
 import CardsComments from '../../components/CardsComments';
 import LoginPopup from '../../components/LoginPopup';
 import getTimeAgo from '../../utils/getTimeAgo';
+import MediaDisplay from '../../components/MediaDisplay';
 
 export default function UserProfileMain() {
 
@@ -52,10 +53,11 @@ return (
       
                     <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card._id}`)}>{card.title}</span></h2>
                     <p>{card.content}</p>
-                    <img src={card.image} style={{
-                        width: '500px',
-                        borderRadius: '20px'
-                    }}/>
+                    <MediaDisplay
+                        mediaUrl={card.mediaUrl}
+                        mediaType={card.mediaType}
+                        style={{width: '90%', borderRadius: '20px'}}
+                    />
                     <hr />
                     <div style={{
                         display: 'flex', 

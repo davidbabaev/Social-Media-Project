@@ -8,6 +8,7 @@ import ConfirmationDialog from '../../components/ConfirmationDialog';
 import useFavoriteCards from '../../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../../constants/cardsCategories';
 import getTimeAgo from '../../utils/getTimeAgo';
+import MediaDisplay from '../../components/MediaDisplay';
 export default function AdminCardsPanel() {
 
   const {loading, getUsers} = useUsers();
@@ -271,8 +272,9 @@ export default function AdminCardsPanel() {
                         }}
                       /> {creator?.name} {creator?.lastName}</td>
                     <td>
-                      <img 
-                        src={card.image}
+                      <MediaDisplay
+                        mediaUrl={card.mediaUrl}
+                        mediaType={card.mediaType}
                         style={{
                             width: '100px',
                             height: '100px',
@@ -280,7 +282,7 @@ export default function AdminCardsPanel() {
                             border: '2px, solid, white',
                             objectFit: 'cover',
                             cursor: 'pointer'
-                        }}  
+                        }}
                       />
                     </td>
                     <td>{card.title}</td>

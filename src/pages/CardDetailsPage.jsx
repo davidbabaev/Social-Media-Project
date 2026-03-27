@@ -12,6 +12,7 @@ import useLikedCards from '../hooks/useLikedCards';
 import LoginPopup from '../components/LoginPopup';
 import useCommentsCards from '../hooks/useCommentsCards';
 import getTimeAgo from '../utils/getTimeAgo';
+import MediaDisplay from '../components/MediaDisplay';
 
 export default function CardDetailsPage() {
 
@@ -48,10 +49,11 @@ export default function CardDetailsPage() {
             }} key={currentCard._id}>
 
             <h2>{currentCard.title}</h2>
-            <img src={currentCard.image} style={{
-                width: '100%',
-                borderRadius: '20px'
-            }}/>
+            <MediaDisplay
+                mediaUrl={currentCard.mediaUrl}
+                mediaType={currentCard.mediaType}
+                style={{width: '500px', borderRadius: '20px'}}
+            />
             <p>{currentCard.content}</p>
             <hr />
             <div style={{

@@ -11,6 +11,7 @@ import { Alert, Avatar, Box, Button, Container, Grid, Paper, Typography } from '
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit';
+import CreateCardModal from '../components/CreateCardModal';
 
 export default function FeedPage() {
 
@@ -22,6 +23,7 @@ export default function FeedPage() {
     const navigate = useNavigate();
     const debounceFollowing = useDebounce(user?.following, 3000)
     const {refreshFeed} = useCardsProvider();
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     // ----------------------------------------------------
     
@@ -270,7 +272,6 @@ export default function FeedPage() {
 
                 </Grid>
 
-
                 {/* Center column */}
                 <Grid size={{xs:12, md:6}}>
                     {isFilled === true && (
@@ -397,8 +398,16 @@ export default function FeedPage() {
 
                     </Paper>
                 </Grid>
-                
             </Grid>
+
+            <button onClick={() => setIsModalOpen(true)}>Start a post</button>
+
+            {isModalOpen && (
+                <CreateCardModal
+                    onCardPosted={() => refreshFeed()}
+                    onClose={() => setIsModalOpen(false)}
+                />
+            )}
         </Container>
     )
 }

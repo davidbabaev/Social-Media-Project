@@ -1,7 +1,12 @@
 import React from 'react'
 import getTimeAgo from '../../../../utils/getTimeAgo'
+import MediaDisplay from '../../../../components/MediaDisplay'
+import { useNavigate } from 'react-router-dom'
 
 export default function TopAndLastFiveCardReuse({topFiveValue, usersArrayValue, mainTitle, showInteractions}) {
+
+    const navigate = useNavigate();
+
   return (
         <div 
             style={{
@@ -19,11 +24,18 @@ export default function TopAndLastFiveCardReuse({topFiveValue, usersArrayValue, 
                 key={card._id}
                 style={{display:'flex', gap: '10px', alignItems: 'center', marginBottom: '15px'}}  
                 >
-                <img 
-                    src={card.image}
-                    style={{width: '200px', height: '120px',borderRadius: '10px', objectFit: 'cover', cursor: 'pointer'}}
+                
+                <div
                     onClick={() => navigate(`/carddetails/${card._id}`)}
-                />
+                >
+                    <MediaDisplay
+                        mediaUrl={card.mediaUrl}
+                        mediaType={card.mediaType}
+                        style={{width: '200px', height: '120px',borderRadius: '10px', objectFit: 'cover', cursor: 'pointer'}}
+                    />
+
+                </div>
+                
                 <div>
                     <div style={{display:'flex'}}>
                         <img style={{
