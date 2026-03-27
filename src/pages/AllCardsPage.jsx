@@ -12,6 +12,7 @@ import LoginPopup from '../components/LoginPopup';
 import CardsComments from '../components/CardsComments';
 import useCommentsCards from '../hooks/useCommentsCards';
 import getTimeAgo from '../utils/getTimeAgo';
+import MediaDisplay from '../components/MediaDisplay';
 
 export default function AllCardsPage() {
 
@@ -161,10 +162,18 @@ export default function AllCardsPage() {
 
                     <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card._id}`)}>{card.title}</span></h2>
                     <p>{card.content}</p>
-                    <img src={card.image} style={{
+
+                    {/* <img src={card.image} style={{
                         width: '500px',
                         borderRadius: '20px'
-                    }}/>
+                    }}/> */}
+
+                    <MediaDisplay
+                        mediaUrl={card.mediaUrl}
+                        mediaType={card.mediaType}
+                        style={{width: '500px', borderRadius: '20px'}}
+                    />
+ 
                     <hr />
                     <div style={{
                         display: 'flex', 

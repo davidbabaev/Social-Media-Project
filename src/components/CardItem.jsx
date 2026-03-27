@@ -8,6 +8,7 @@ import useCommentsCards from '../hooks/useCommentsCards';
 import CardsComments from './CardsComments';
 import LoginPopup from './LoginPopup';
 import getTimeAgo from '../utils/getTimeAgo';
+import MediaDisplay from './MediaDisplay';
 
 export default function CardItem({card}) {
 
@@ -38,10 +39,20 @@ export default function CardItem({card}) {
 
           <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card._id}`)}>{card.title}</span></h2>
           <p>{card.content}</p>
-          <img src={card.image} style={{
+
+          {/* <img src={card.image} style={{
               width: '500px',
               borderRadius: '20px'
-          }}/>
+          }}/> */}
+
+
+          <MediaDisplay
+                mediaUrl={card.mediaUrl}
+                mediaType={card.mediaType}
+                style={{width: '500px', borderRadius: '20px'}}
+          />
+
+
           <hr />
           <div style={{
               display: 'flex', 

@@ -3,6 +3,7 @@ import { useCardsProvider } from '../../providers/CardsProvider';
 import { useAuth } from '../../providers/AuthProvider';
 import { CARD_CATEGORIES } from '../../constants/cardsCategories';
 import getTimeAgo from '../../utils/getTimeAgo';
+import MediaDisplay from '../../components/MediaDisplay';
 export default function MyCardsSection() {
 
     const {registeredCards, handleDeleteCard, handleEditCard} = useCardsProvider();
@@ -91,7 +92,15 @@ return (
                 <h2>{card.title}</h2>
                 <p>{card.content}</p>
                 <p><span style={{fontWeight: 'bold'}}>Category: </span>{card.category}</p>
-                <img src={card.image} style={{width: '90%', borderRadius: '20px'}}/>
+
+                {/* <img src={card.image} style={{width: '90%', borderRadius: '20px'}}/> */}
+
+                <MediaDisplay
+                    mediaUrl={card.mediaUrl}
+                    mediaType={card.mediaType}
+                    style={{width: '90%', borderRadius: '20px'}}
+                />
+
                 <hr />
                 <div style={{
                     display: 'flex', 
