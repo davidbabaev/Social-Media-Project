@@ -60,7 +60,7 @@ const httpRequestFormData = async (endpoint, method, body) => {
 
 // Users Requests
 export const loginUser = (userData) => httpRequest('/users/login', 'POST', userData);
-export const registerUser = (userData) => httpRequestFormData('/users', 'POST', userData);
+export const registerUser = (userData) => httpRequest('/users', 'POST', userData);
 export const getAllUsers = () => httpRequest('/users', 'GET');
 export const getSingleUser = (id) => httpRequest(`/users/${id}`, 'GET');
 export const updateUser = (id, userData) => httpRequestFormData(`/users/${id}`, 'PUT', userData);

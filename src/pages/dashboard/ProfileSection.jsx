@@ -211,9 +211,10 @@ return (
             <div>
             <label>Edit Profile Image:</label>
             <br />
-            <input type="text" 
-                value={editprofilePicture}
-                onChange={(e) => setEditprofilePicture(e.target.value)}
+            <input 
+                type="file" 
+                accept='image/*'
+                onChange={(e) => setEditprofilePicture(e.target.files[0])}
                 placeholder= {editprofilePicture}
                 />
             </div>
@@ -221,11 +222,12 @@ return (
             <div>
             <label>Edit Cover Image:</label>
             <br />
-            <input type="text" 
-                value={editCoverImage}
-                onChange={(e) => setEditCoverImage(e.target.value)}
+            <input 
+                type="file"
+                accept='image/*' 
+                onChange={(e) => setEditCoverImage(e.target.files[0])}
                 placeholder= {editCoverImage}
-                />
+            />
             </div>
 
             <div>
@@ -301,26 +303,23 @@ return (
                     alert('City is required')
                     return;
                 }
-                const result = await editUser(
-                    user._id,
-                    {
-                        name: editName,
-                        lastName: editLastName,
-                        email: user.email,
-                        address: {
-                            country: editCountry,
-                            city: editCity,
-                        },
-                        profilePicture: editprofilePicture,
-                        coverImage: editCoverImage,
-                        age: getAgeByDate(editBirthDate),
-                        gender: editGender,
-                        phone: editPhone,
-                        job: editJob,
-                        birthDate: editBirthDate,
-                        aboutMe: editAboutMe,
-                    }
-                )
+                const formData = new FormData();
+                formData.append('name', editName);
+                formData.append('lastName', editLastName);
+                formData.append('email', user.email);
+                formData.append('address[country]', editCountry);
+                formData.append('address[city]', editCity);
+                formData.append('profilePicture', editprofilePicture);
+                formData.append('coverImage', editCoverImage);
+                formData.append('age', getAgeByDate(editBirthDate));
+                formData.append('gender', editGender);
+                formData.append('phone', editPhone);
+                formData.append('job', editJob);
+                formData.append('birthDate', editBirthDate);
+                formData.append('aboutMe', editAboutMe);
+
+                const result = await editUser(user._id, formData);
+
                 if(result.success){
                     setEditMode(false);
                 } else{

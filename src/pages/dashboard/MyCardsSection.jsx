@@ -13,7 +13,7 @@ export default function MyCardsSection() {
     // edit card values states:
     const [editTitle, setEditTitle] = useState('');
     const [editText, setEditText] = useState('');
-    const [editImg, setEditImg] = useState('');
+    const [editMedia, setEditMedia] = useState(null);
     const [editCategory, setEditCategory] = useState('');
   
     const myCards = registeredCards.filter(card => card.userId === user._id);
@@ -41,7 +41,6 @@ return (
                 <h2>{editTitle}</h2>
                 <p>{editCategory}</p>
                 <p>{editText}</p>
-                <p>link: {editImg}</p>
                 <input 
                 placeholder='Title'
                 value={editTitle}
@@ -63,21 +62,23 @@ return (
                 ))}
                 </select>
 
-                <input 
-                value={editImg}
-                onChange={(e) => setEditImg(e.target.value)}  
+                <input
+                    type='file'
+                    accept='image/*,video/*' 
+                    onChange={(e) => setEditMedia(e.target.files[0])}  
                 />
                 <button onClick={() => setEditingCardId(null)}>Cancel</button>
                 <button
                 onClick={async () => {
-                    let result = await handleEditCard(
-                        card._id, 
-                    {
-                        title: editTitle, 
-                        content: editText, 
-                        image: editImg, 
-                        category: editCategory
-                    })
+
+                    const formData = new FormData();
+                    formData.append('title', editTitle);
+                    formData.append('content', editText);
+                    formData.append('category', editCategory);
+                    formData.append('media', editMedia);
+
+                    const result = await handleEditCard(card._id, formData)
+
                     if(result.success){
                         setEditingCardId(false)
                     }else{
@@ -122,7 +123,6 @@ return (
                         setEditingCardId(card._id);
                         setEditTitle(card.title);
                         setEditText(card.content);
-                        setEditImg(card.image);
                         setEditCategory(card.category);
                     }}>Edit</button>
                 </div>

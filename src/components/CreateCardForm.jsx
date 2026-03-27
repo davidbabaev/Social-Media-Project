@@ -97,7 +97,7 @@ return (
                 />
             </div>
             <div>
-                <label>Image</label>
+                <label>Upload Your Image/ Video </label>
                 <br />
                 <input 
                     type="file"
