@@ -12,6 +12,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit';
 import CreateCardModal from '../components/CreateCardModal';
+import CreateCardTrigger from '../components/CreateCardTrigger';
 
 export default function FeedPage() {
 
@@ -309,6 +310,19 @@ export default function FeedPage() {
                             Complete your profile to get the best experience
                         </Alert>
                     )}
+
+
+                    <CreateCardTrigger
+                        onOpen={() => setIsModalOpen(true)}
+                    />
+
+                    {isModalOpen && (
+                        <CreateCardModal
+                            onCardPosted={() => refreshFeed()}
+                            onClose={() => setIsModalOpen(false)}
+                        />
+                    )}
+
                 </Grid>
 
                 {/* Right column */}
@@ -400,14 +414,6 @@ export default function FeedPage() {
                 </Grid>
             </Grid>
 
-            <button onClick={() => setIsModalOpen(true)}>Start a post</button>
-
-            {isModalOpen && (
-                <CreateCardModal
-                    onCardPosted={() => refreshFeed()}
-                    onClose={() => setIsModalOpen(false)}
-                />
-            )}
         </Container>
     )
 }
