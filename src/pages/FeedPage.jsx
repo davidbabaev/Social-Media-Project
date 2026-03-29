@@ -22,9 +22,10 @@ export default function FeedPage() {
     const {users} = useUsers();
     const{getFollowingCount, getFollowersCount, toggleFollow, isFollowByMe} = useFollowUser();
     const navigate = useNavigate();
-    const debounceFollowing = useDebounce(user?.following, 3000)
+    const debounceFollowing = useDebounce(user?.following, 3000);
     const {refreshFeed} = useCardsProvider();
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [mediaType, setMediaType] = useState(null);
 
     // ----------------------------------------------------
     
@@ -313,13 +314,17 @@ export default function FeedPage() {
 
 
                     <CreateCardTrigger
-                        onOpen={() => setIsModalOpen(true)}
+                        onOpen={(type) => {
+                            setIsModalOpen(true);
+                            setMediaType(type);
+                        }}
                     />
 
                     {isModalOpen && (
                         <CreateCardModal
                             onCardPosted={() => refreshFeed()}
                             onClose={() => setIsModalOpen(false)}
+                            mediaButton={mediaType}
                         />
                     )}
 

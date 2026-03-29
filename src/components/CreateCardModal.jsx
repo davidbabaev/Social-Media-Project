@@ -3,7 +3,7 @@ import CreateCardForm from './CreateCardForm'
 import { Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function CreateCardModal({onClose, onCardPosted}) {
+export default function CreateCardModal({onClose, onCardPosted, mediaButton}) {
   return (
     <Box
       sx={{
@@ -26,10 +26,18 @@ export default function CreateCardModal({onClose, onCardPosted}) {
             p: 3,
             width: 560,
             maxHeight: '90vh',
-            overflowY: 'auto'
+            overflowY: 'auto',
+            position: 'relative'
           }}
         >
-            <IconButton onClick={onClose}>
+            <IconButton 
+              onClick={onClose}
+              sx={{
+                position: 'absolute',
+                top: 8,
+                right: 8,
+              }}
+            >
               <CloseIcon/>
             </IconButton>
 
@@ -38,6 +46,7 @@ export default function CreateCardModal({onClose, onCardPosted}) {
                     onCardPosted();
                     onClose();
                 }}
+                mediaButton={mediaButton}
             />
         </Box>
     </Box>

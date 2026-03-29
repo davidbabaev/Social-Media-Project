@@ -27,7 +27,7 @@ export default function CreateCardTrigger({onOpen}) {
                 sx={{cursor: 'pointer'}}
             />
             <Box
-                onClick={onOpen}
+                onClick={() => onOpen()}
                 sx={{
                     flex: 1,
                     border: '0.5px solid',
@@ -47,8 +47,8 @@ export default function CreateCardTrigger({onOpen}) {
         </Box>
 
         <Box sx={{display: 'flex', gap: 1}}>
-            <Button color='inherit' onClick={onOpen} startIcon={<MovieIcon/>}>Video</Button>
-            <Button color='inherit' onClick={onOpen} startIcon={<InsertPhotoIcon/>}>Photo</Button>
+            <Button color='inherit' onClick={() => onOpen('video')} startIcon={<MovieIcon/>}>Video</Button>
+            <Button color='inherit' onClick={() => onOpen('image')} startIcon={<InsertPhotoIcon/>}>Photo</Button>
         </Box>
         
     </Paper>

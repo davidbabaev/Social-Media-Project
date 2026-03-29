@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
 import { useCardsProvider } from '../providers/CardsProvider';
 import EmojiPicker from 'emoji-picker-react';
@@ -15,7 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import CategoryIcon from '@mui/icons-material/Category';
 
-export default function CreateCardForm({onSuccess}) {
+export default function CreateCardForm({onSuccess, mediaButton}) {
 
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
@@ -33,6 +33,13 @@ export default function CreateCardForm({onSuccess}) {
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const {user} = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(mediaButton){
+            fileInputRef.current.accept = mediaButton === 'image' ? 'image/*' : 'video/*';
+            fileInputRef.current.click();
+        }
+    }, [])
 
     const theme = useTheme();
 
@@ -368,7 +375,7 @@ return (
             <input 
                 ref={fileInputRef}
                 type="file"
-                accept='image/*,video/*' 
+                accept = {'image/*,video/*'} 
                 onChange={(e) => setMediaFile(e.target.files[0])}
                 style={{display: 'none'}}
             />
@@ -376,6 +383,7 @@ return (
             {!previewMediaFile && (
                 <Tooltip title = "Add Photo/Video">
                     <IconButton onClick={() => {
+                            fileInputRef.current.accept = 'image/*,video/*';
                             fileInputRef.current.click()
                             setError('')
                         }} sx={{ display:'flex', gap: 1, borderRadius: 5}}>
