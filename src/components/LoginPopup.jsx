@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-export default function LoginPopup({isOpen, onClose}) {
+export default function LoginPopup({onCloseLoginPopup}) {
 
     const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ export default function LoginPopup({isOpen, onClose}) {
                     <button onClick={() => navigate('/login')}>login</button>
                     <br />
                     <br />
-                    <button onClick={onClose}>close</button>
+                    <button onClick={onCloseLoginPopup}>close</button>
                 </div>
             
         </div>

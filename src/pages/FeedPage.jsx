@@ -6,18 +6,18 @@ import useUsers from '../hooks/useUsers';
 import useFollowUser from '../hooks/useFollowUser';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
-import CreateCardForm from '../components/CreateCardForm';
-import { Alert, Avatar, Box, Button, Container, Grid, Paper, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Card, Container, Grid, Paper, Typography } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit';
 import CreateCardModal from '../components/CreateCardModal';
 import CreateCardTrigger from '../components/CreateCardTrigger';
+import CardPopupModal from '../components/card/CardPopupModal';
 
 export default function FeedPage() {
 
     const {feedCards} = useCardsProvider();
-    const [count, setCount] = useState(2);
+    const [count, setCount] = useState(10);
     const {user} = useAuth();
     const {users} = useUsers();
     const{getFollowingCount, getFollowersCount, toggleFollow, isFollowByMe} = useFollowUser();
@@ -26,6 +26,8 @@ export default function FeedPage() {
     const {refreshFeed} = useCardsProvider();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [mediaType, setMediaType] = useState(null);
+    const [selectedCardId, setSelectedCardId] = useState(null);
+
 
     // ----------------------------------------------------
     
@@ -269,6 +271,13 @@ export default function FeedPage() {
                             >
                                 Edit Profile
                             </Button>
+
+                            {countedRegisterCards[0] && (
+                                <Button 
+                                    onClick={() => setSelectedCardId(countedRegisterCards[0]._id)}>
+                                        Open First Card
+                                </Button>
+                            )}
                         </Box>
                     </Paper>
 
@@ -312,7 +321,6 @@ export default function FeedPage() {
                         </Alert>
                     )}
 
-
                     <CreateCardTrigger
                         onOpen={(type) => {
                             setIsModalOpen(true);
@@ -328,7 +336,24 @@ export default function FeedPage() {
                         />
                     )}
 
+                    {/* Card Item */}
+                    {countedRegisterCards.map((card) => (
+                        <CardItem 
+                            key={card._id}
+                            card={card}
+                            onOpenCard={() => setSelectedCardId(card._id)}
+                        />
+                    ))}
+
+                    {selectedCardId && (
+                        <CardPopupModal
+                            cardId = {selectedCardId}
+                            onClose = {() => setSelectedCardId(null)}
+                        />
+                    )}
+
                 </Grid>
+
 
                 {/* Right column */}
                 <Grid size={{xs:12, md:3}}>

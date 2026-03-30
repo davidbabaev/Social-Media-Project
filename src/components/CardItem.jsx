@@ -10,7 +10,7 @@ import LoginPopup from './LoginPopup';
 import getTimeAgo from '../utils/getTimeAgo';
 import MediaDisplay from './MediaDisplay';
 
-export default function CardItem({card}) {
+export default function CardItem({card, onOpenCard}) {
 
   const [isOpen, setIsOpen] = useState(false);
     function onClose(){

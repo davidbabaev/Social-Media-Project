@@ -1,63 +1,67 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useAuth } from '../providers/AuthProvider';
+import { Avatar, Box, Button, TextField } from '@mui/material';
 
 export default function CardsComments({card, users, addComment, removeComment}) {
 
     const [commentText, setCommentText] = useState('');
     const {user: loggedInUser} = useAuth();
     const [commentsCount, setCommentsCount] = useState(5);
+    const [isLoading, setIsLoading] = useState(false)
     
+    const inputRef = useRef(null);
     
     const handleSubmit = (e) => {
+        setIsLoading(false)
         e.preventDefault();
         addComment(commentText, card._id)
         setCommentText('');
+        setIsLoading(true)
     }
 
     const countedComments = (card?.comments || []).slice(0, commentsCount)
 
   return (
-    <div>
-        <hr />
-        { loggedInUser &&
-            (<form onSubmit={handleSubmit}>
-                <input 
-                    type="text" 
-                    placeholder='Write your comment...'
-                    onChange={(e) => setCommentText(e.target.value)}
-                    value={commentText}
+    <Box>
+        {loggedInUser && (
+            <Box sx={{display: 'flex', gap: 1, alignItems: 'center', mb: 2}}>
+                <Avatar
+                    src={loggedInUser.profilePicture}
+                    sx={{width: 36, height: 36}}
                 />
-                <button type='submit'>Send</button>
-            </form>)
-        }
 
-        <h4>Comments</h4>
+                <TextField
+                    fullWidth
+                    size='small'
+                    placeholder='Write your opinion..'
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e)}
+                    sx={{
+                        '& .MuiOutlinedInput-root':{
+                            borderRadius: 5,
+                            fontSize: 13
+                        }
+                    }}
+                />   
 
-        {countedComments.length === 0 && <p>ther'es no comments yet</p>}
+                <Button
+                    type='submit'
+                    variant='contained'
+                    loading={isLoading}
+                    loadingPosition='start'
+                    disabled={!commentText.trim()}
+                    sx={{ml: 'auto', borderRadius: 5, minWidth: 90}}
+                    onClick={handleSubmit}
+                    color='primary'
+                >
+                    {isLoading ? "Sending..." : "Send"}
+                </Button>
 
-        {
-            countedComments.map((comment) => {
-                const user = users.find(u => u._id === comment.userId);
-
-                return(
-                    <div key= {comment._id}>
-                        <p>{user?.name || "Unknown User"}</p>
-                        <p>{comment.commentText}</p>
-                        { loggedInUser && 
-                        (loggedInUser._id === comment.userId || 
-                            loggedInUser._id === card.userId
-                        ) && (
-                            <button onClick={() => removeComment(card._id, comment._id)}>X</button>
-                        )}
-                        <hr />
-                    </div>
-                )
-            })
-        }
-        {commentsCount >= (card?.comments || []).length ? (<p>No more Cards</p>): (
-            <button onClick={() => setCommentsCount(commentsCount + 5)}>Read More</button>
+                
+            </Box>   
         )}
 
-    </div>
+    </Box>
   )
 }
