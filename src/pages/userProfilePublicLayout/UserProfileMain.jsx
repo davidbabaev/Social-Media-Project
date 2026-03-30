@@ -35,7 +35,7 @@ export default function UserProfileMain() {
       return <p>Loading..</p>
     }
 
-    const userCards = registeredCards.filter(uCard => uCard.userId === userProfile._id)
+    const userCards = registeredCards.filter(uCard => uCard.userId === userProfile._id).sort((a,b) => b.createdAt.localeCompare(a.createdAt))
 
 return (
   <div>
