@@ -56,22 +56,21 @@ export default function CardDetailsModal({cardId, onClose}) {
         const getLikesUsers = users.filter((u) => currentCard.likes.includes(u._id)).slice(0,4)
 
   return (
-    <Box sx={{display: 'flex', height: '60vh'}}>
+    <Box sx={{display: 'flex', minHeight: 'min(60vh, 400px)', maxHeight: 'min(75vh, 680px)'}}>
         {/* Left Media */}
 
-        <Box sx={{flex: 1, bgcolor: 'black', borderRadius: 10}}>
+        <Box sx={{flex: 1, bgcolor: 'black'}}>
             {/* Media display */}
             <MediaDisplay
                 mediaUrl={currentCard.mediaUrl}
                 mediaType={currentCard.mediaType}
-                style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10}}
+                style={{width: '100%', height: '100%', objectFit: 'contain'}}
             />
         </Box>
 
 
         {/* Right Media */}
-
-        <Box sx={{width: 380, overflowY: 'auto', p:2}}>
+        <Box sx={{width: 380, display: 'flex', flexDirection: 'column', maxHeight: 'min(75vh, 680px)'}}>
             
             
             {/* Creator flow */}
@@ -79,7 +78,10 @@ export default function CardDetailsModal({cardId, onClose}) {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'flex-start',
-                mb: 2
+                p: 2,
+                borderBottom: '1px solid',
+                borderColor: 'divider',
+                mx:2,
             }}>
 
                 {/* left avatar + info */}
@@ -132,152 +134,150 @@ export default function CardDetailsModal({cardId, onClose}) {
                 )}
             </Box>
 
-            <Divider sx={{my: 2}}/>
+            <Box sx={{overflow: 'auto', p:2, flex: 1}} >
+                {/* Title */}
+                {currentCard.title && (
+                    <Typography component='div' fontWeight={600} fontSize={20} mb={1}>
+                        {currentCard.title}
+                    </Typography>
+                )}
+                {/* Category */}
+                {currentCard.category && (
+                    <Chip 
+                        label={currentCard.category} 
+                        size='small' 
+                        fontSize={14} 
+                        sx={{mb:1}}
+                    />
+                )}
 
-            {/* Title */}
-            {currentCard.title && (
-                <Typography component='div' fontWeight={600} fontSize={20} mb={1}>
-                    {currentCard.title}
-                </Typography>
-            )}
-            {/* Category */}
-            {currentCard.category && (
-                <Chip 
-                    label={currentCard.category} 
-                    size='small' 
-                    fontSize={14} 
-                    sx={{mb:1}}
-                />
-            )}
+                {/* Contnet */}
+                {currentCard.content && (
+                    <Typography component='div' fontWeight={400} fontSize={14} mb={1} sx={{whiteSpace: 'pre-wrap'}}>
 
-            {/* Contnet */}
-            {currentCard.content && (
-                <Typography component='div' fontWeight={400} fontSize={14} mb={1} sx={{whiteSpace: 'pre-wrap'}}>
+                        {isExpanded ? currentCard.content : currentCard.content.slice(0, 150)}
 
-                    {isExpanded ? currentCard.content : currentCard.content.slice(0, 150)}
+                        {currentCard.content.length > 150 && (
+                            <span
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                style={{
+                                    color: theme.palette.primary.main, 
+                                    cursor: 'pointer',
+                                    fontWeight: 600,
+                                    marginLeft: 4
 
-                    {currentCard.content.length > 150 && (
-                        <span
-                            onClick={() => setIsExpanded(!isExpanded)}
-                            style={{
-                                color: theme.palette.primary.main, 
-                                cursor: 'pointer',
-                                fontWeight: 600,
-                                marginLeft: 4
-
-                            }}
-                        >
-                            {isExpanded ? '...showless' : '...read more'}
-                        </span>
-                    )}
-
-                </Typography>
-            )}
-
-
-            {/* URL */}
-            {currentCard.web && (
-                <Button
-                    size='small'
-                    variant='outlined'
-                    href={currentCard.web}
-                    startIcon={<LaunchIcon/>}
-                    target='_blank'
-                    rel='noreferrer'
-                    sx={{mb:1, borderRadius: 5, fontSize: 11}}
-                >
-                    Visit Link
-                </Button>
-            )}
-
-            <Divider sx={{my: 1, borderColor: 'background.paper'}}/>
-
-            {/* likes + comment - counts */}
-            <Box sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mb: 1
-            }}>
-                {/* left: ovelapping avatars */}
-                <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-
-                    {/* Avatars */}
-                    <Box sx={{display: 'flex'}}>
-                        {getLikesUsers.map((likedUser, index) => (
-                            <Avatar
-                                key={likedUser._id}
-                                src={likedUser.profilePicture}
-                                sx={{
-                                    width: 30,
-                                    height: 30,
-                                    ml: index === 0 ? 0 : -0.8,
-                                    border: '1.5px solid',
-                                    borderColor: 'background.paper'
                                 }}
-                            />
-                        ))}
+                            >
+                                {isExpanded ? '...showless' : '...read more'}
+                            </span>
+                        )}
+
+                    </Typography>
+                )}
+
+
+                {/* URL */}
+                {currentCard.web && (
+                    <Button
+                        size='small'
+                        variant='outlined'
+                        href={currentCard.web}
+                        startIcon={<LaunchIcon/>}
+                        target='_blank'
+                        rel='noreferrer'
+                        sx={{mb:1, borderRadius: 5, fontSize: 11}}
+                    >
+                        Visit Link
+                    </Button>
+                )}
+
+                <Divider sx={{my: 1, borderColor: 'background.paper'}}/>
+
+                {/* likes + comment - counts */}
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    mb: 1
+                }}>
+                    {/* left: ovelapping avatars */}
+                    <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+
+                        {/* Avatars */}
+                        <Box sx={{display: 'flex'}}>
+                            {getLikesUsers.map((likedUser, index) => (
+                                <Avatar
+                                    key={likedUser._id}
+                                    src={likedUser.profilePicture}
+                                    sx={{
+                                        width: 30,
+                                        height: 30,
+                                        ml: index === 0 ? 0 : -0.8,
+                                        border: '1.5px solid',
+                                        borderColor: 'background.paper'
+                                    }}
+                                />
+                            ))}
+                        </Box>
+
+                        {/* Count */}
+                        <Typography component={'div'} fontSize={13} color='text.secondary'>
+                            {getLikeCount(currentCard._id)} likes
+                        </Typography>
                     </Box>
 
-                    {/* Count */}
+                    {/* Right */}
                     <Typography component={'div'} fontSize={13} color='text.secondary'>
-                        {getLikeCount(currentCard._id)} likes
+                        {countComments(currentCard._id)} comments
                     </Typography>
                 </Box>
 
-                {/* Right */}
-                <Typography component={'div'} fontSize={13} color='text.secondary'>
-                    {countComments(currentCard._id)} comments
-                </Typography>
-            </Box>
+                <Divider sx={{my: 2}}/>
 
-            <Divider sx={{my: 2}}/>
-
-            {/* Action buttons */}
+                {/* Action buttons */}
 
 
-            <Box sx={{display: 'flex', gap: 1, mb: 2, justifyContent: 'space-between'}}>
-                {/* Favorite */}
-                <Button
-                    size='small'
-                    startIcon={favoriteCards.some(c => c._id === currentCard._id) ? <BookmarkAddedIcon/> : <BookmarkBorderOutlinedIcon/>}
-                    onClick={() => user ? handleFavoriteCards(currentCard) : setIsLoginPopupOpen(true)}
+                <Box sx={{display: 'flex', gap: 1, mb: 2, justifyContent: 'space-between'}}>
+                    {/* Favorite */}
+                    <Button
+                        size='small'
+                        startIcon={favoriteCards.some(c => c._id === currentCard._id) ? <BookmarkAddedIcon/> : <BookmarkBorderOutlinedIcon/>}
+                        onClick={() => user ? handleFavoriteCards(currentCard) : setIsLoginPopupOpen(true)}
+                        >
+                        {favoriteCards.some(c => c._id === currentCard._id) ? 'saved' : 'save'}
+                    </Button>
+
+                    {/* Like */}
+                    <Button
+                        size='small'
+                        startIcon={isLikeByMe(currentCard._id) ? <ThumbUpIcon/> : <ThumbUpOffAltIcon/>}
+                        onClick={() => toggleLike(currentCard._id)}
                     >
-                    {favoriteCards.some(c => c._id === currentCard._id) ? 'saved' : 'save'}
-                </Button>
+                        {isLikeByMe(currentCard._id) ? "Unlike" : "Like"}
+                    </Button>
 
-                {/* Like */}
-                <Button
-                    size='small'
-                    startIcon={isLikeByMe(currentCard._id) ? <ThumbUpIcon/> : <ThumbUpOffAltIcon/>}
-                    onClick={() => toggleLike(currentCard._id)}
-                >
-                    {isLikeByMe(currentCard._id) ? "Unlike" : "Like"}
-                </Button>
+                    {/* Like */}
+                    <Button
+                        size='small'
+                        startIcon={<ChatBubbleOutlineIcon/>}
+                        onClick={() => inputRef.current && inputRef.current.focus()}
+                    >
+                        comment 
+                    </Button>
+                </Box>
 
-                {/* Like */}
-                <Button
-                    size='small'
-                    startIcon={<ChatBubbleOutlineIcon/>}
-                    onClick={() => inputRef.current && inputRef.current.focus()}
-                >
-                    comment 
-                </Button>
+
+                {/* Comment input */}
+                {/* comments */}
+                <CardsComments
+                    card = {currentCard}
+                    users={users}
+                    addComment={addComment}
+                    removeComment = {removeComment}
+                    focusRef = {inputRef}
+                />
             </Box>
-
-
-            {/* Comment input */}
-            {/* comments */}
-            <CardsComments
-                card = {currentCard}
-                users={users}
-                addComment={addComment}
-                removeComment = {removeComment}
-                focusRef = {inputRef}
-            />
-            
         </Box>
-
     </Box>
   )
 }

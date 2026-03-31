@@ -1,8 +1,18 @@
 import CardDetailsModal from './CardDetailsModal';
 import { Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useEffect } from 'react';
 
 export default function CardPopupModal({cardId, onClose}) {
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+
+  }, [])
+
   return (
     <Box
       sx={{
@@ -15,36 +25,44 @@ export default function CardPopupModal({cardId, onClose}) {
         zIndex: 1000,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
       }}
     >
         <Box
           sx={{
             bgcolor: 'background.paper',
             borderRadius: 3,
-            p: 3,
-            width: 900,
-            maxHeight: '90vh',
-            overflowY: 'auto',
+            // p:0,
+            width: '90vw',
+            maxWidth: 900,
+            maxHeight: 'min(85vh, 680px)',
+            overflow: 'hidden',
             position: 'relative'
           }}
         >
+          <Box sx={{position: 'relative', height: '100%'}}>
             <IconButton 
               onClick={onClose}
               sx={{
                 position: 'absolute',
                 top: 8,
                 right: 8,
+                m: 1,
+                bgcolor: 'background.paper',
+                zIndex: 1100
               }}
             >
               <CloseIcon/>
             </IconButton>
 
-
             <CardDetailsModal
               cardId = {cardId}
               onClose = {onClose}
             />
+
+          </Box>
+
+
         </Box>
     </Box>
   )
