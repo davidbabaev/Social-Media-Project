@@ -8,14 +8,12 @@ import { useCardsProvider } from '../providers/CardsProvider';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function CardsComments({card, users, addComment, removeComment}) {
+export default function CardsComments({card, users, addComment, removeComment, focusRef}) {
 
     const [commentText, setCommentText] = useState('');
     const {user: loggedInUser} = useAuth();
     const [commentsCount, setCommentsCount] = useState(5);
     const [isLoading, setIsLoading] = useState(false)
-    
-    const inputRef = useRef(null);
     const {refreshFeed} = useCardsProvider();
     const navigate = useNavigate();
     
@@ -47,6 +45,7 @@ export default function CardsComments({card, users, addComment, removeComment}) 
                 />
 
                 <TextField
+                    inputRef={focusRef}
                     fullWidth
                     size='small'
                     multiline

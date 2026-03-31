@@ -5,7 +5,7 @@ import { useAuth } from '../../providers/AuthProvider';
 import useFavoriteCards from '../../hooks/useFavoriteCards';
 import CardsComments from '../CardsComments';
 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useLikedCards from '../../hooks/useLikedCards';
 import useCommentsCards from '../../hooks/useCommentsCards';
@@ -40,6 +40,8 @@ export default function CardDetailsModal({cardId, onClose}) {
         }
         const {addComment, countComments, removeComment} = useCommentsCards();
         const navigate = useNavigate();
+
+        const inputRef = useRef(null);
     
         const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
     
@@ -129,25 +131,6 @@ export default function CardDetailsModal({cardId, onClose}) {
                     </Button>
                 )}
             </Box>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             <Divider sx={{my: 2}}/>
 
@@ -276,6 +259,7 @@ export default function CardDetailsModal({cardId, onClose}) {
                 <Button
                     size='small'
                     startIcon={<ChatBubbleOutlineIcon/>}
+                    onClick={() => inputRef.current && inputRef.current.focus()}
                 >
                     comment 
                 </Button>
@@ -289,6 +273,7 @@ export default function CardDetailsModal({cardId, onClose}) {
                 users={users}
                 addComment={addComment}
                 removeComment = {removeComment}
+                focusRef = {inputRef}
             />
             
         </Box>

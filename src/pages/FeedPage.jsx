@@ -182,7 +182,7 @@ export default function FeedPage() {
                                     fontWeight={600}
                                     fontSize={14}
                                 >
-                                    {getFollowingCount(user?._id)}
+                                    {(user?.following || []).length}
                                 </Typography>
 
                                 <Typography 
