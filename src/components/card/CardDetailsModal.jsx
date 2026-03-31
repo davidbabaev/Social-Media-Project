@@ -130,6 +130,25 @@ export default function CardDetailsModal({cardId, onClose}) {
                 )}
             </Box>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <Divider sx={{my: 2}}/>
 
             {/* Title */}
@@ -150,7 +169,7 @@ export default function CardDetailsModal({cardId, onClose}) {
 
             {/* Contnet */}
             {currentCard.content && (
-                <Typography component='div' fontWeight={400} fontSize={14} mb={1}>
+                <Typography component='div' fontWeight={400} fontSize={14} mb={1} sx={{whiteSpace: 'pre-wrap'}}>
 
                     {isExpanded ? currentCard.content : currentCard.content.slice(0, 150)}
 
@@ -234,7 +253,7 @@ export default function CardDetailsModal({cardId, onClose}) {
             {/* Action buttons */}
 
 
-            <Box sx={{display: 'flex', gap: 1, mb: 2}}>
+            <Box sx={{display: 'flex', gap: 1, mb: 2, justifyContent: 'space-between'}}>
                 {/* Favorite */}
                 <Button
                     size='small'
@@ -265,7 +284,12 @@ export default function CardDetailsModal({cardId, onClose}) {
 
             {/* Comment input */}
             {/* comments */}
-            <CardsComments/>
+            <CardsComments
+                card = {currentCard}
+                users={users}
+                addComment={addComment}
+                removeComment = {removeComment}
+            />
             
         </Box>
 

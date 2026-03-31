@@ -145,21 +145,29 @@
                     <div key= {comment._id}>
                         <p>{user?.name || "Unknown User"}</p>
                         <p>{comment.commentText}</p>
+
+
+
                         { loggedInUser && 
-                        (loggedInUser._id === comment.userId || 
-                            loggedInUser._id === card.userId
-                        ) && (
-                            <button onClick={() => removeComment(card._id, comment._id)}>X</button>
-                        )}
+                            (loggedInUser._id === comment.userId || 
+                                loggedInUser._id === card.userId
+                            ) && (
+                                <button onClick={() => removeComment(card._id, comment._id)}>X</button>
+                            )
+                        }
+
+
+
                         <hr />
                     </div>
                 )
             })
         }
+
         {commentsCount >= 
-        (card?.comments || []).length ? 
-        (<p>No more Cards</p>): (
-            <button onClick={() => setCommentsCount(commentsCount + 5)}>Read More</button>
+        (card?.comments || []).length  
+        && (
+            <button onClick={() => setCommentsCount(commentsCount + 5)}>Load More</button>
         )}
 
     </div>

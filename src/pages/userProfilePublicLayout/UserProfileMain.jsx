@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import useUsers from '../../hooks/useUsers';
 import { useCardsProvider } from '../../providers/CardsProvider';
@@ -23,6 +23,11 @@ export default function UserProfileMain() {
     function onClose(){
         setIsOpen(false)
     }
+
+    // addidng window scroll 0
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
 
     const [isCommentOpen, setIsCommentOpen] = useState(null);
     const {addComment, countComments, removeComment} = useCommentsCards();    
