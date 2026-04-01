@@ -13,6 +13,9 @@ import CardsComments from '../components/CardsComments';
 import useCommentsCards from '../hooks/useCommentsCards';
 import getTimeAgo from '../utils/getTimeAgo';
 import MediaDisplay from '../components/MediaDisplay';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
+import CardItem from '../components/CardItem';
 
 export default function AllCardsPage() {
 
@@ -32,6 +35,10 @@ export default function AllCardsPage() {
 
     // card categories/ tags
     const [categoryFilter, setCategoryFilter] = useState('');
+
+    const [openCommentCardId, setOpenCommentCardId] = useState(null);
+    const [selectedCardId, setSelectedCardId] = useState(null);
+    
 
     const [isOpen, setIsOpen] = useState(false);
     function onClose(){
@@ -84,207 +91,126 @@ export default function AllCardsPage() {
     const countedRegisterCards = filteredCards.slice(0, count)    
 
   return (
-    <div>
-        <h1>All Cards</h1>
+    <Container maxWidth="lg" sx={{py:3}}>
+        <Grid container spacing={3}>
+            {/* Sidebar */}
+            <Grid 
+                size={{md:4}} 
+                sx={{
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    gap: 2
+                }}>
 
-        <div>
-            <select 
-                value={creatorId}
-                onChange={(e) => setCreatorId(e.target.value)}    
-            >
-                <option value="">All Users</option>
-                {users.map((user) => (
-                    <option key={user._id} value={user._id}>{user?.name}</option>
-                ))}
-            </select>
-        </div>
+                {/* Sort */}
+                <Paper
+                    elevation={0}
+                    sx={{
+                        borderRadius: 3,
+                        border: '0.5px solid',
+                        borderColor: 'divider',
+                        p: 2,
+                    }}
+                >
+                    <Typography fontWeight={600} fontSize={13} mb={1.5}>
+                        Sort By
+                    </Typography>
+                </Paper>
 
-        <div>
-            <select 
-                value={dateSort}
-                onChange={(e) => setDateSort(e.target.value)}
-            >
-                <option value="">All Dates</option>
-                <option value="newest">Newest first</option>
-                <option value="oldest">Oldest first</option>
-            </select>
-        </div>
+                {/* Category */}
+                <Paper
+                    elevation={0}
+                    sx={{
+                        borderRadius: 3,
+                        border: '0.5px solid',
+                        borderColor: 'divider',
+                        p: 2,
+                    }}
+                >
+                    <Typography fontWeight={600} fontSize={13} mb={1.5}>
+                        Category
+                    </Typography>
+                </Paper>
 
-        <div>
-            <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-            >
-                <option value="">All Categories</option>
-                {CARD_CATEGORIES.map((category, index) => (
-                    <option key={category} value={category}>
-                        {category}
-                    </option>
-                ))}
-            </select>
-        </div>
+                {/* Creator */}
+                <Paper
+                    elevation={0}
+                    sx={{
+                        borderRadius: 3,
+                        border: '0.5px solid',
+                        borderColor: 'divider',
+                        p: 2,
+                    }}
+                >
+                    <Typography fontWeight={600} fontSize={13} mb={1.5}>
+                        Creator
+                    </Typography>
+                </Paper>
 
-        <div>
-            <select 
-                value={favorites}
-                onChange={(e) => setFavorites(e.target.value)}
-            >
-                <option value="">All / Favorites</option>
-                <option value="myFavorites">My Favorites Cards</option>
-            </select>
-        </div>
+                {/* Creator */}
+                <Paper
+                    elevation={0}
+                    sx={{
+                        borderRadius: 3,
+                        border: '0.5px solid',
+                        borderColor: 'divider',
+                        p: 2,
+                    }}
+                >
+                    <Typography fontWeight={600} fontSize={13} mb={1.5}>
+                        Show
+                    </Typography>
+                </Paper>
 
-        <div>
-            <input 
-                type="text" 
-                value={searchCard}
-                onChange={(e) => setSearchCard(e.target.value)}
-            />
-        </div>
+            </Grid>
 
+            <Grid size={{md:8}}>
+                {/* main */}
+                <TextField
+                    fullWidth
+                    size='small'
+                    placeholder='Search Post..'
+                    value={searchCard}
+                    onChange={(e) => setSearchCard(e.target.value)}
+                    slotProps={{
+                        input: {
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            )
+                        }
+                    }}
+                    sx={{
+                        '& .MuiOutlinedInput-root':{
+                            borderRadius: 5,
+                            fontSize: 13
+                        }
+                    }}
+                />
 
+                <Box sx={{display: 'flex', justifyContent: 'space-between', p:1}}>
+                    <Typography color='text.secondary'>
+                        47 posts found
+                    </Typography>
 
+                    <Typography color='text.secondary'>
+                        Newest | Design | David Babaev
+                    </Typography>
+                </Box>
 
-
-        {/* ============================================================== */}
-
-
-
-
-
-        {countedRegisterCards.length === 0 && <p>You haven't created any cards yet.</p>}
-        <div style={{
-            display: 'flex', 
-            flexDirection: 'column'
-        }}>
-
-
-        {countedRegisterCards.map((card) => {
-            const creator = users.find(user => user._id === card.userId);
-
-            return(
-                <div style={{
-                    border: 'solid black 1px', 
-                    padding: '20px', 
-                    borderRadius: '20px', 
-                    margin: '20px 0px'
-                    }} key={card._id}>
-
-                    <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card._id}`)}>{card.title}</span></h2>
-                    <p>{card.content}</p>
-
-                    <MediaDisplay
-                        mediaUrl={card.mediaUrl}
-                        mediaType={card.mediaType}
-                        style={{width: '500px', borderRadius: '20px'}}
+                {countedRegisterCards.map((card) => (
+                    <CardItem
+                        key={card._id}
+                        card={card}
+                        onOpenCard={() => setSelectedCardId(card._id)}
+                        openCommentCardId={openCommentCardId}
+                        setOpenCommentCardId = {setOpenCommentCardId}
                     />
- 
-                    <hr />
-                    <div style={{
-                        display: 'flex', 
-                        flexDirection: 'row', 
-                        gap: '10px'
-                        }}>
-                        <img 
-                            style={{
-                                width: '60px',
-                                height: '60px',
-                                borderRadius: '50%',
-                                border: '2px, solid, white',
-                                objectFit: 'cover',
-                                cursor: 'pointer',
-                            }} 
-                                src={creator?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}
-                            onClick={() => navigate(`/profiledashboard/${creator._id}/profilemain`)}    
-                        />
-                        <p>
-                            <span
-                                style={{cursor: 'pointer'}}
-                                onClick={() => navigate(`/profiledashboard/${creator._id}/profilemain`)}
-                            >
-                                {creator?.name} {creator?.lastName}
-                            </span>
-                        </p>
-                        <p>|</p>
-                        <p
-                        style={{
-                            color: 'gray', 
-                            fontSize:'13px',
-                        }}
-                        >{getTimeAgo(card.createdAt)}</p>
-                        <p>|</p>
-                        {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {card.category}</p>)}
-                        <p>|</p>
-                        <p>{getLikeCount(card._id)} likes</p>
-                        <p>|</p>
-                        <p>{countComments(card._id)} comments</p>
-                        <p>|</p>
+                ))}
 
-                            <div>
-                                {user ? (
-                                    <button onClick={() => toggleLike(card._id)}>
-                                        {isLikeByMe(card._id) ? "Unlike" : "Like"}
-                                    </button>
-                                ):(
-                                    <button onClick={() => setIsOpen(true)}>Like</button>
-                                )}
-
-                                {user ? (
-                                    <div>
-                                        {favoriteCards.some(c => c._id === card._id) ? (
-                                            <button onClick={() => handleFavoriteCards(card)}>Remove From Favorite</button>
-                                        ) : (
-                                            <button onClick={() => handleFavoriteCards(card)}>Add To Favorites</button>
-                                        )}
-                                    </div>
-                                    ) : (
-                                        <button onClick={() => setIsOpen(true)}>Add to favorites</button>
-                                    )}
-
-                                {user ? (
-                                    <button onClick={() => {
-                                        if(isCommentOpen === card._id){
-                                            setIsCommentOpen(null)
-                                        } else{
-                                            setIsCommentOpen(card._id)
-                                        }
-                                    }}>add new comment</button>
-                                ): (
-                                    <button onClick={() => setIsOpen(true)}>add new comment</button>
-                                )}
-
-                                <button onClick={() => navigate(`/carddetails/${card._id}`)}>Show Card Details</button>    
-                            </div>
-                    </div>
-                    <div>
-                        {
-                        isCommentOpen === card._id &&(  
-                            <CardsComments
-                                card = {card}
-                                users={users}
-                                addComment={addComment}
-                                removeComment = {removeComment}
-                            />
-                        )}
-                    </div>
-                </div>
-            )
-            
-        })}
-
-
-
-
-        {  isOpen && (
-            <LoginPopup
-                onClose = {onClose}
-            />
-        )}
-
-        </div>
-        {count >= filteredCards.length ? (<p>No More Cards</p>) : (
-            <button onClick={() => setCount(count + 2)}>Read more</button>
-        )}
-    </div>
+            </Grid>
+        </Grid>
+    </Container>
   )
 }

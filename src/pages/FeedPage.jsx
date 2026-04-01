@@ -6,7 +6,7 @@ import useUsers from '../hooks/useUsers';
 import useFollowUser from '../hooks/useFollowUser';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
-import { Alert, Avatar, Box, Button, Card, Container, Grid, Paper, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Card, Container, Grid, Paper, Typography} from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit';
@@ -272,13 +272,6 @@ export default function FeedPage() {
                             >
                                 Edit Profile
                             </Button>
-
-                            {countedRegisterCards[0] && (
-                                <Button 
-                                    onClick={() => setSelectedCardId(countedRegisterCards[0]._id)}>
-                                        Open First Card
-                                </Button>
-                            )}
                         </Box>
                     </Paper>
 
