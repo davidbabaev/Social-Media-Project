@@ -36,7 +36,7 @@ export default function CardsComments({card, users, addComment, removeComment, f
     const countedComments = (card?.comments || []).sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0, commentsCount)
 
   return (
-    <Box>
+    <Box sx={{p:1}}>
         {loggedInUser && (
             <Box sx={{display: 'flex', gap: 1, alignItems: 'center', mb: 2}}>
                 <Avatar
@@ -135,6 +135,7 @@ export default function CardsComments({card, users, addComment, removeComment, f
             
                         <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                             {/* Right: Follow button */}
+
                             {loggedInUser && loggedInUser._id !== userComment?._id && !isFollowByMe(userComment?._id) &&(
                                 <Button
                                     size='small'

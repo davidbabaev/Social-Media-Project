@@ -52,7 +52,8 @@ export default function FeedPage() {
         if(!user) return;
         isUserDataFill();
     }, [])
-    
+
+    const [openCommentCardId, setOpenCommentCardId] = useState(null);
     
     // ----------------------------------------------------
 
@@ -342,6 +343,8 @@ export default function FeedPage() {
                             key={card._id}
                             card={card}
                             onOpenCard={() => setSelectedCardId(card._id)}
+                            openCommentCardId={openCommentCardId}
+                            setOpenCommentCardId = {setOpenCommentCardId}
                         />
                     ))}
 

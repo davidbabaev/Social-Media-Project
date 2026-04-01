@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import useFavoriteCards from '../hooks/useFavoriteCards';
 import useUsers from '../hooks/useUsers';
 import { useAuth } from '../providers/AuthProvider';
@@ -9,17 +9,33 @@ import CardsComments from './CardsComments';
 import LoginPopup from './LoginPopup';
 import getTimeAgo from '../utils/getTimeAgo';
 import MediaDisplay from './MediaDisplay';
+import { Avatar, Box, Button, Chip, Divider, Typography, useTheme } from '@mui/material';
+import useFollowUser from '../hooks/useFollowUser';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { useCardsProvider } from '../providers/CardsProvider';
+import LaunchIcon from '@mui/icons-material/Launch';
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
-export default function CardItem({card, onOpenCard}) {
 
-  const [isOpen, setIsOpen] = useState(false);
-    function onClose(){
-      setIsOpen(false)
+
+export default function CardItem({card, onOpenCard ,openCommentCardId, setOpenCommentCardId}) {
+
+    const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+    function onCloseLoginPopup(){
+        setIsLoginPopupOpen(false)
     }
-
-    const [isCommentOpen, setIsCommentOpen] = useState(false);
-
     const {addComment, countComments, removeComment} = useCommentsCards();
+    const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
+    const {refreshFeed} = useCardsProvider();
+    const [isExpanded, setIsExpanded] = useState(false)
+    const theme = useTheme();
+    const inputRef = useRef(null);
+    
+
     const navigate = useNavigate();
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
     const {user} = useAuth();
@@ -28,115 +44,251 @@ export default function CardItem({card, onOpenCard}) {
 
     const creator = users.find(u => u._id === card.userId);
 
+    const getLikesUsers = users.filter((u) => card.likes.includes(u._id)).slice(0,4)
+
+
   return (
-    <div>
-      <div style={{
-          border: 'solid lightgray 1px', 
-          padding: '20px', 
-          borderRadius: '20px', 
-          margin: '20px 0px'
+        <Box sx={{
+            width: '100%', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            borderRadius: 3,
+            border: '0.5px solid',
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+            my: 2
           }}>
+        <Box>
 
-          <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card._id}`)}>{card.title}</span></h2>
-          <p>{card.content}</p>
+            {/* Creator flow */}
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                // borderBottom: '1px solid',
+                // borderColor: 'divider',
+            }}>
 
-          <MediaDisplay
-                mediaUrl={card.mediaUrl}
-                mediaType={card.mediaType}
-                style={{width: '500px', borderRadius: '20px'}}
-          />
+                {/* left avatar + info */}
+                <Box sx={{display: 'flex', gap: 1.5, p: 2}}>
+                    <Avatar
+                        src={creator?.profilePicture}
+                        sx={{cursor: 'pointer', width: 48, height: 48}}
+                        onClick={() => navigate(`/profiledashboard/${creator?._id}/profilemain`)}
+                    />
 
-          <hr />
-          <div style={{
-              display: 'flex', 
-              flexDirection: 'row', 
-              gap: '10px'
-              }}>
-              <img 
-                  style={{
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        border: '2px, solid, white',
-                        objectFit: 'cover',
-                        cursor: 'pointer'
-                  }} 
-                      src={creator?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}
-                  onClick={() => creator && navigate(`/profiledashboard/${creator._id}/profilemain`)}    
-              />
-              <p>
-                  <span
-                      style={{cursor: 'pointer'}}
-                      onClick={() => creator && navigate(`/profiledashboard/${creator._id}/profilemain`)}
-                  >
-                      {creator?.name} {creator?.lastName}
-                  </span>
-              </p>
-              <p>|</p>
-              <p
-                style={{
-                    color: 'gray', 
-                    fontSize:'13px', 
-                    margin: 0,
-                }}
-              >{getTimeAgo(card.createdAt)}</p>
-              <p>|</p>
-              {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>{card.category}</p>)}
-              <p>|</p>
-              <p>{getLikeCount(card._id)} likes</p>
-              <p>|</p>
-              <p>{countComments(card._id)} comments</p>
-              <p>|</p>
+                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 0.5}}>
+                        <Typography component={'div'} fontWeight={600} fontSize={14} lineHeight={1.2}>
+                            {creator?.name} {creator?.lastName}
+                            <Typography 
+                                component='span' 
+                                color='text.secondary'
+                                fontSize={11}
+                                fontWeight={400}
+                            >
+                                {isFollowByMe(creator?._id) && ' · following'}
+                            </Typography>
+                        </Typography>
 
-                  <div>
-                      {user ? (
-                          <button onClick={() => toggleLike(card._id)}>
-                              {isLikeByMe(card._id) ? "Unlike" : "Like"}
-                          </button>
-                      ):(
-                          <button onClick={() => setIsOpen(true)}>Like</button>
-                      )}
+                        <Typography component={'div'} fontSize={11} color='text.secondary' lineHeight={0.9}>
+                            {creator?.job}
+                        </Typography>
 
-                      {user ? (
-                          <div>
-                              {favoriteCards.some(c => c._id === card._id) ? (
-                                  <button onClick={() => handleFavoriteCards(card)}>Remove From Favorite</button>
-                              ) : (
-                                  <button onClick={() => handleFavoriteCards(card)}>Add To Favorites</button>
-                              )}
-                          </div>
-                          ) : (
-                              <button onClick={() => setIsOpen(true)}>Add to favorites</button>
-                          )}
+                        <Typography component={'div'} fontSize={11} color='text.secondary' lineHeight={0.9}>
+                            {getFollowersCount(creator?._id)} followers · {getTimeAgo(card.createdAt)}
+                        </Typography>
 
-                      {user ? (
-                          <button onClick={() => {setIsCommentOpen(!isCommentOpen)}}>add new comment</button>
-                      ): (
-                          <button onClick={() => setIsOpen(true)}>add new comment</button>
-                      )}
+                    </Box>
+                </Box>
 
-                      <button onClick={() => navigate(`/carddetails/${card._id}`)}>Show Card Details</button>    
-                  </div>
-          </div>
-          <div>
-              {
-              isCommentOpen &&(  
-                  <CardsComments
-                      card = {card}
-                      users={users}
-                      addComment={addComment}
-                      removeComment = {removeComment}
-                  />
-              )}
-          </div>
-      </div>
 
-    {  isOpen && (
-        <LoginPopup
-            onClose = {onClose}
-        />
-    )}
-    </div>
-    
+                {/* Right: Follow button */}
+                {user && user._id !== creator?._id && !isFollowByMe(creator?._id) &&(
+                    <Button
+                        size='small'
+                        variant={'outlined'}
+                        startIcon={<PersonAddIcon/>}
+                        onClick={async () => {
+                            await toggleFollow(creator?._id)
+                            await refreshFeed();
+                        }}
+                        sx={{
+                            fontSize: 9, 
+                            minWidth: 70, 
+                            borderRadius: 5, 
+                            py: 0.3,
+                            m: 2,
+                            '& .MuiButton-startIcon' : {mb: 0.2}, lineHeight: 0 
+                        }}
+                    >
+                        Follow
+                    </Button>
+                )}
+            </Box>
+
+            <Box sx={{px:2, flex: 1}} >
+                {/* Title */}
+                {card.title && (
+                    <Typography component='div' fontWeight={600} fontSize={20} mb={1}>
+                        {card.title}
+                    </Typography>
+                )}
+                {/* Category */}
+                {card.category && (
+                    <Chip 
+                        label={card.category} 
+                        size='small' 
+                        fontSize={14} 
+                        sx={{mb:1}}
+                    />
+                )}
+
+                {/* Contnet */}
+                {card.content && (
+                    <Typography component='div' fontWeight={400} fontSize={14} mb={1} sx={{whiteSpace: 'pre-wrap'}}>
+
+                        {isExpanded ? card.content : card.content.slice(0, 150)}
+
+                        {card.content.length > 150 && (
+                            <span
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                style={{
+                                    color: theme.palette.primary.main, 
+                                    cursor: 'pointer',
+                                    fontWeight: 600,
+                                    marginLeft: 4
+
+                                }}
+                            >
+                                {isExpanded ? '...showless' : '...read more'}
+                            </span>
+                        )}
+
+                    </Typography>
+                )}
+
+
+                {/* URL */}
+                {card.web && (
+                    <Button
+                        size='small'
+                        variant='outlined'
+                        href={card.web}
+                        startIcon={<LaunchIcon/>}
+                        target='_blank'
+                        rel='noreferrer'
+                        sx={{mb:1, borderRadius: 5, fontSize: 11}}
+                    >
+                        Visit Link
+                    </Button>
+                )}
+
+            </Box>
+
+            {/* Media display */}
+
+            <Box onClick={onOpenCard} sx={{cursor: 'pointer'}}>
+                <MediaDisplay
+                    mediaUrl={card.mediaUrl}
+                    mediaType={card.mediaType}
+                    style={{
+                        width: '100%', 
+                        // height: '100%', 
+                        objectFit: 'cover'
+                    }}
+                />
+            </Box>
+
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                px: 1
+            }}>
+                {/* left: ovelapping avatars */}
+                <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+
+                    {/* Avatars */}
+                    <Box sx={{display: 'flex'}}>
+                        {getLikesUsers.map((likedUser, index) => (
+                            <Avatar
+                                key={likedUser._id}
+                                src={likedUser.profilePicture}
+                                sx={{
+                                    width: 30,
+                                    height: 30,
+                                    ml: index === 0 ? 0 : -0.8,
+                                    border: '1.5px solid',
+                                    borderColor: 'background.paper'
+                                }}
+                            />
+                        ))}
+                    </Box>
+
+                    {/* Count */}
+                    <Typography component={'div'} fontSize={13} color='text.secondary'>
+                        {getLikeCount(card._id)} likes
+                    </Typography>
+                </Box>
+
+                {/* Right */}
+                <Typography component={'div'} fontSize={13} color='text.secondary'>
+                    {countComments(card._id)} comments
+                </Typography>
+            </Box>
+
+            <Divider sx={{my: 1}}/>
+
+            <Box sx={{
+                display: 'flex', 
+                gap: 1, 
+                mb: 1, 
+                justifyContent: 'space-between',
+                px: 1
+            }}>
+                {/* Favorite */}
+                <Button
+                    size='small'
+                    startIcon={favoriteCards.some(c => c._id === card._id) ? <BookmarkAddedIcon/> : <BookmarkBorderOutlinedIcon/>}
+                    onClick={() => user ? handleFavoriteCards(card) : setIsLoginPopupOpen(true)}
+                    >
+                    {favoriteCards.some(c => c._id === card._id) ? 'saved' : 'save'}
+                </Button>
+
+                {/* Like */}
+                <Button
+                    size='small'
+                    startIcon={isLikeByMe(card._id) ? <ThumbUpIcon/> : <ThumbUpOffAltIcon/>}
+                    onClick={() => toggleLike(card._id)}
+                >
+                    {isLikeByMe(card._id) ? "Unlike" : "Like"}
+                </Button>
+
+                {/* Comment */}
+                <Button
+                    size='small'
+                    startIcon={<ChatBubbleOutlineIcon/>}
+                    onClick={() => {
+                        setOpenCommentCardId(openCommentCardId === card._id ? null : card._id)
+                        inputRef.current && inputRef.current.focus()
+                    }}   
+                >
+                    comment
+                </Button>
+            </Box>
+            
+            {openCommentCardId === card._id && (
+                <CardsComments
+                    card = {card}
+                    users={users}
+                    addComment={addComment}
+                    removeComment = {removeComment}
+                    focusRef = {inputRef}
+                />
+            )}
+
+        </Box>
+
+    </Box>
   )
 }

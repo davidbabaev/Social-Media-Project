@@ -142,6 +142,16 @@ export default function AllCardsPage() {
             />
         </div>
 
+
+
+
+
+        {/* ============================================================== */}
+
+
+
+
+
         {countedRegisterCards.length === 0 && <p>You haven't created any cards yet.</p>}
         <div style={{
             display: 'flex', 
@@ -261,6 +271,9 @@ export default function AllCardsPage() {
             )
             
         })}
+
+
+
 
         {  isOpen && (
             <LoginPopup

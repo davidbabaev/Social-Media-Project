@@ -56,7 +56,11 @@ export default function CardDetailsModal({cardId, onClose}) {
         const getLikesUsers = users.filter((u) => currentCard.likes.includes(u._id)).slice(0,4)
 
   return (
-    <Box sx={{display: 'flex', minHeight: 'min(60vh, 400px)', maxHeight: 'min(75vh, 680px)'}}>
+    <Box sx={{
+        display: 'flex', 
+        minHeight: 'min(60vh, 400px)', 
+        maxHeight: 'min(75vh, 680px)'
+    }}>
         {/* Left Media */}
 
         <Box sx={{flex: 1, bgcolor: 'black'}}>
@@ -64,13 +68,22 @@ export default function CardDetailsModal({cardId, onClose}) {
             <MediaDisplay
                 mediaUrl={currentCard.mediaUrl}
                 mediaType={currentCard.mediaType}
-                style={{width: '100%', height: '100%', objectFit: 'contain'}}
+                style={{
+                    width: '100%', 
+                    height: '100%', 
+                    objectFit: 'contain'
+                }}
             />
         </Box>
 
 
         {/* Right Media */}
-        <Box sx={{width: 380, display: 'flex', flexDirection: 'column', maxHeight: 'min(75vh, 680px)'}}>
+        <Box sx={{
+            width: 380, 
+            display: 'flex', 
+            flexDirection: 'column', 
+            maxHeight: 'min(75vh, 680px)'
+        }}>
             
             
             {/* Creator flow */}
@@ -82,7 +95,7 @@ export default function CardDetailsModal({cardId, onClose}) {
                 borderBottom: '1px solid',
                 borderColor: 'divider',
                 mx:2,
-            }}>
+                }}>
 
                 {/* left avatar + info */}
                 <Box sx={{display: 'flex', gap: 1.5}}>
@@ -256,7 +269,7 @@ export default function CardDetailsModal({cardId, onClose}) {
                         {isLikeByMe(currentCard._id) ? "Unlike" : "Like"}
                     </Button>
 
-                    {/* Like */}
+                    {/* Comment */}
                     <Button
                         size='small'
                         startIcon={<ChatBubbleOutlineIcon/>}
