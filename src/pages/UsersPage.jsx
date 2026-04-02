@@ -86,6 +86,7 @@ function UsersPage() {
             onChange={(e) => setSearch(e.target.value)}
         />
         </div>
+        
          <select 
                 disabled={nameSort}
                 style={{
