@@ -6,13 +6,6 @@ import useDebounce from '../hooks/useDebounce';
 import useFavoriteCards from '../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../providers/AuthProvider';
-import useLikedCards from '../hooks/useLikedCards';
-import LoginPopup from '../components/LoginPopup';
-import CardsComments from '../components/CardsComments';
-import useCommentsCards from '../hooks/useCommentsCards';
-import getTimeAgo from '../utils/getTimeAgo';
-import MediaDisplay from '../components/MediaDisplay';
 import SearchIcon from '@mui/icons-material/Search';
 import { Avatar, Box, Button, Checkbox, Chip, Container, Divider, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 import CardItem from '../components/CardItem';
@@ -48,22 +41,9 @@ export default function AllCardsPage() {
     // controls the search input for users
     const [creatorSearch, setCreatorSearch] = useState('')
 
-
-
-    const [isOpen, setIsOpen] = useState(false);
-    function onClose(){
-        setIsOpen(false)
-    }
-
-    const [isCommentOpen, setIsCommentOpen] = useState(null);
-
-    const {addComment, countComments, removeComment} = useCommentsCards();
-
     const navigate = useNavigate();
     
     const {registeredCards} = useCardsProvider();
-    const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
-    const {user} = useAuth();
     const [count, setCount] = useState(30);
     const {users} = useUsers(); 
     const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
@@ -182,7 +162,7 @@ export default function AllCardsPage() {
                 size={{md:4}} 
                 sx={{
                     position: 'sticky',
-                    top: 94,
+                    top: 0,
                     height: 'calc(100vh - 94px)',
                     overflow: 'auto',
                     overscrollBehavior: 'contain',
