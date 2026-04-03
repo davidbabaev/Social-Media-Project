@@ -1,6 +1,6 @@
 import React from 'react'
-import useSelectedUsers from '../hooks/useSelectedUsers'
 import { useNavigate } from 'react-router-dom';
+import useSelectedUsers from '../../hooks/useSelectedUsers';
 
 
 export default function SelectedPage() {

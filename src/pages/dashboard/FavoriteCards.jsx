@@ -1,9 +1,9 @@
 import React from 'react'
-import useFavoriteCards from '../hooks/useFavoriteCards'
+import useFavoriteCards from '../../hooks/useFavoriteCards';
 import { useNavigate } from 'react-router-dom';
-import useUsers from '../hooks/useUsers';
-import getTimeAgo from '../utils/getTimeAgo';
-import MediaDisplay from '../components/MediaDisplay';
+import useUsers from '../../hooks/useUsers';
+import getTimeAgo from '../../utils/getTimeAgo';
+import MediaDisplay from '../../components/MediaDisplay';
 export default function FavoriteCards() {
 
     const {favoriteCards, handleRemoveCard} = useFavoriteCards();
