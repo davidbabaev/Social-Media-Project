@@ -5,15 +5,12 @@ import useUsers from '../hooks/useUsers';
 import useDebounce from '../hooks/useDebounce';
 import useFavoriteCards from '../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
-import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
-import { Avatar, Box, Button, Checkbox, Chip, Container, Divider, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Checkbox, Chip, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 import CardItem from '../components/CardItem';
 import CardPopupModal from '../components/card/CardPopupModal';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-
-
-
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 
 export default function AllCardsPage() {
 
@@ -40,13 +37,11 @@ export default function AllCardsPage() {
 
     // controls the search input for users
     const [creatorSearch, setCreatorSearch] = useState('')
-
-    const navigate = useNavigate();
     
     const {registeredCards} = useCardsProvider();
-    const [count, setCount] = useState(30);
+    const [count, setCount] = useState(10);
     const {users} = useUsers(); 
-    const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
+    const {favoriteCards} = useFavoriteCards();
 
     const [showAllCategories, setShowAllCategories] = useState(false)
 
@@ -109,10 +104,12 @@ export default function AllCardsPage() {
 
     if(favorites !== ''){
         activeFilters.push({
-            label: 'Saved Posts',
+            label: 'Favorite Posts',
             onDelete: () => setFavorites('') 
         })
     }
+
+    
 
     const filteredCards = useMemo(() => {
 
@@ -125,7 +122,16 @@ export default function AllCardsPage() {
         }
 
         if(debounceSearchCard !== ''){
-            result = result.filter(card => card.title.toLowerCase().includes(debounceSearchCard.toLowerCase()))
+            result = result.filter(card => {
+                const findCreator = users.find(u => card.userId === u._id)
+                return (findCreator?.name + ' ' + findCreator?.lastName).toLowerCase().includes(debounceSearchCard.toLowerCase()) 
+                ||
+                (card.title || '').toLowerCase().includes(debounceSearchCard.toLowerCase()) 
+                ||
+                (card.category || '').toLowerCase().includes(debounceSearchCard.toLowerCase()) 
+                ||
+                (card.content || '').toLowerCase().includes(debounceSearchCard.toLowerCase()) 
+            })
         }
 
         if(dateSort !== ''){
@@ -150,7 +156,7 @@ export default function AllCardsPage() {
 
 
         return result;
-    }, [creatorId, registeredCards, debounceSearchCard, dateSort, categoriesFilter, favorites, favoriteCards])
+    }, [creatorId, registeredCards, debounceSearchCard, dateSort, categoriesFilter, favorites, favoriteCards, users])
     
     const countedRegisterCards = filteredCards.slice(0, count)    
 
@@ -530,6 +536,24 @@ export default function AllCardsPage() {
                         cardId = {selectedCardId}
                         onClose = {() => setSelectedCardId(null)}
                     />
+                )}
+
+                {filteredCards.length > count &&(
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            width: '100%', 
+                            justifyContent: 'center'}}
+                    >
+                        <Button 
+                            onClick={() => setCount(count + 10)}
+                            endIcon={<ExpandCircleDownIcon/>} 
+                            variant='outlined'
+                            sx={{borderRadius: 5}}
+                            >
+                                Load More
+                        </Button>
+                    </Box>
                 )}
 
             </Grid>
