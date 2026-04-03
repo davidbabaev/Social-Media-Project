@@ -77,7 +77,6 @@ export default function ProfileSection() {
     if(!user) return <p>Loading...</p>
 return (
 <div>
-    <h2>My Profile</h2>
     {!editMode ? (
         <div
             style={{
@@ -87,10 +86,6 @@ return (
             margin: '20px 0px'
             }}
             >
-            <img style={{width: '100%', borderRadius: '10px', height:'230px', objectFit:'cover'}} src={user.coverImage}/>
-            <img style={{marginTop: '-100px',marginLeft: '20px',width: '17%', borderRadius: '50%', border: 'solid 2px white', objectFit:'cover', height:'170px'}} src={user.profilePicture}/>
-            <h2>{user.name} {user.lastName}</h2>
-            <hr />
             <p><span style={{fontWeight:'bold', fontSize: '20px'}}>About</span><br/> {user.aboutMe}</p>
             <hr />
             <p>Email: {user.email}</p>

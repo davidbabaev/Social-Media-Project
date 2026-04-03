@@ -214,8 +214,6 @@ export default function FeedPage() {
                                 </Typography>
                             </Box>
                         </Box>
-
-
                     </Paper>
 
                     {/* Buttons */}
