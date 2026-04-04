@@ -1,10 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '../../providers/AuthProvider';
 import useCountries from '../../hooks/useCountries';
 import { JOB_INDUSTRIES } from '../../constants/usersJobIndustries';
 import useCities from '../../hooks/useCities';
 import { getMaxBirthDate, getAgeByDate } from '../../utils/getAgeByBirthDate';
 import { useLocation } from 'react-router-dom';
+import { Avatar, Box, Button, Container, Grid, IconButton, MenuItem, Paper, Stack, TextField, Typography } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
 
@@ -24,17 +28,58 @@ export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
     const [editGender, setEditGender] = useState('');
     const [editBirthDate, setEditBirthDate] = useState('');
     const [editPhone, setEditPhone] = useState('');
-    const [editAboutMe, setEditAboutMe] = useState('');   
+    const [editAboutMe, setEditAboutMe] = useState('');
+    const [mediaFile, setMediaFile] = useState(null);
+    const fileInputRef = useRef(null);
+    const fileCoverImgInputRef = useRef(null);
+
+    const maxDate = useMemo(() => getMaxBirthDate(13), []);
+    
+    
 
      const handleCountryChange = (e) => {
         setEditCountry(e.target.value);
         setEditCity('');
     }
 
+    const previewProfilePicture = useMemo(() => {
+        if(editprofilePicture instanceof File){
+            return URL.createObjectURL(editprofilePicture)
+        }
+        else if(typeof editprofilePicture === 'string'){
+            return editprofilePicture
+        }
+        else{
+            return null
+        }
+    }, [editprofilePicture])
+
+    const previewCoverImage = useMemo(() => {
+        if(editCoverImage instanceof File){
+            return URL.createObjectURL(editCoverImage)
+        }
+        else if(typeof editCoverImage === 'string'){
+            return editCoverImage
+        }
+        else{
+            return null
+        }
+    }, [editCoverImage])
+
+    const userData = [
+        {label: 'Email' , value: user.email},
+        {label: 'Phone' , value: user.phone},
+        {label: 'Country' , value: user.address?.country},
+        {label: 'City' , value: user.address?.city},
+        {label: 'Age' , value: user.age},
+        {label: 'Job' , value: user.job},
+        {label: 'Gender' , value: user.gender},
+        {label: 'Birth Date' , value: user.birthDate?.split("T")[0]},
+        {label: 'Joined to Mirage' , value: user.createdAt?.split("T")[0]},
+    ]
+
     const {cities, isCitiesLoading} = useCities(editCountry);
     
-    const maxDate = useMemo(() => getMaxBirthDate(13), []);
-
     // the state will be the data object you passed {editMode: true}
     const location = useLocation();
     const {state} = location;
@@ -74,231 +119,434 @@ export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
             setEditAboutMe(user.aboutMe);
         }
     }, [editMode])
-        
-    // import edit function that we need to initial in the AuthProvider page
+
+    
+    const countryMenuItems = useMemo(() => {
+        return apiCountriesList.map((country) => (
+            <MenuItem 
+                key={country.code} 
+                value={country.name}
+            >
+                {country.name}
+            </MenuItem>
+        ))
+    }, [apiCountriesList])
+
+    const citiesMenuItems = useMemo(() => {
+        return cities.map((cityApi) => (
+            <MenuItem 
+                key={cityApi} 
+                value={cityApi}
+            >
+                {cityApi}
+            </MenuItem>
+        ))
+    }, [cities])
+
+    const jobsMenuItems = useMemo(() => {
+        return JOB_INDUSTRIES.map((job) => (
+            <MenuItem 
+                key={job} 
+                value={job}
+            >
+                {job}
+            </MenuItem>
+        ))
+    }, [])
 
     if(!user) return <p>Loading...</p>
+
 return (
-<div>
+<Box mb={2}>
     {!editMode ? (
-        <div
-            style={{
-            border: 'solid black 1px', 
-            padding: '20px', 
-            borderRadius: '20px', 
-            margin: '20px 0px'
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column'
             }}
             >
-            <p><span style={{fontWeight:'bold', fontSize: '20px'}}>About</span><br/> {user.aboutMe}</p>
+                <Paper
+                    elevation={0}
+                    sx={{
+                        mt: 2,
+                        p: 3,
+                        borderRadius: 3,
+                        border: '1px solid',
+                        borderColor: 'divider'
+                    }}
+                >
+                    <Typography fontSize={20} fontWeight={700} pb={1}>
+                        About            
+                    </Typography>
+                    <Typography>
+                        {user.aboutMe}            
+                    </Typography>
+                </Paper>
+
+                <Paper
+                    elevation={0}
+                    sx={{
+                        mt: 2,
+                        p: 3,
+                        borderRadius: 3,
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                    }}
+                >
+                    {userData.map((data, index) => (
+                        <Box sx={{display: 'flex', width: '50%',}}>
+                            <Box sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                py: 1,
+                                borderBottom: '1px solid',
+                                borderColor: 'divider',
+                                width: '100%',
+                            }}>
+                                <Typography fontSize={14} color='text.secondary'>
+                                    {data.label}            
+                                </Typography>
+                                <Typography fontSize={15} fontWeight={700}>
+                                    {data.value}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    ))}
+                </Paper>
             <hr />
-            <p>Email: {user.email}</p>
-            <p>Country: {user.address?.country}</p>
-            <p>City: {user.address?.city}</p>
-            <p>Age: {user.age}</p>
-            <p>Job: {user.job}</p>
-            <p>Gender: {user.gender}</p>
-            <p>Phone: {user.phone}</p>
-            <p>Birth Date: {user.birthDate?.split("T")[0]}</p>
-            <p>Registered At: {user.createdAt?.split("T")[0]}</p>
-        </div>
+        </Box>
 
     ): (
-        <div 
-            style={{
-            border: 'solid black 1px', 
-            padding: '20px', 
-            borderRadius: '20px', 
-            margin: '20px 0px'
+        <Box 
+            sx={{
+                display: 'flex',
+                flexDirection: 'column'
             }}
         >
-            <div>
-            <label>Edit Name:</label>
-            <br />
-            <input type="text" 
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                placeholder= {editName}
-                />
-            </div>
-
-            <div>
-            <label>Last Name:</label>
-            <br />
-            <input type="text" 
-                value={editLastName}
-                onChange={(e) => setEditLastName(e.target.value)}
-                placeholder= {editLastName}
-                />
-            </div>
-
-            <div>
-            <label>Your Email:</label>
-            <br />
-            <input type="text" 
-                value={editEmail}
-                disabled
-                onChange={(e) => setEditEmail(e.target.value)}
-                placeholder= {editEmail}
-                />
-            </div>
-
-            <div>
-            <label>Edit Country:</label>
-            <br />
-            <select 
-                value={editCountry}
-                onChange={handleCountryChange}  
+            <Paper
+                elevation={0}
+                sx={{
+                    mt: 2,
+                    p: 3,
+                    borderRadius: 3,
+                    border: '1px solid',
+                    borderColor: 'divider'
+                }}
             >
-                <option value="">All</option>
-                {apiCountriesList.map((country) => (
-                    <option key={country.code} value={country.name}>{country.name}</option>
-                ))}
-            </select>
-            </div>
 
-            <div>
-                <label>Edit City:</label>
-                <br />
-                <select 
-                    value={editCity}
-                    onChange={(e) => setEditCity(e.target.value)}
-                    // wrong--> {...country === '' && disabled}
-                    disabled = {editCountry === '' || isCitiesLoading}
-                >
-                    <option value="">All</option>
-                    {cities.map((cityApi) => (
-                        <option
-                            key={cityApi} 
-                            value={cityApi}
-                        >
-                            {cityApi}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <div>
-            <label>Edit Profile Image:</label>
-            <br />
-            <input 
-                type="file" 
-                accept='image/*'
-                onChange={(e) => setEditprofilePicture(e.target.files[0])}
-                placeholder= {editprofilePicture}
+                <input 
+                    ref={fileCoverImgInputRef}
+                    type="file"
+                    accept='image/*' 
+                    onChange={(e) => setEditCoverImage(e.target.files[0])}
+                    style={{display: 'none'}}
                 />
-            </div>
 
-            <div>
-            <label>Edit Cover Image:</label>
-            <br />
-            <input 
-                type="file"
-                accept='image/*' 
-                onChange={(e) => setEditCoverImage(e.target.files[0])}
-                placeholder= {editCoverImage}
-            />
-            </div>
+                <Box sx={{position: 'relative', mb: 4}}>
 
-            <div>
-                <label>Job:</label>
-                <br />
-                <select 
+                    <Typography fontWeight={700} fontSize={18}>
+                        Banner image
+                    </Typography>
+
+                    <Typography color='text.secondary' fontSize={14} mb={1}>
+                        This image will appear across the top of your profile
+                    </Typography>
+
+                    <Box
+                        onClick = {() => fileCoverImgInputRef.current.click()}
+                        sx={{
+                            width: '100%',
+                            height: 230,
+                            borderRadius: 4,
+                            backgroundImage: `url(${previewCoverImage})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            cursor: 'pointer'
+                        }}       
+                    />
+
+                    <IconButton
+                        onClick={() => fileCoverImgInputRef.current.click()}
+                        sx={{
+                            position: 'absolute',
+                            bottom: -10,
+                            right: 15,
+                            bgcolor: 'background.paper',
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            p:0.5
+                        }}
+                    >
+                        <EditIcon fontSize='small'/>
+                    </IconButton>
+                </Box>
+
+                <input 
+                    ref={fileInputRef}
+                    type="file" 
+                    accept='image/*'
+                    onChange={(e) => setEditprofilePicture(e.target.files[0])}
+                    style={{display: 'none'}}
+                />
+
+                <Box mb={4}>
+                    <Typography fontWeight={700} fontSize={18}>
+                        Profile picture
+                    </Typography>
+
+                    <Typography color='text.secondary' fontSize={14} mb={1}>
+                        Your profile picture will appear where your profile is presented on Mirage, like next to your media and comments
+                    </Typography>
+                    <Box sx={{position: 'relative', width: 'fit-content', mb:2}}>
+                        <Avatar 
+                            onClick={() => fileInputRef.current.click()}
+                            src={previewProfilePicture}
+                            sx={{
+                                width: 100, 
+                                height: 100, 
+                                cursor: 'pointer'
+                            }}
+                        />
+                        <IconButton
+                            onClick={() => fileInputRef.current.click()}
+                            sx={{
+                                position: 'absolute',
+                                bottom: 0,
+                                right: 0,
+                                bgcolor: 'background.paper',
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                p:0.5
+                            }}
+                        >
+                            <EditIcon fontSize='small'/>
+                        </IconButton>
+
+                    </Box>
+                </Box>
+
+
+                
+                <Typography fontWeight={700} fontSize={18}>
+                    About me
+                </Typography>
+
+                <Typography color='text.secondary' fontSize={14} mb={1}>
+                    Tell people about who you are
+                </Typography>
+
+                <Paper
+                    elevation={0}
+                    sx={{
+                        p: 2,
+                        borderRadius: 3,
+                        border: '1px solid',
+                        borderColor: 'divider'
+                    }}
+                >
+
+                    <TextField 
+                        fullWidth
+                        multiline
+                        rows={6}
+                        placeholder='About me...'
+                        value={editAboutMe}
+                        onChange={(e) => setEditAboutMe(e.target.value)}
+                        variant='standard'
+                        sx={{
+                            p: 1,
+                            '& .MuiInput-input::placeholder': {
+                                fontSize: 15,
+                                color: 'text.secondary'
+                            },
+                            '& .MuiInput-input': {
+                                fontSize: 16,
+                                // color: 'text.secondary'
+                            },
+                            color: 'text.secondary',
+                            '& .MuiInput-underline:before' : {borderBottom: 'none'},
+                            '& .MuiInput-underline:after' : {borderBottom: 'none'},
+                            '& .MuiInput-underline:hover:before' : {borderBottom: 'none'},
+                            '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: 'none' },
+                        }}
+                    />
+
+                </Paper>
+
+                {/* Name Row */}
+                <Stack direction='row' spacing={2} sx={{ mt: 3, mb: 2}}>
+                    <TextField
+                        fullWidth
+                        variant='outlined'
+                        label='First Name'
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        placeholder= {editName}
+                    />
+                    
+                    <TextField
+                        fullWidth
+                        variant='outlined'
+                        label='Last Name'
+                        value={editLastName}
+                        onChange={(e) => setEditLastName(e.target.value)}
+                        placeholder={editLastName}
+                    />
+                </Stack>
+
+                <TextField
+                    fullWidth
+                    variant='outlined'
+                    label='Email'
+                    type='email'
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    placeholder={editEmail}
+                    autoComplete='off'
+                    sx={{mb: 2}}
+                />
+            
+
+                <Stack direction='row' spacing={2} sx={{mb: 2}}>
+                    <TextField
+                        fullWidth
+                        select
+                        variant='outlined'
+                        label='Country'
+                        value={editCountry}
+                        onChange={handleCountryChange}
+                    >
+                        {countryMenuItems}
+                    </TextField>
+
+                    <TextField
+                        fullWidth
+                        select
+                        variant='outlined'
+                        label='City'
+                        value={editCity}
+                        onChange={(e) => setEditCity(e.target.value)}
+                        disabled={editCountry === '' || isCitiesLoading}
+                    >
+                        {citiesMenuItems}
+                    </TextField>
+                </Stack>
+
+                <Stack direction='row' spacing={2} sx={{mb:2}}>
+                <TextField
+                    fullWidth
+                    select
+                    variant='outlined'
+                    label='Job Industry'
                     value={editJob}
                     onChange={(e) => setEditJob(e.target.value)}
                 >
-                    <option value="">All</option>
-                    {JOB_INDUSTRIES.map((job) => (
-                        <option key={job} value={job}>{job}</option>
-                    ))}
-                </select>
-            </div>
+                    {jobsMenuItems}
+                </TextField>
+    
+                <TextField
+                    fullWidth
+                    select
+                    variant='outlined'
+                    label='Gender'
+                    value={editGender}
+                    onChange={(e) => setEditGender(e.target.value)}
+                >
+                    <MenuItem value='Male'>Male</MenuItem>
+                    <MenuItem value='Female'>Female</MenuItem>
+                </TextField>
+                </Stack>
 
-            <div>
-            <label>Edit Gender</label>
-            <br />
-            <select 
-                value={editGender}
-                onChange={(e) => setEditGender(e.target.value)}
-            >
-                <option value="">All</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
-            </div>
+                <Stack direction='row' spacing={2} sx={{mb:2}}>
+                    <Box sx={{flex: 1}}>
+                        <DatePicker
+                            label='Birth Date'
+                            value={editBirthDate ? dayjs(editBirthDate) : null}
+                            onChange={(newValue) => setEditBirthDate(newValue ? newValue.format('YYYY-MM-DD') : '')}
+                            maxDate={dayjs(maxDate)}
+                            slotProps={{
+                                textField:{
+                                    fullWidth: true,
+                                    variant: 'outlined'
+                                }
+                            }}
+                        />
+                        <Typography color='text.secondary' fontSize={13}>
+                            You must be at least 13+ years old
+                        </Typography>
+                    </Box>
 
-            <div>
-                <label>Birth Date:</label>
-                <br />
-                <input 
-                    type="date" 
-                    value={editBirthDate}
-                    onChange={(e) => setEditBirthDate(e.target.value)}
-                    max={maxDate}
+                    <TextField
+                        sx={{flex: 1}}
+                            fullWidth
+                            variant='outlined'
+                            label="Phone"
+                            value={editPhone}
+                            onChange={(e) => setEditPhone(e.target.value)}
+                            slotProps={{
+                              htmlInput: {maxLength: 10}
+                        }}
                     />
-                    <br />
-                    <small>You must be at least 13+ years old</small>
-            </div>
+                </Stack>
 
-            <div>
-            <label>Edit Phone:</label>
-            <br />
-            <input type="text" 
-                value={editPhone}
-                onChange={(e) => setEditPhone(e.target.value)}
-                placeholder= {editPhone}
-                />
-            </div>
+                <Box sx={{display: 'flex', gap: 1}}>
+                        <Button
+                            variant='contained'
+                            sx={{
+                                borderRadius: 5
+                            }}
+                            onClick={async() => {
+                                if(editCountry === ''){
+                                    alert('Country is required')
+                                    return;
+                                }
+                                if(editCity === 'Not Defined' || editCity === ''){
+                                    alert('City is required')
+                                    return;
+                                }
+                                const formData = new FormData();
+                                formData.append('name', editName);
+                                formData.append('lastName', editLastName);
+                                formData.append('email', user.email);
+                                formData.append('address[country]', editCountry);
+                                formData.append('address[city]', editCity);
+                                formData.append('profilePicture', editprofilePicture);
+                                formData.append('coverImage', editCoverImage);
+                                formData.append('age', getAgeByDate(editBirthDate));
+                                formData.append('gender', editGender);
+                                formData.append('phone', editPhone);
+                                formData.append('job', editJob);
+                                formData.append('birthDate', editBirthDate);
+                                formData.append('aboutMe', editAboutMe);
 
-            <div>
-                <label>Edit About Me:</label>
-                <br />
-                <textarea
-                    value={editAboutMe}
-                    onChange={(e) => setEditAboutMe(e.target.value)}
-                    style={{resize: 'none'}}
-                    rows={4}
-                />
-            </div>
+                                const result = await editUser(user._id, formData);
 
-            <br />
+                                if(result.success){
+                                    onCloseEdit();
+                                } else{
+                                    alert(result.message)
+                                }
+                            }}
+                        >
+                            Save changes
+                        </Button>
 
-            <button
-            onClick={async() => {
-                if(editCountry === ''){
-                    alert('Country is required')
-                    return;
-                }
-                if(editCity === 'Not Defined' || editCity === ''){
-                    alert('City is required')
-                    return;
-                }
-                const formData = new FormData();
-                formData.append('name', editName);
-                formData.append('lastName', editLastName);
-                formData.append('email', user.email);
-                formData.append('address[country]', editCountry);
-                formData.append('address[city]', editCity);
-                formData.append('profilePicture', editprofilePicture);
-                formData.append('coverImage', editCoverImage);
-                formData.append('age', getAgeByDate(editBirthDate));
-                formData.append('gender', editGender);
-                formData.append('phone', editPhone);
-                formData.append('job', editJob);
-                formData.append('birthDate', editBirthDate);
-                formData.append('aboutMe', editAboutMe);
+                        <Button
+                            variant='outlined'
+                            sx={{
+                                borderRadius: 5
+                            }}
+                            onClick={() => onCloseEdit()}
+                        >
+                            Discard
+                        </Button>
+                </Box>
 
-                const result = await editUser(user._id, formData);
-
-                if(result.success){
-                    onCloseEdit();
-                } else{
-                    alert(result.message)
-                }
-                }}
-            >Save Edits</button>
-            <button onClick={() => onCloseEdit()}>Cancel Edit Mode</button>
-        </div>
+            </Paper>
+        </Box>
     )}
-</div>
+</Box>
 )
 }

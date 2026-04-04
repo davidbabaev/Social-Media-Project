@@ -43,7 +43,8 @@ export default function DashboardLayout() {
                 sx={{
                     overflow: 'hidden',
                     bgcolor: 'background.paper',
-                    my:2
+                    my:2,
+                    borderRadius: 4,
                 }}
             >
                 {/* Cover Image */}

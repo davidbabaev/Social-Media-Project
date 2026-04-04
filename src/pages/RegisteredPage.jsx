@@ -329,8 +329,6 @@ export default function RegisteredPage() {
             variant='outlined'
           />
 
-
-
           {error && (
             <Alert severity='error' sx={{mb: 2}}>
               {error}
