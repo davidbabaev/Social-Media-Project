@@ -18,6 +18,7 @@ export default function DashboardLayout() {
     const {user, handleLogout} = useAuth();
     const {handleDeleteUser, getUsers} = useUsers();  
     const [confirmDeleteUser, setConfirmDeleteUser] = useState(null);
+    const [editMode, setEditMode] = useState(false);
     const navigate = useNavigate();
 
     const onLogOut = () => {
@@ -191,15 +192,19 @@ export default function DashboardLayout() {
                     </Box>
                     
                     <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
-                        <Button 
-                            variant='contained'
-                            size='small'
-                            sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
-                            endIcon={<EditIcon/>}
-                            
-                        >
-                            Edit Profile
-                        </Button>
+
+                        {editMode === false && (
+                            <Button 
+                                variant='contained'
+                                size='small'
+                                sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
+                                endIcon={<EditIcon/>}
+                                onClick={() => setEditMode(true)}
+                                
+                            >
+                                Edit Profile
+                            </Button>
+                        )}
                         
                         {!user.isAdmin && (
                             <Button 
@@ -250,7 +255,11 @@ export default function DashboardLayout() {
             </Tabs>
 
             <Routes>
-                <Route path='/myprofile' element={<ProfileSection/>}/>
+                <Route path='/myprofile' element={<ProfileSection
+                    editMode = {editMode} // flase by default
+                    onEditMode={() => setEditMode(true)}
+                    onCloseEdit={() => setEditMode(false)}
+                />}/>
                 <Route path='/mycards' element={<MyCardsSection/>}/>
                 <Route path='/myfavorites' element={<SelectedPage/>}/>
                 <Route path='/myfavoritescards' element={<FavoriteCards/>}/>

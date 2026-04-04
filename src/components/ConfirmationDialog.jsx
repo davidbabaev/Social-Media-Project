@@ -52,7 +52,7 @@ export default function ConfirmationDialog({message, onClose, onConfirm}) {
             />
             
             <Typography fontSize={15} lineHeight={0.5}>
-                Are you sure you wnat to      
+                Are you sure you want to      
             </Typography>
 
             <Typography fontSize={20} fontWeight={700}>

@@ -4,23 +4,12 @@ import useCountries from '../../hooks/useCountries';
 import { JOB_INDUSTRIES } from '../../constants/usersJobIndustries';
 import useCities from '../../hooks/useCities';
 import { getMaxBirthDate, getAgeByDate } from '../../utils/getAgeByBirthDate';
-import { useLocation, useNavigate } from 'react-router-dom';
-import useUsers from '../../hooks/useUsers';
-import { useCardsProvider } from '../../providers/CardsProvider';
-import ConfirmationDialog from '../../components/ConfirmationDialog';
+import { useLocation } from 'react-router-dom';
 
-export default function ProfileSection() {
+export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
 
-    const {user, editUser, handleLogout} = useAuth(); // only works for registered
+    const {user, editUser} = useAuth(); // only works for registered
     const {apiCountriesList} = useCountries(); 
-    const {handleDeleteUser, getUsers} = useUsers();
-    const {refreshFeed, fetchCards} = useCardsProvider();
-    const navigate = useNavigate();
-
-    const onLogOut = () => {
-        handleLogout();
-        navigate('/login');
-    }
     
     // edit logged-in user values states:
     const [editName, setEditName] = useState('');
@@ -43,11 +32,7 @@ export default function ProfileSection() {
     }
 
     const {cities, isCitiesLoading} = useCities(editCountry);
-
-    const [confirmDeleteUser, setConfirmDeleteUser] = useState(null);
     
-    const [editMode, setEditMode] = useState(false);
-
     const maxDate = useMemo(() => getMaxBirthDate(13), []);
 
     // the state will be the data object you passed {editMode: true}
@@ -55,7 +40,7 @@ export default function ProfileSection() {
     const {state} = location;
     useEffect(() => {
         if(state?.editMode === true){
-            setEditMode(true);
+            onEditMode();
             setEditName(user.name);
             setEditLastName(user.lastName);
             setEditEmail(user.email);
@@ -71,7 +56,25 @@ export default function ProfileSection() {
             setEditAboutMe(user.aboutMe);
         }
     }, [state])
-    
+
+    useEffect(() => {
+        if(editMode === true){
+            setEditName(user.name);
+            setEditLastName(user.lastName);
+            setEditEmail(user.email);
+            setEditCountry(user.address?.country);
+            setEditCity(user.address?.city);
+            setEditprofilePicture(user.profilePicture);
+            setEditCoverImage(user.coverImage);
+            setEditJob(user.job);
+            setEditAge(user.age)
+            setEditGender(user.gender);
+            setEditBirthDate(user.birthDate.split("T")[0]);
+            setEditPhone(user.phone);
+            setEditAboutMe(user.aboutMe);
+        }
+    }, [editMode])
+        
     // import edit function that we need to initial in the AuthProvider page
 
     if(!user) return <p>Loading...</p>
@@ -97,35 +100,6 @@ return (
             <p>Phone: {user.phone}</p>
             <p>Birth Date: {user.birthDate?.split("T")[0]}</p>
             <p>Registered At: {user.createdAt?.split("T")[0]}</p>
-
-            <button onClick={() => {
-                setEditMode(!editMode);
-                setEditName(user.name);
-                setEditLastName(user.lastName);
-                setEditEmail(user.email);
-                setEditCountry(user.address?.country);
-                setEditCity(user.address?.city);
-                setEditprofilePicture(user.profilePicture);
-                setEditCoverImage(user.coverImage);
-                setEditJob(user.job);
-                setEditAge(user.age)
-                setEditGender(user.gender);
-                setEditBirthDate(user.birthDate.split("T")[0]);
-                setEditPhone(user.phone);
-                setEditAboutMe(user.aboutMe);
-            }
-            }>Edit Profile</button>
-
-            {!user.isAdmin && (
-                <button
-                    onClick={() => {
-                        setConfirmDeleteUser(user);
-                    }}
-                >
-                    Delete User
-                </button>
-            )}
-
         </div>
 
     ): (
@@ -316,29 +290,14 @@ return (
                 const result = await editUser(user._id, formData);
 
                 if(result.success){
-                    setEditMode(false);
+                    onCloseEdit();
                 } else{
                     alert(result.message)
                 }
                 }}
             >Save Edits</button>
-            <button onClick={() => setEditMode(!editMode)}>Cancel Edit Mode</button>
+            <button onClick={() => onCloseEdit()}>Cancel Edit Mode</button>
         </div>
-    )}
-
-    {confirmDeleteUser && (
-        <ConfirmationDialog
-            message={`Delete user ${confirmDeleteUser.name} ${confirmDeleteUser.lastName}?`}
-            onClose={() => setConfirmDeleteUser(null)}
-            onConfirm={async () => {
-                await handleDeleteUser(confirmDeleteUser._id);
-                await getUsers();
-                await fetchCards();
-                await refreshFeed();
-                setConfirmDeleteUser(null);
-                onLogOut();
-            }}
-        />
     )}
 </div>
 )
