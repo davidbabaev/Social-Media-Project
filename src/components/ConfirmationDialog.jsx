@@ -6,6 +6,13 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 export default function ConfirmationDialog({message, onClose, onConfirm}) {
 
+    useEffect(() => {
+        document.body.style.overflow = 'hidden'
+        return () => {
+        document.body.style.overflow = 'unset'
+        }
+    }, [])
+
   return (
     <Box
         sx={{
@@ -38,9 +45,12 @@ export default function ConfirmationDialog({message, onClose, onConfirm}) {
                 
             }}
         >
-            <Icon>
-                <DeleteForeverIcon/>
-            </Icon>
+
+            <DeleteForeverIcon
+                color = 'error'
+                sx={{fontSize: 90, transform: 'rotate(10deg)', width: '100%', mb: 2}}
+            />
+            
             <Typography fontSize={15} lineHeight={0.5}>
                 Are you sure you wnat to      
             </Typography>
