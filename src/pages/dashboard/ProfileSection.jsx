@@ -34,10 +34,8 @@ export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
     const fileCoverImgInputRef = useRef(null);
 
     const maxDate = useMemo(() => getMaxBirthDate(13), []);
-    
-    
 
-     const handleCountryChange = (e) => {
+    const handleCountryChange = (e) => {
         setEditCountry(e.target.value);
         setEditCity('');
     }

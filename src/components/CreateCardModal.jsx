@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CreateCardForm from './CreateCardForm'
 import { Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function CreateCardModal({onClose, onCardPosted, mediaButton}) {
+export default function CreateCardModal({card, onClose, onCardPosted, mediaButton}) {
+
+  useEffect(() => {
+      document.body.style.overflow = 'hidden'
+      return () => {
+      document.body.style.overflow = 'unset'
+      }
+  }, [])
+
   return (
     <Box
       sx={{
@@ -42,6 +50,7 @@ export default function CreateCardModal({onClose, onCardPosted, mediaButton}) {
             </IconButton>
 
             <CreateCardForm
+                card={card}
                 onSuccess={() => {
                     onCardPosted();
                     onClose();

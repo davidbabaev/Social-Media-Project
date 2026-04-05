@@ -77,7 +77,7 @@ export default function ConfirmationDialog({message, onClose, onConfirm}) {
                     endIcon={<DeleteIcon/>}
                     onClick={onConfirm}
                 >
-                    Delete Profile
+                    Delete
                 </Button>
 
                 <Button 
