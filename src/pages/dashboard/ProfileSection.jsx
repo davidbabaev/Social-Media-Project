@@ -120,7 +120,7 @@ export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
 
     
     const countryMenuItems = useMemo(() => {
-        return apiCountriesList.map((country) => (
+        return apiCountriesList.map((country, index) => (
             <MenuItem 
                 key={country.code} 
                 value={country.name}
@@ -194,7 +194,7 @@ return (
                     }}
                 >
                     {userData.map((data, index) => (
-                        <Box sx={{display: 'flex', width: '50%',}}>
+                        <Box key={index} sx={{display: 'flex', width: '50%',}}>
                             <Box sx={{
                                 display: 'flex',
                                 flexDirection: 'column',

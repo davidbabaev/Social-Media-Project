@@ -78,7 +78,7 @@ return (
                         </Typography>
                     )}
 
-                    <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
+                    <Box sx={{display: 'flex', gap: 1, alignItems: 'center', mb:1}}>
                         {card.category && (
                             <Chip 
                                 label={card.category} 
