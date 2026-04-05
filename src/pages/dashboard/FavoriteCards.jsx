@@ -1,65 +1,169 @@
-import React from 'react'
 import useFavoriteCards from '../../hooks/useFavoriteCards';
 import { useNavigate } from 'react-router-dom';
 import useUsers from '../../hooks/useUsers';
 import getTimeAgo from '../../utils/getTimeAgo';
 import MediaDisplay from '../../components/MediaDisplay';
+import React, { useState } from 'react'
+import { useCardsProvider } from '../../providers/CardsProvider';
+import { useAuth } from '../../providers/AuthProvider';
+import { Avatar, Box, Button, Chip, Typography, useTheme } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
+
+
 export default function FavoriteCards() {
 
     const {favoriteCards, handleRemoveCard} = useFavoriteCards();
-
     const {users} = useUsers()
-
     const navigate = useNavigate();
+    
+    const [count, setCount] = useState(5);
+    const [isExpanded, setIsExpanded] = useState(null)
+    const theme = useTheme();
+    const countedRegisterCards = favoriteCards.slice(0, count)  
 
   return (
-    <div>
-        <div>
-            <h2>Selected Cards</h2>
-            {favoriteCards.map((favCard) => {
+    <Box>
+        {countedRegisterCards.map((favCard) => {
+            const currentUser = users.find(user => favCard.userId === user._id) 
+            if(!currentUser) return;
 
-                const currentUser = users.find(user => favCard.userId === user._id) 
-                if(!currentUser) return;
-
-                return(
-                    <div style={{
-                        border: 'solid black 1px', 
-                        padding: '20px', 
-                        borderRadius: '20px', 
-                        margin: '20px 0px'
-                    }} key={favCard._id}>
-
-                        <h2>{favCard.title}</h2>
-                        <p>{favCard.content}</p>
+            return(
+                <Box key={favCard._id}>
+                    <Box 
+                        sx={{
+                            width: '100%', 
+                            display: 'flex', 
+                            borderRadius: 3,
+                            border: '0.5px solid',
+                            borderColor: 'divider',
+                            bgcolor: 'background.paper',
+                            my: 2,
+                            p: 2,
+                            gap: 2
+                        }}
+                    >
                         <MediaDisplay
                             mediaUrl={favCard.mediaUrl}
                             mediaType={favCard.mediaType}
-                            style={{width: '500px', borderRadius: '20px'}}
-                        />
-                        <hr />
-                        <div style={{
-                            display: 'flex', 
-                            flexDirection: 'row', 
-                            gap: '10px'
-                        }}>
-                            <img style={{width: '6%', height: '6%', borderRadius: '50%', marginTop: '4px'}} src={currentUser.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}/>
-                            <p>{currentUser.name}</p>
-                            <p>|</p>
-                            <p
                             style={{
-                                color: 'gray', 
-                                fontSize:'13px', 
+                                maxWidth: 250, 
+                                height: '100%', 
+                                objectFit: 'cover',
+                                borderRadius: 10
                             }}
-                            >{getTimeAgo(favCard.createdAt)}</p>
-                            <p>|</p>
-                            {!favCard.category ? (<p>Don't Have Categoty</p>) : (<p>Category: {favCard.category}</p>)}
-                            
-                            <button onClick={() => handleRemoveCard(favCard)}>Remove</button>
-                        </div>
-                    </div>
-                )
+                        />
+
+                        <Box flex={1}>
+
+                            {/* Title */}
+                            {favCard.title && (
+                                <Typography lineHeight={0.8} component='div' fontWeight={600} fontSize={18} mb={1}>
+                                    {favCard.title}
+                                </Typography>
+                            )}
+
+
+                            <Box sx={{display: 'flex', gap: 1, alignItems: 'center', mb:1}}>
+
+                                <Avatar 
+                                    src={currentUser?.profilePicture}
+                                    sx={{
+                                        width: 30, 
+                                        height: 30, 
+                                        cursor: 'pointer'
+                                    }}
+                                    onClick={() => navigate(`/profiledashboard/${currentUser._id}/profilemain`)}
+                                />
+                                <Typography 
+                                    component={'div'} 
+                                    fontSize={12} 
+                                    color='text.secondary' 
+                                    lineHeight={0.9} 
+                                    onClick={() => navigate(`/profiledashboard/${currentUser._id}/profilemain`)}
+                                    sx={{cursor: 'pointer'}}
+
+                                >
+                                    {currentUser?.name} {currentUser?.lastName}
+                                </Typography>
+
+                                <Typography component={'div'} fontSize={22} color='text.secondary' lineHeight={0.9}>
+                                    ∙
+                                </Typography>
+
+                                <Typography component={'div'} fontSize={12} color='text.secondary' lineHeight={0.9}>
+                                    {getTimeAgo(favCard.createdAt)}
+                                </Typography>
+
+                                {favCard.category && (
+                                    <Chip 
+                                        label={favCard.category} 
+                                        size='small'  
+                                    />
+                                )}
+
+                            </Box>
+
+                            {/* Contnet */}
+                            {favCard.content && (
+                                <Typography component='div' fontWeight={400} fontSize={14} mb={1} sx={{whiteSpace: 'pre-wrap'}}>
+            
+                                    {isExpanded === favCard._id ? favCard.content : favCard.content.slice(0, 150)}
+            
+                                    {favCard.content.length > 150 && (
+                                        <span
+                                            onClick={() => setIsExpanded(isExpanded === favCard._id ? null : favCard._id)}
+                                            style={{
+                                                color: theme.palette.primary.main, 
+                                                cursor: 'pointer',
+                                                fontWeight: 600,
+                                                marginLeft: 4
+            
+                                            }}
+                                        >
+                                            {isExpanded === favCard._id ? '...showless' : '...read more'}
+                                        </span>
+                                    )}
+            
+                                </Typography>
+                            )}
+
+                        </Box>
+
+                        <Box sx={{display: 'flex', gap: 1, alignItems: 'start'}}>
+                            <Button 
+                                variant='outlined'
+                                color='error'
+                                size='small'
+                                sx={{borderRadius: 5, px: 2, py:0.5, fontSize: 10}}
+                                endIcon={<DeleteIcon/>}
+                                onClick={() => handleRemoveCard(favCard)}
+                            >
+                                Remove
+                            </Button>
+                        </Box>
+                        
+                    </Box>
+                </Box>
+            )
         })}
-        </div>
-    </div>
+        {favoriteCards.length > count &&(
+            <Box
+                sx={{
+                    display: 'flex',
+                    width: '100%', 
+                    justifyContent: 'center'}}
+            >
+                <Button 
+                    onClick={() => setCount(count + 5)}
+                    endIcon={<ExpandCircleDownIcon/>} 
+                    variant='outlined'
+                    sx={{borderRadius: 5}}
+                    >
+                        Load More
+                </Button>
+            </Box>
+        )}
+    </Box>
   )
 }
