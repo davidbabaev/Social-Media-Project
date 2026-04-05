@@ -15,22 +15,38 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import CategoryIcon from '@mui/icons-material/Category';
 
-export default function CreateCardForm({onSuccess, mediaButton}) {
+export default function CreateCardForm({onSuccess, mediaButton, card}) {
 
-    const [title, setTitle] = useState('');
-    const [text, setText] = useState('');
-    const [mediaFile, setMediaFile] = useState(null);
-    const [category, setCategory] = useState('');
-    const [webUrl, setWebUrl] = useState('');
+    const [title, setTitle] = useState(card?.title || '');
+    const [text, setText] = useState(card?.content || '');
+    const [mediaFile, setMediaFile] = useState(card?.mediaUrl || null);
+    const [category, setCategory] = useState(card?.category || '');
+    const [webUrl, setWebUrl] = useState(card?.web || '');
+
+    const previewMedia = useMemo(() => {
+        if(mediaFile instanceof File){
+            return URL.createObjectURL(mediaFile)
+        }
+        else if(typeof mediaFile === 'string'){
+            return mediaFile
+        }
+        else{
+            return null
+        }
+    }, [mediaFile])
+
+
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const {handleCardRegister} = useCardsProvider();
+    const {handleCardRegister, handleEditCard} = useCardsProvider();
     const [isLoading, setIsLoading] = useState(false);
     const [isEmojiOpen, setIsEmojiOpen] = useState(false);
     const fileInputRef = useRef(null);
-    const [isLinkFieldShown, setIsLinkFieldShown] = useState(false);
-    const [isTitleOn, setIsTitleOn] = useState(false);
-    const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
+    const [isTitleOn, setIsTitleOn] = useState(card?.title ? true : false);
+    const [isLinkFieldShown, setIsLinkFieldShown] = useState(card?.web ? true : false);
+    const [isCategoryOpen, setIsCategoryOpen] = useState(card?.category ? true : false);
+
     const {user} = useAuth();
     const navigate = useNavigate();
 
@@ -53,10 +69,6 @@ export default function CreateCardForm({onSuccess, mediaButton}) {
         '& .MuiInput-underline:after': { borderBottom: 'none' },
         '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: 'none' },
     }
-
-    const previewMediaFile = useMemo(() => {
-        return mediaFile ? URL.createObjectURL(mediaFile) : null
-    }, [mediaFile])
 
     const handleSubmitNewCard = async (e) => {
         e.preventDefault();
@@ -83,7 +95,12 @@ export default function CreateCardForm({onSuccess, mediaButton}) {
         
         try{
             setIsLoading(true); // start is loading
-            const result = await handleCardRegister(formData)
+            let result;
+            if(!card){
+                result = await handleCardRegister(formData)
+            } else{
+                result = await handleEditCard(card._id,formData) 
+            }
             if(!result.success){
                 setError(result.message)// show error to user
                 return;
@@ -95,7 +112,7 @@ export default function CreateCardForm({onSuccess, mediaButton}) {
             fileInputRef.current.value = '';
             setCategory('');
             setWebUrl('');
-            setSuccessMessage('Your card created successfully')
+            setSuccessMessage(card ? 'Card updated successfully' : 'Your card created successfully')
             setIsLinkFieldShown(false)
             
             // then hand control back to parent
@@ -299,7 +316,7 @@ return (
         )}
 
         {/* media preview */}   
-        {previewMediaFile && (
+        {previewMedia && (
             <Box sx={{position: 'relative', mt: 1, mb:1}}>
                 
                 {/* Floating Buttons over image */}
@@ -349,8 +366,8 @@ return (
                 </Box>
 
                 <MediaDisplay
-                    mediaUrl={previewMediaFile}
-                    mediaType={mediaFile.type.startsWith('video/') ? 'video' : 'image'}
+                    mediaUrl={previewMedia}
+                    mediaType={mediaFile instanceof File ? mediaFile.type.startsWith('video/') ? 'video' : 'image' : card?.mediaType}
                     style={{width: '100%', borderRadius: '10px'}}
                 />
             </Box>
@@ -380,7 +397,7 @@ return (
                 style={{display: 'none'}}
             />
 
-            {!previewMediaFile && (
+            {!previewMedia && (
                 <Tooltip title = "Add Photo/Video">
                     <IconButton onClick={() => {
                             fileInputRef.current.accept = 'image/*,video/*';
@@ -451,7 +468,7 @@ return (
                 disabled={!text || !mediaFile}
                 sx={{ml: 'auto', borderRadius: 5, minWidth: 90}}
             >
-                {isLoading ? "Posting..." : "Post"}
+                {isLoading ? (card ? 'Saving..' : 'Posting..') : (card ? 'Save' : 'Post')}
             </Button>
 
         </Box>
