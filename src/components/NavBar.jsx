@@ -62,12 +62,13 @@ export default function NavBar() {
   return (
     
     <AppBar 
-        position='static'
+        position='sticky'
         sx={{
             bgcolor: 'background.paper',
             boxShadow: 'none',
             borderBottom: '1px solid',
-            borderColor: 'divider'
+            borderColor: 'divider',
+            // height: '100vh',
         }}
     >
         <Container maxWidth="lg">

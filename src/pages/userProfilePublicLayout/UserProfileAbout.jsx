@@ -1,6 +1,7 @@
 import React from 'react'
 import useUsers from '../../hooks/useUsers'
 import { useParams } from 'react-router-dom';
+import { Box, Paper, Typography } from '@mui/material';
 
 export default function UserProfileAbout() {
 
@@ -13,21 +14,77 @@ export default function UserProfileAbout() {
     return <p>Loading...</p>
   }
 
-  return (
-    <div>
-      <h1>About Me</h1>
-      <p>{userProfile.aboutMe}</p>
+    const userData = [
+        {label: 'Email' , value: userProfile.email},
+        {label: 'Phone' , value: userProfile.phone},
+        {label: 'Country' , value: userProfile.address?.country},
+        {label: 'City' , value: userProfile.address?.city},
+        {label: 'Age' , value: userProfile.age},
+        {label: 'Job' , value: userProfile.job},
+        {label: 'Gender' , value: userProfile.gender},
+        {label: 'Birth Date' , value: userProfile.birthDate?.split("T")[0]},
+        {label: 'Joined to Mirage' , value: userProfile.createdAt?.split("T")[0]},
+    ]
 
-      <hr />
-      <h2>Details</h2>
-      <p>Email: {userProfile.email}</p>
-      <p>Country: {userProfile.address?.country}</p>
-      <p>City: {userProfile.address?.city}</p>
-      <p>Age: {userProfile.age}</p>
-      <p>Job: {userProfile.job}</p>
-      <p>Gender: {userProfile.gender}</p>
-      <p>Phone: {userProfile.phone}</p>
-      <p>Joined On: {userProfile.createdAt.split("T")[0]}</p>
-    </div>
+  return (
+      <Box
+          sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              mb: 2
+          }}
+          >
+              <Paper
+                  elevation={0}
+                  sx={{
+                      mt: 2,
+                      p: 3,
+                      borderRadius: 3,
+                      border: '1px solid',
+                      borderColor: 'divider'
+                  }}
+              >
+                  <Typography fontSize={20} fontWeight={700} pb={1}>
+                      About            
+                  </Typography>
+                  <Typography>
+                      {userProfile.aboutMe}            
+                  </Typography>
+              </Paper>
+
+              <Paper
+                  elevation={0}
+                  sx={{
+                      mt: 2,
+                      p: 3,
+                      borderRadius: 3,
+                      border: '1px solid',
+                      borderColor: 'divider',
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                  }}
+              >
+                  {userData.map((data, index) => (
+                      <Box key={index} sx={{display: 'flex', width: '50%',}}>
+                          <Box sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              py: 1,
+                              borderBottom: '1px solid',
+                              borderColor: 'divider',
+                              width: '100%',
+                          }}>
+                              <Typography fontSize={14} color='text.secondary'>
+                                  {data.label}            
+                              </Typography>
+                              <Typography fontSize={15} fontWeight={700}>
+                                  {data.value}
+                              </Typography>
+                          </Box>
+                      </Box>
+                  ))}
+              </Paper>
+      </Box>
+
   )
 }

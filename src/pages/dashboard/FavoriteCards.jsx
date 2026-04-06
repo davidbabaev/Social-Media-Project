@@ -21,7 +21,7 @@ export default function FavoriteCards() {
     const countedRegisterCards = favoriteCards.slice(0, count)  
 
   return (
-    <Box sx={{display: 'flex', justifyContent: 'center', pt: 3}}>
+    <Box sx={{display: 'flex', justifyContent: 'center', pt: 3, flexDirection: 'column'}}>
         {!countedRegisterCards[0] && (<Typography color='text.secondary'>You didn't selected users yet</Typography>)}
         {countedRegisterCards.map((favCard) => {
             const currentUser = users.find(user => favCard.userId === user._id) 
@@ -31,8 +31,8 @@ export default function FavoriteCards() {
                 <Box key={favCard._id}>
                     <Box 
                         sx={{
+                            display: 'flex',
                             width: '100%', 
-                            display: 'flex', 
                             borderRadius: 3,
                             border: '0.5px solid',
                             borderColor: 'divider',

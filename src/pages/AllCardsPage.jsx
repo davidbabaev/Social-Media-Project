@@ -169,8 +169,8 @@ export default function AllCardsPage() {
                 sx={{
                     position: 'sticky',
                     top: 0,
-                    height: 'calc(100vh - 94px)',
                     overflow: 'auto',
+                    height: 'calc(100vh - 94px)',
                     overscrollBehavior: 'contain',
                     display: 'flex', 
                     flexDirection: 'column',

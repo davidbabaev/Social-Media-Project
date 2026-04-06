@@ -17,6 +17,7 @@ import useSelectedUsers from '../../hooks/useSelectedUsers';
 import ChatIcon from '@mui/icons-material/Chat';
 import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import UserProfileMedia from './UserProfileMedia';
 
 export default function UserProfileLayout() {
 
@@ -356,7 +357,13 @@ export default function UserProfileLayout() {
                 label='About'
                 value={`/profiledashboard/${id}/about`}
                 onClick={() => navigate(`/profiledashboard/${id}/about`)}
-                />
+              />
+
+            <Tab 
+                label='Media' 
+                value={`/profiledashboard/${id}/media`}
+                onClick={() => navigate(`/profiledashboard/${id}/media`)}
+            />
 
             <Tab 
                 label='Following' 
@@ -369,6 +376,7 @@ export default function UserProfileLayout() {
                 value={`/profiledashboard/${id}/followers`}
                 onClick={() => navigate(`/profiledashboard/${id}/followers`)}
             />
+
         </Tabs>
 
       <Routes>
@@ -377,6 +385,7 @@ export default function UserProfileLayout() {
         <Route path='/about' element = {<UserProfileAbout/>}/>
         <Route path='/following' element = {<UserProfileFollowing/>}/>
         <Route path='/followers' element = {<UserProfileFollowers/>}/>
+        <Route path='/media' element = {<UserProfileMedia/>}/>
       </Routes>
     </Container>
   )

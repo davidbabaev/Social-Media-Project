@@ -3,168 +3,356 @@ import { useNavigate, useParams } from 'react-router-dom'
 import useUsers from '../../hooks/useUsers';
 import { useCardsProvider } from '../../providers/CardsProvider';
 import { useAuth } from '../../providers/AuthProvider';
-import useCommentsCards from '../../hooks/useCommentsCards';
-import useLikedCards from '../../hooks/useLikedCards';
-import useFavoriteCards from '../../hooks/useFavoriteCards';
-import CardsComments from '../../components/CardsComments';
-import LoginPopup from '../../components/LoginPopup';
-import getTimeAgo from '../../utils/getTimeAgo';
-import MediaDisplay from '../../components/MediaDisplay';
+import CardItem from '../../components/CardItem';
+import CardPopupModal from '../../components/card/CardPopupModal';
+import { Avatar, Box, Button, Divider, Grid, Paper, Typography } from '@mui/material';
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
+import useFollowUser from '../../hooks/useFollowUser';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+
 
 export default function UserProfileMain() {
 
-  const {id} = useParams();
-  const {users} = useUsers();
-  const {registeredCards} = useCardsProvider();
-  const {user} = useAuth();
-  const navigate = useNavigate();
+    const {id} = useParams();
+    const {users} = useUsers();
+    const {registeredCards} = useCardsProvider();
+    const {user} = useAuth();
+    const navigate = useNavigate();
+    const [count, setCount] = useState(10);
+    const {refreshFeed} = useCardsProvider();
+    
 
     const [isOpen, setIsOpen] = useState(false);
     function onClose(){
         setIsOpen(false)
     }
 
+    
+    const [selectedCardId, setSelectedCardId] = useState(null);
+    const [openCommentCardId, setOpenCommentCardId] = useState(null);
+    
+    
     // addidng window scroll 0
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])
+    
+    const {toggleFollow, isFollowByMe, getFollowersCount} = useFollowUser();
 
-    const [isCommentOpen, setIsCommentOpen] = useState(null);
-    const {addComment, countComments, removeComment} = useCommentsCards();    
-    const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
-    const {favoriteCards, handleFavoriteCards} = useFavoriteCards();
-
+    
     const userProfile = users.find(u => u._id === id);
 
+    
     if(!userProfile){
-      return <p>Loading..</p>
+        return <p>Loading..</p>
     }
 
+    const mutualPeople = users.filter((u) => 
+        user.following?.includes(u._id) &&
+        userProfile.following?.includes(u._id)
+    )
+
+
+    // people that this user follow on,
+    // and me not following
+    const suggestionsPeople = users.filter((u) => 
+        userProfile?.following?.includes(u._id) &&
+        !user?.following?.includes(u._id) &&
+        u._id !== user?._id
+    )
+    
+    const userData = [
+        {label: 'Job', value: userProfile?.job},
+        {label: 'Location', value: userProfile?.address.country + ', ' + userProfile?.address.city},
+        {label: 'Gender', value: userProfile?.gender},
+        {label: 'Joined', value: userProfile.createdAt.split("T")[0]},
+    ] 
+    
     const userCards = registeredCards.filter(uCard => uCard.userId === userProfile._id).sort((a,b) => b.createdAt.localeCompare(a.createdAt))
 
+    const countedRegisterCards = userCards.slice(0, count)    
+
 return (
-  <div>
-      <div>      
-      {userCards.map((card) => {
-            const creator = users.find(user => user._id === card.userId);
-      
-            return(
-                <div style={{
-                    border: 'solid black 1px', 
-                    padding: '20px', 
-                    borderRadius: '20px', 
-                    margin: '20px 0px'
-                    }} key={card._id}>
-      
-                    <h2><span style={{cursor: 'pointer'}} onClick={() => navigate(`/carddetails/${card._id}`)}>{card.title}</span></h2>
-                    <p>{card.content}</p>
-                    <MediaDisplay
-                        mediaUrl={card.mediaUrl}
-                        mediaType={card.mediaType}
-                        style={{width: '90%', borderRadius: '20px'}}
-                    />
-                    <hr />
-                    <div style={{
-                        display: 'flex', 
-                        flexDirection: 'row', 
-                        gap: '10px',
-                        }}>
-                        <img 
-                            style={{
-                                width: '60px',
-                                height: '60px',
-                                borderRadius: '50%',
-                                border: '2px, solid, white',
-                                objectFit: 'cover',
+    <Grid container spacing={2}>
+        <Grid size={7}>
+            {countedRegisterCards.map((card) => (
+                <CardItem
+                    key={card._id}
+                    card={card}
+                    onOpenCard={() => setSelectedCardId(card._id)}
+                    openCommentCardId={openCommentCardId}
+                    setOpenCommentCardId = {setOpenCommentCardId}
+                />
+            ))}
+        
+            {selectedCardId && (
+                <CardPopupModal
+                    cardId = {selectedCardId}
+                    onClose = {() => setSelectedCardId(null)}
+                />
+            )}
+        
+        </Grid>
+
+        <Grid 
+            size={5}
+            sx={{
+                position: 'sticky',
+                top: 64,
+                overflow: 'auto',
+                maxHeight: 'calc(100vh - 64px)'
+            }}
+        >
+
+            <Paper
+                elevation={0}
+                sx={{
+                    border: '1px solid',
+                    borderRadius: 3,
+                    borderColor: 'divider',
+                    p: 2,
+                    mt: 2
+                }}
+            >
+                <Typography sx={{fontSize: 18, fontWeight: 700}}>
+                    About
+                </Typography>
+                <Typography fontSize={15}>
+                    {userProfile?.aboutMe}
+                </Typography>
+                <Divider sx={{py: 1}}/>
+
+
+                {userData.map((u) => (
+                    <Box mt={2} key={u._id}>
+                        <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                            <Typography fontSize={15} color='text.secondary'>{u.label}</Typography>
+                            <Typography fontSize={15} fontWeight={700}>{u.value}</Typography>
+                        </Box>
+                    </Box>
+                ))}
+            </Paper>
+
+            <Paper
+                elevation={0}
+                sx={{
+                    border: '1px solid',
+                    borderRadius: 3,
+                    borderColor: 'divider',
+                    p: 2,
+                    mt: 2
+                }}
+            >
+                <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 1}}>
+                    <Typography fontWeight={600} fontSize={18}>
+                        Photos
+                    </Typography>
+
+                    <Typography 
+                        fontSize={14} color='primary.main' sx={{cursor: 'pointer'}}
+                        onClick = {() => navigate(`/profiledashboard/${userProfile?._id}/media`)}
+                    >
+                        See all
+                    </Typography>
+                </Box>
+
+                <Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gap: 0.5,
+                    borderRadius: 2,
+                    overflow: 'hidden'
+                }}>
+                    {userCards.slice(0,9).map((image) => (
+                        <Box
+                            key={image._id}
+                            sx={{
+                                aspectRatio: '1',
+                                backgroundImage: `url(${image.mediaUrl})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
                                 cursor: 'pointer',
-                            }} 
-                                src={creator?.profilePicture || 'https://cdn.pixabay.com/profilePicture/2023/02/18/11/00/icon-7797704_640.png'}
-                            onClick={() => navigate(`/profiledashboard/${creator._id}/profilemain`)}    
+                                '&:hover': {opacity: 0.85}
+                            }}  
+                            onClick={() => {
+                                setSelectedCardId(image._id)
+                            }}
                         />
-                        <p>
-                            <span
-                                style={{cursor: 'pointer'}}
-                                onClick={() => navigate(`/profiledashboard/${creator._id}/profilemain`)}
-                            >
-                                {creator?.name} {creator?.lastName}
-                            </span>
-                        </p>
-                        <p>|</p>
-                        <p
-                        style={{
-                            color: 'gray', 
-                            fontSize:'13px', 
-                        }}
-                        >{getTimeAgo(card.createdAt)}</p>
-                        <p>|</p>
-                        {!card.category ? (<p>Category: Don't Have Yet</p>) : (<p>Category: {card.category}</p>)}
-                        <p>|</p>
-                        <p>{getLikeCount(card._id)} likes</p>
-                        <p>|</p>
-                        <p>{countComments(card._id)} comments</p>
-                        <p>|</p>
-      
-                            <div>
-                                {user ? (
-                                    <button onClick={() => toggleLike(card._id)}>
-                                        {isLikeByMe(card._id) ? "Unlike" : "Like"}
-                                    </button>
-                                ):(
-                                    <button onClick={() => setIsOpen(true)}>Like</button>
-                                )}
-      
-                                {user ? (
-                                    <div>
-                                        {favoriteCards.some(c => c._id === card._id) ? (
-                                            <button onClick={() => handleFavoriteCards(card)}>Remove From Favorite</button>
-                                        ) : (
-                                            <button onClick={() => handleFavoriteCards(card)}>Add To Favorites</button>
-                                        )}
-                                    </div>
-                                    ) : (
-                                        <button onClick={() => setIsOpen(true)}>Add to favorites</button>
-                                    )}
-      
-                                {user ? (
-                                    <button onClick={() => {
-                                        if(isCommentOpen === card._id){
-                                            setIsCommentOpen(null)
-                                        } else{
-                                            setIsCommentOpen(card._id)
-                                        }
-                                    }}>add new comment</button>
-                                ): (
-                                    <button onClick={() => setIsOpen(true)}>add new comment</button>
-                                )}
-      
-                                <button onClick={() => navigate(`/carddetails/${card._id}`)}>Show Card Details</button>    
-                            </div>
-                    </div>
-                    <div>
-                        {
-                        isCommentOpen === card._id &&(  
-                            <CardsComments
-                                card = {card}
-                                users={users}
-                                addComment={addComment}
-                                removeComment = {removeComment}
+                    ))}
+                </Box>
+            </Paper>
+
+            <Paper
+                elevation={0}
+                sx={{
+                    border: '1px solid',
+                    borderRadius: 3,
+                    borderColor: 'divider',
+                    p: 2,
+                    mt: 2,
+                    display: mutualPeople.length < 1 ? 'none' : 'block'
+                }}
+            >
+                <Box 
+                    sx={{
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        mb: 1,
+                    }}>
+                    <Typography fontWeight={600} fontSize={18}>
+                        Mutual friends
+                    </Typography>
+
+                    {/* <Typography 
+                        fontSize={14} color='primary.main' sx={{cursor: 'pointer'}}
+                        onClick = {() => navigate(`/profiledashboard/${userProfile?._id}/media`)}
+                    >
+                        See all
+                    </Typography> */}
+                </Box>
+
+                <Box>
+                    {mutualPeople.map((person) => (
+                        <Box key={person._id} sx={{display: 'flex', gap: 1.5, py: 1}}>
+                            <Avatar
+                                src={person?.profilePicture}
+                                sx={{cursor: 'pointer', width: 48, height: 48}}
+                                onClick={() => navigate(`/profiledashboard/${person?._id}/profilemain`)}
                             />
-                        )}
-                    </div>
-                </div>
-            )
-            
-        })}
-            
-        {  isOpen && (
-            <LoginPopup
-                onClose = {onClose}
-            />
+
+                            <Box sx={{display: 'flex', flexDirection: 'column', gap: 0.5}}>
+                                <Typography component={'div'} fontWeight={600} fontSize={14} lineHeight={1.2}>
+                                    {person?.name} {person?.lastName}
+                                    <Typography 
+                                        component='span' 
+                                        color='text.secondary'
+                                        fontSize={11}
+                                        fontWeight={400}
+                                    >
+                                        {isFollowByMe(person?._id) && ' · following'}
+                                    </Typography>
+                                </Typography>
+
+                                <Typography component={'div'} fontSize={11} color='text.secondary' lineHeight={0.9}>
+                                    {person?.job}
+                                </Typography>
+
+                                <Typography component={'div'} fontSize={11} color='text.secondary' lineHeight={0.9}>
+                                    {getFollowersCount(person?._id)} followers
+                                </Typography>
+
+                        </Box>
+                    </Box>
+                    ))}
+                </Box>
+            </Paper>
+
+            <Paper
+                elevation={0}
+                sx={{
+                    border: '1px solid',
+                    borderRadius: 3,
+                    borderColor: 'divider',
+                    p: 2,
+                    mt: 2,
+                    display: suggestionsPeople.length < 1 ? 'none' : 'block'
+                }} 
+            >
+                <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 1}}>
+                    <Typography fontWeight={600} fontSize={18}>
+                        Make New Friends
+                    </Typography>
+
+                    {/* <Typography 
+                        fontSize={14} color='primary.main' sx={{cursor: 'pointer'}}
+                        onClick = {() => navigate(`/profiledashboard/${userProfile?._id}/media`)}
+                    >
+                        See all
+                    </Typography> */}
+                </Box>
+
+                <Box>
+                    {suggestionsPeople.map((person) => (
+                        <Box key={person._id} sx={{display: 'flex', gap: 1.5, alignItems: 'center'}}>
+                            <Avatar
+                                src={person?.profilePicture}
+                                sx={{cursor: 'pointer', width: 48, height: 48}}
+                                onClick={() => navigate(`/profiledashboard/${person?._id}/profilemain`)}
+                            />
+
+                            <Box sx={{
+                                display: 'flex', 
+                                flexDirection: 'column', 
+                                gap: 0.5,
+                                flex: 1,
+                                my: 1,
+                            }}>
+                                <Typography component={'div'} fontWeight={600} fontSize={14} lineHeight={1.2}>
+                                    {person?.name} {person?.lastName}
+                                    <Typography 
+                                        component='span' 
+                                        color='text.secondary'
+                                        fontSize={11}
+                                        fontWeight={400}
+                                    >
+                                        {isFollowByMe(person?._id) && ' · following'}
+                                    </Typography>
+                                </Typography>
+
+                                <Typography component={'div'} fontSize={11} color='text.secondary' lineHeight={0.9}>
+                                    {person?.job}
+                                </Typography>
+
+                                <Typography component={'div'} fontSize={11} color='text.secondary' lineHeight={0.9}>
+                                    {getFollowersCount(person?._id)} followers
+                                </Typography>
+
+                            </Box>
+
+                            {/* Right: Follow button */}
+                            {user && user._id !== person?._id && !isFollowByMe(person?._id) &&(
+                                <Button
+                                    size='small'
+                                    variant={'outlined'}
+                                    startIcon={<PersonAddIcon/>}
+                                    onClick={async () => {
+                                        await toggleFollow(person?._id)
+                                        await refreshFeed();
+                                    }}
+                                    sx={{
+                                        fontSize: 9, 
+                                        borderRadius: 5, 
+                                        // '& .MuiButton-startIcon' : {mb: 0.2} 
+                                    }}
+                                >
+                                    Follow
+                                </Button>
+                            )}
+                        
+                    </Box>
+                    ))}
+
+                </Box>
+            </Paper>
+        </Grid>
+
+        {userCards.length > count &&(
+            <Box
+                sx={{
+                    display: 'flex',
+                    width: '100%', 
+                    justifyContent: 'center'}}
+            >
+                <Button 
+                    onClick={() => setCount(count + 10)}
+                    endIcon={<ExpandCircleDownIcon/>} 
+                    variant='outlined'
+                    sx={{borderRadius: 5}}
+                    >
+                        Load More
+                </Button>
+            </Box>
         )}
-      
-    </div>
-
-
-  </div>
+    </Grid>
 )
 }
