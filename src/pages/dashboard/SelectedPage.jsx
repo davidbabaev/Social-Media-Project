@@ -32,7 +32,7 @@ export default function SelectedPage() {
             justifyContent: 'center'
         }}
     >
-        {!selectedUsers[0] && (<Typography color='text.secondary'>You didn't selected users  yet</Typography>)}
+        {!selectedUsers[0] && (<Typography color='text.secondary'>You didn't selected users yet</Typography>)}
 
         {selectedUsers.map((selected) => {
             const myCardsCount = registeredCards.filter(card => card.userId === selected?._id).length;
@@ -195,28 +195,6 @@ export default function SelectedPage() {
                     </Box>
 
                     <Box px={2}>
-                        {/* {!isFollowByMe(selected?._id) &&(
-                            <Button
-                                size='small'
-                                variant={'outlined'}
-                                startIcon={<PersonAddIcon/>}
-                                onClick={async () => {
-                                    await toggleFollow(selected?._id)
-                                    await refreshFeed();
-                                }}
-                                fullWidth
-                                sx={{
-                                    fontSize: 9, 
-                                    borderRadius: 5, 
-                                    py: 0.3,
-                                    '& .MuiButton-startIcon' : {mb: 0.2}, 
-                                    lineHeight: 0,
-                                    mb:2,
-                                }}
-                            >
-                                Follow
-                            </Button>
-                        )} */}
 
                         <Button
                             size='small'
@@ -246,22 +224,3 @@ export default function SelectedPage() {
     </Container>
   )
 }
-
-{/* <button onClick={() => handleRemoveUser(selected)}>Remove</button>
-<button onClick={() => navigate(`/userprofile/${selected._id}`)}>to the user page</button> */}
-
-    // <div>
-    //     <div>
-    //         <h2>Selected Users</h2>
-    //         {!selectedUsers[0] && (<p>You Didn't Select Users  Yet</p>)}
-    //         {selectedUsers.map((selected) => (
-    //             <div key={selected._id}>
-    //                 <img style={{borderRadius: '50%', width: '100px'}} src={selected.profilePicture}/>
-    //                 <p>{selected.name}</p>
-    //                 <button onClick={() => handleRemoveUser(selected)}>Remove</button>
-    //                 <button onClick={() => navigate(`/userprofile/${selected._id}`)}>to the user page</button>
-    //                 <hr />
-    //             </div>
-    //         ))}
-    //     </div>
-    // </div>

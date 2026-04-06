@@ -7,6 +7,16 @@ import { useAuth } from '../../providers/AuthProvider';
 import UserProfileFollowing from './UserProfileFollowing';
 import UserProfileFollowers from './UserProfileFollowers';
 import { useCardsProvider } from '../../providers/CardsProvider';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import CheckIcon from '@mui/icons-material/Check';
+import { Avatar, Box, Button, Container, IconButton, Paper, Tab, Tabs, Tooltip, Typography } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import useSelectedUsers from '../../hooks/useSelectedUsers';
+import ChatIcon from '@mui/icons-material/Chat';
+import { useEffect, useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function UserProfileLayout() {
 
@@ -16,6 +26,18 @@ export default function UserProfileLayout() {
     const {refreshFeed, registeredCards} = useCardsProvider();
     
     const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
+    const {selectedUsers ,selectHandleUser} = useSelectedUsers();
+    const [messageOpen, setMessageOpen] = useState(false)
+
+    useEffect(() => {
+      if(messageOpen){
+        document.body.style.overflow = 'hidden'
+        return () => {
+        document.body.style.overflow = 'unset'
+        }
+      }
+    }, [messageOpen])
+
     
     const userProfile = users.find(u => u._id === id);
     
@@ -29,83 +51,333 @@ export default function UserProfileLayout() {
     }
 
   return (
-    <div>
 
-    <div
-      style={{
-      border: 'solid black 1px', 
-      padding: '20px', 
-      borderRadius: '20px', 
-      margin: '20px 0px'
-      }}
+    <Container maxWidth= 'lg'>
+      <Paper
+          elevation={0}
+          sx={{
+              overflow: 'hidden',
+              bgcolor: 'background.paper',
+              my:2,
+              borderRadius: 4,
+          }}
       >
-      <img style={{
-        width: '100%', 
-        borderRadius: '10px', 
-        height:'230px', 
-        objectFit:'cover'}} 
-        src={userProfile.coverImage}
-        />
-      <img 
-      style={{
-        marginTop: '-100px',
-        marginLeft: '20px',
-        width: '17%', 
-        borderRadius: '50%', 
-        border: 'solid 2px white', 
-        objectFit:'cover', 
-        height:'170px'
-      }} 
-      src={userProfile.profilePicture}
-      />
+          {/* Cover Image */}
+          <Box
+              sx={{
+                  width: '100%',
+                  height: 230,
+                  borderRadius: 4,
+                  backgroundImage: `url(${userProfile?.coverImage})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+              }}       
+          />
 
-      <h2>{userProfile.name} {userProfile.lastName}</h2>
+          <Box 
+              sx={{
+                  mb:1,
+                  display: 'flex',
+              }} 
+              onClick={() => navigate(`/profiledashboard/${userProfile?._id}/following`)}
+          >
+              <Avatar
+                  src={userProfile?.profilePicture}
+                  sx={{
+                      mt: '-100px', 
+                      width: 180,
+                      height: 180,
+                      mx:3,
+                      border: '4px solid',
+                      borderColor: 'background.paper',
+                      cursor: 'pointer',
+                  }}
+              />
 
-      <div style={{display:'flex', gap: '20px'}}>
-        <div style={{display:'block', border: '1px solid black', padding: '10px', borderRadius: '10px'}}>
-            <p>Followers</p>
-            <p>{getFollowersCount(userProfile._id)}</p>
-        </div>
+              {/* Stats row */}
+              <Box sx={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'start',
+                  gap: 3,
+                  borderBottom: '1px solid',
+                  borderColor: 'divider',
+                  mr: 2
+              }}>
+                  <Box 
+                      textAlign='center'
+                      onClick={() => navigate(`/profiledashboard/${userProfile?._id}/followers`)}
+                      sx={{
+                          cursor: 'pointer',
+                          display: 'flex',
+                          gap: 0.5,
+                          alignItems: 'center',
+                      }}
+                  >
+                      <Typography 
+                          fontWeight={600}
+                          fontSize={16}
+                      >
+                          {getFollowersCount(userProfile?._id)}
+                      </Typography>
 
-        <div style={{display:'block', border: '1px solid black', padding: '10px', borderRadius: '10px'}}>
-            <p>Following</p>
-            <p>{getFollowingCount(userProfile._id)}</p>
-        </div>
+                      <Typography 
+                          fontSize={16}
+                          color='text.secondary'
+                      >
+                          followers
+                      </Typography>
+                  </Box>
 
-        <div style={{display:'block', border: '1px solid black', padding: '10px', borderRadius: '10px'}}>
-            <p>Posts</p>
-            <p>{postsAmount}</p>
-        </div>
+                  <Box 
+                      textAlign='center'
+                      onClick={() => navigate(`/profiledashboard/${userProfile?._id}/following`)}
+                      sx={{
+                          cursor: 'pointer',
+                          display: 'flex',
+                          gap: 0.5,
+                          alignItems: 'center',
+                      }}
+                  >
+                      <Typography 
+                          fontWeight={600}
+                          fontSize={16}
+                      >
+                          {(userProfile?.following || []).length}
+                      </Typography>
 
-        {user?._id === userProfile._id && (<button onClick={() => navigate(`/dashboard/myprofile`)}>Edit Your Profile</button>)}
-      
-      {user?._id !== userProfile._id && (
-        <button onClick={async() => {
-            await toggleFollow(userProfile._id)
-            await refreshFeed();
-        }}>
-            {isFollowByMe(userProfile._id) ? "Unfollow" : "Follow"}
-        </button>
-      )}
+                      <Typography 
+                          fontSize={16}
+                          color='text.secondary'
+                      >
+                          following
+                      </Typography>
+                  </Box>
 
-        <div>
-          <nav>
-              <Link style={mystyle} to={`/profiledashboard/${id}/profilemain`}>All Media</Link>
-              <Link style={mystyle} to={`/profiledashboard/${id}/about`}>About</Link>
-              <Link style={mystyle} to={`/profiledashboard/${id}/following`}>Following</Link>
-              <Link style={mystyle} to={`/profiledashboard/${id}/followers`}>Followers</Link>
-          </nav>
-      </div>
-    </div> 
-    </div>
-            <Routes>
-              <Route index element = {<UserProfileMain/>}/>
-              <Route path='/profilemain' element = {<UserProfileMain/>}/>
-              <Route path='/about' element = {<UserProfileAbout/>}/>
-              <Route path='/following' element = {<UserProfileFollowing/>}/>
-              <Route path='/followers' element = {<UserProfileFollowers/>}/>
-            </Routes>
-    </div>
+                  <Box 
+                      textAlign='center'
+                      onClick={() => navigate(`/profiledashboard/${userProfile?._id}/profilemain`)}
+                      sx={{
+                          cursor: 'pointer',
+                          display: 'flex',
+                          gap: 0.5,
+                          alignItems: 'center',
+                      }}
+                  >
+                      <Typography 
+                          fontWeight={600}
+                          fontSize={16}
+                      >
+                          {postsAmount}
+                      </Typography>
+
+                      <Typography 
+                          fontSize={16}
+                          color='text.secondary'
+                      >
+                          posts
+                      </Typography>
+                  </Box>
+              </Box>
+
+          </Box>
+          
+          <Box sx={{display: 'flex', justifyContent: 'space-between', pr:2 }}>
+              {/* Name, Job, Location */}
+              <Box sx={{mx: 3, mb:2}}>
+                  <Typography 
+                      fontWeight={600} 
+                      fontSize={25}
+                      onClick={() => navigate(`/profiledashboard/${userProfile?._id}/profilemain`)}
+                      sx={{cursor: 'pointer', mb: -0.5}}
+                  >
+                      {userProfile?.name} {userProfile?.lastName}
+                  </Typography>
+
+                  <Typography 
+                      fontSize={15} 
+                      color='text.secondaty' 
+                      sx={{mb: -0.5}}
+                  >
+                      {userProfile?.job}
+                  </Typography>
+
+                  <Typography fontSize={13} color='text.disabled'>
+                      {userProfile?.address.country}, {userProfile?.address.city}
+                  </Typography>
+              </Box>
+              
+              <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
+
+                  {user?._id !== userProfile._id && (
+                    <>
+                      <Button 
+                        variant={isFollowByMe(userProfile._id) ? 'outlined' : 'outlined'}
+                        startIcon={isFollowByMe(userProfile._id) ? <CheckIcon/> : <PersonAddIcon/>}
+                        size='small'
+                        sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
+                        onClick={async() => {
+                          await toggleFollow(userProfile._id)
+                          await refreshFeed();
+                        }}
+                        color={isFollowByMe(userProfile._id) ? 'inherit' : 'primary'}
+                      >
+                        {isFollowByMe(userProfile._id) ? "Following" : "Follow"}
+                      </Button>
+
+                      <Button 
+                        variant='outlined'
+                        sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
+                        // onClick={() => navigate(`/dashboard/myprofile`)}
+                        startIcon={<ChatIcon/>}
+                        onClick={() => setMessageOpen(!messageOpen)}
+                      >
+                          Message
+                      </Button>
+                      
+                      {messageOpen && (
+                        <Box
+                          sx={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            bgcolor: 'rgba(0,0,0,0.5)',
+                            zIndex: 1000,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Box
+                              sx={{
+                                bgcolor: 'background.paper',
+                                borderRadius: 3,
+                                height: 200,
+                                width: 200
+                              }}
+                          >
+                            <Box sx={{position: 'relative', height: '100%', display: 'flex',flexDirection: 'column', gap: 1 , justifyContent: 'center', alignItems: 'center', p: 3, textAlign: 'center'}}>
+                              <IconButton 
+                                onClick={() => setMessageOpen(!messageOpen)}
+                                sx={{
+                                  position: 'absolute',
+                                  top: 0,
+                                  right: 0,
+                                  m: 1,
+                                  bgcolor: 'background.paper',
+                                  zIndex: 1100
+                                }}
+                              >
+                                <CloseIcon/>
+                              </IconButton>
+                                
+                                <ChatIcon
+                                  sx={{fontSize: 50, transform: 'rotate(10deg)', width: '100%', color: 'primary.main'}}
+                                />
+                                <Typography fontWeight={700} lineHeight={1}>
+                                  This feature will come soon
+                                </Typography>
+                            </Box>
+                          </Box>
+                        </Box>
+                      )}
+
+
+                      {selectedUsers.some(selUser => selUser._id === userProfile._id) ? (
+                        <Tooltip title="Unsave from Favorites">
+                          <IconButton 
+                              size='small'
+                              sx={{
+                                  border: '1px solid',
+                                  px: 1.1, 
+                                  py:1.1,
+                                  bgcolor: 'action.hover',
+                                  borderColor: 'primary.main',
+                                  color: 'primary.main'
+                              }}
+                             onClick={() => selectHandleUser(userProfile)}
+                          >
+                              <FavoriteIcon sx={{fontSize: 20}}/>
+                          </IconButton>
+                        </Tooltip>
+                      ): (
+                        <Tooltip title="Save to favorite users">
+                          <IconButton 
+                              size='small'
+                              sx={{
+                                  border: '1px solid',
+                                  borderColor: 'divider',
+                                  px: 1.1, 
+                                  py:1.1,
+                                  bgcolor: 'background.paper',
+                                  color: 'text.secondary',
+                              }}
+                              onClick={() => selectHandleUser(userProfile)}
+                          >
+                              <FavoriteBorderIcon sx={{fontSize: 20}}/>
+                          </IconButton>
+                        </Tooltip>
+                      )}
+
+                    </>
+                  )}
+
+                  {user?._id === userProfile._id && (
+                    <Button 
+                      variant='outlined'
+                      sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
+                      onClick={() => navigate(`/dashboard/myprofile`)}
+                      startIcon={<SettingsIcon/>}
+                      >
+                        Profile Settings
+                    </Button>
+                  )}
+
+              </Box>
+          </Box>
+
+      </Paper>
+
+      <Tabs sx={{
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+        }}
+            value={location.pathname}
+        >
+            <Tab 
+                label='Profile' 
+                value={`/profiledashboard/${id}/profilemain`}
+                onClick={() => navigate(`/profiledashboard/${id}/profilemain`)}
+                />
+
+            <Tab 
+                label='About'
+                value={`/profiledashboard/${id}/about`}
+                onClick={() => navigate(`/profiledashboard/${id}/about`)}
+                />
+
+            <Tab 
+                label='Following' 
+                value={`/profiledashboard/${id}/following`}
+                onClick={() => navigate(`/profiledashboard/${id}/following`)}
+                />
+
+            <Tab 
+                label='Followers' 
+                value={`/profiledashboard/${id}/followers`}
+                onClick={() => navigate(`/profiledashboard/${id}/followers`)}
+            />
+        </Tabs>
+
+      <Routes>
+        <Route index element = {<UserProfileMain/>}/>
+        <Route path='/profilemain' element = {<UserProfileMain/>}/>
+        <Route path='/about' element = {<UserProfileAbout/>}/>
+        <Route path='/following' element = {<UserProfileFollowing/>}/>
+        <Route path='/followers' element = {<UserProfileFollowers/>}/>
+      </Routes>
+    </Container>
   )
 }
-

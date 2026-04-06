@@ -7,11 +7,12 @@ import FavoriteCards from './FavoriteCards'
 import useFollowUser from '../../hooks/useFollowUser'
 import { useAuth } from '../../providers/AuthProvider'
 import { useCardsProvider } from '../../providers/CardsProvider'
-import { Avatar, Box, Button, Container, Paper, Tab, Tabs, Toolbar, Typography } from '@mui/material'
+import { Avatar, Box, Button, Container, IconButton, Paper, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmationDialog from '../../components/ConfirmationDialog'
 import useUsers from '../../hooks/useUsers'
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 export default function DashboardLayout() {
 
@@ -193,6 +194,28 @@ export default function DashboardLayout() {
                     </Box>
                     
                     <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
+
+                        <Tooltip title="View your public profile">
+                            <IconButton 
+                                size='small'
+                                onClick={() => navigate(`/profiledashboard/${user._id}/profilemain`)}
+                                sx={{
+                                    border: '1px solid',
+                                    borderColor: 'divider',
+                                    px: 1.4, 
+                                    py:1.4,
+                                    bgcolor: 'background.paper',
+                                    color: 'text.secondary',
+                                    // '&:hover':{
+                                    //     bgcolor: 'action.hover',
+                                    //     borderColor: 'primary.main',
+                                    //     color: 'primary.main'
+                                    // }
+                                }}
+                            >
+                                <RemoveRedEyeIcon sx={{fontSize: 15}}/>
+                            </IconButton>
+                        </Tooltip>
 
                         {editMode === false && (
                             <Button 

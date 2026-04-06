@@ -4,8 +4,6 @@ import useUsers from '../../hooks/useUsers';
 import getTimeAgo from '../../utils/getTimeAgo';
 import MediaDisplay from '../../components/MediaDisplay';
 import React, { useState } from 'react'
-import { useCardsProvider } from '../../providers/CardsProvider';
-import { useAuth } from '../../providers/AuthProvider';
 import { Avatar, Box, Button, Chip, Typography, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
@@ -23,7 +21,8 @@ export default function FavoriteCards() {
     const countedRegisterCards = favoriteCards.slice(0, count)  
 
   return (
-    <Box>
+    <Box sx={{display: 'flex', justifyContent: 'center', pt: 3}}>
+        {!countedRegisterCards[0] && (<Typography color='text.secondary'>You didn't selected users yet</Typography>)}
         {countedRegisterCards.map((favCard) => {
             const currentUser = users.find(user => favCard.userId === user._id) 
             if(!currentUser) return;
