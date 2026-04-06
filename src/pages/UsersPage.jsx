@@ -3,6 +3,8 @@ import useDebounce from '../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
 import useUsers from '../hooks/useUsers';
 import useSelectedUsers from '../hooks/useSelectedUsers';
+import { Box, Checkbox, Container, Grid, Paper, Typography } from '@mui/material';
+import UsersPageSorts from '../components/UsersPageSorts';
 
 
 function UsersPage() {
@@ -19,12 +21,40 @@ function UsersPage() {
 
     // filters
     const [genderFilter, setGenderFilter] = useState('');
-    const [countryFilter, setCountryFilter] = useState('');
+    const [CountriesFilter, setCountriesFilter] = useState([]);
     
     const navigateToUser = useNavigate();
 
+    const SORT_AGE = [
+        {label: 'All', value: ''},
+        {label: 'Youngest', value: 'youngest'},
+        {label: 'Oldest', value: 'oldest'}
+    ]
+    
+    const SORT_NAME_AZ = [
+        {label: 'All', value: ''},
+        {label: 'A → Z', value: 'az'},
+        {label: 'Z → A', value: 'za'}
+    ]
+    
+    const SORT_GENDER = [
+        {label: 'All', value: ''},
+        {label: 'Male', value: 'Male'},
+        {label: 'Female', value: 'Female'}
+    ]
+
     const countries = [...new Set(users.map(user => user.address?.country.toLowerCase()))]
     // remove doplicates from array, and we get new array by name countries that without duplicates
+
+    const handleCountryToggle = (country) => {
+        setCountriesFilter((prev) => {
+            const include = prev.includes(country)
+            if(!include){
+                return [...prev, country]
+            }
+            return prev.filter(c => c !== country)
+        })
+    }
     
     const filtred = useMemo(() => {
 
@@ -41,18 +71,18 @@ function UsersPage() {
         }
 
         // country filter:
-        if(countryFilter !== ''){
-            result = result.filter(user => user?.address?.country.toLowerCase() === countryFilter.toLowerCase())
-        }
+        // if(countryFilter !== ''){
+        //     result = result.filter(user => user?.address?.country.toLowerCase() === countryFilter.toLowerCase())
+        // }
 
         // sorts:
         result.sort((a,b) => {
             let comparison = 0;
 
             // age sort:
-            if(ageSort === 'low'){
+            if(ageSort === 'youngest'){
                 comparison = a.age - b.age;
-            } else if(ageSort === 'high'){
+            } else if(ageSort === 'oldest'){
                 comparison = b.age - a.age;
             }
 
@@ -69,7 +99,7 @@ function UsersPage() {
         });
 
         return result;
-    }, [debounceSearch, users, ageSort, nameSort, genderFilter, countryFilter])
+    }, [debounceSearch, users, ageSort, nameSort, genderFilter])
     
     const visibleUsers = filtred.slice(0, count)
     
@@ -77,106 +107,119 @@ function UsersPage() {
         return <p>Loading...</p>
     }
 
-  return (
-    <div>
-        <div>
-        <input 
-            type="text" 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-        />
-        </div>
-        
-         <select 
-                disabled={nameSort}
-                style={{
-                    backgroundColor: ageSort ? 'lightblue' : 'white', 
-                    border: 'none', 
-                    marginRight: '8px',
-                    padding: '8px',
-                }}
-                value={ageSort} 
-                onChange={(e) => setAgeSort(e.target.value)}>
-                    <option value="">All Ages</option>
-                    <option value="low">Low → High</option>
-                    <option value="high">High → Low</option>
-            </select>
-        
-         <select
-                disabled={ageSort}
-                style={{
-                    backgroundColor: nameSort ? 'lightblue' : 'white', 
-                    border: 'none', 
-                    marginRight: '8px',
-                    padding: '8px',
-                }}
-                value={nameSort} 
-                onChange={(e) => setNameSort(e.target.value)}>
-                    <option value="">A-Z Default</option>
-                    <option value="az">A → Z</option>
-                    <option value="za">Z → A</option>
-            </select>
+    return(
+        <Container maxWidth='lg' sx={{py:3}}>
+            <Grid container spacing={3}>
 
-            <select
-                style={{
-                    backgroundColor: genderFilter ? 'lightblue' : 'white', 
-                    border: 'none', 
-                    marginRight: '8px',
-                    padding: '8px',
-                }}
-                value={genderFilter} 
-                onChange={(e) => setGenderFilter(e.target.value)}>
-                    <option value="">All Genders</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-            </select>
+                {/* Side Bar */}
+                <Grid 
+                    size={{md: 4}}
+                    sx={{
+                        position: 'sticky',
+                        top: 64,
+                        overflow: 'auto',
+                        maxHeight: 'calc(100vh - 64px)',
+                        display: 'flex', 
+                        flexDirection: 'column',
+                        gap: 2,
+                        
+                        // hide scrollbar visually but keep it functional
+                        '&::-webkit-scrollbar': {display: 'none'}
+                    }}
+                >   
+                    {/* Sort Age*/}
+                    <UsersPageSorts
+                        title = 'Sort by age'
+                        options = {SORT_AGE}
+                        selectedValue = {ageSort}
+                        onSelect = {setAgeSort}
+                    />
+                    
+                    {/* Sort */}
+                    <UsersPageSorts
+                        title = 'Sort by A-Z'
+                        options = {SORT_NAME_AZ}
+                        selectedValue = {nameSort}
+                        onSelect = {setNameSort}
+                    />
+                    
+                    {/* Sort */}
+                    <UsersPageSorts
+                        title = 'Sort by A-Z'
+                        options = {SORT_GENDER}
+                        selectedValue = {genderFilter}
+                        onSelect = {setGenderFilter}
+                    />
 
-            <select
-                style={{
-                    backgroundColor: countryFilter ? 'lightblue' : 'white', 
-                    border: 'none', 
-                    marginRight: '8px',
-                    padding: '8px',
-                }}
-                value={countryFilter} 
-                onChange={(e) => setCountryFilter(e.target.value)}>
-                    <option value="">All countries</option>
-                    {countries.map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                    ))}
-            </select>
-        <br />
-        <br />
-        {visibleUsers.map((user) => (
-            <div key={user._id}>
-                <img style={{
-                    width: '150px',
-                    height: '150px',
-                    borderRadius: '50%',
-                    border: '2px, solid, white',
-                    objectFit: 'cover',
-                    cursor: 'pointer'
-                }} src={user.profilePicture}/>
-                <h3>{user.name} {user.lastName}</h3>
-                <p>Email: {user.email}</p>
-                <p>Age: {user.age}</p>
-                <p>Country: {user.address.country}</p>
-                <p>Gender: {user.gender}</p>
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            borderRadius: 3,
+                            border: '0.5px solid',
+                            borderColor: 'divider',
+                            p: 2,
+                        }}
+                    >
+                        {countries.slice(0, 10).map((countryC, index) => {
+                            const countedUsersByCountry = users.filter(u => u.address.country === countryC).length
 
-                {selectedUsers.some(selUser => selUser._id === user._id) ? (
-                    <button onClick={() => selectHandleUser(user)}>Deselecte User</button>
-                ): (
-                    <button onClick={() => selectHandleUser(user)}>Select User</button>
-                )}
+                            return(
+                                <Box 
+                                    key={countryC} 
+                                    onClick ={() => handleCountryToggle(countryC)}
+                                    sx={{
+                                        display: 'flex', 
+                                        alignItems: 'center',
+                                        borderRadius: 2,
+                                        bgcolor: CountriesFilter.includes(countryC) ? 'action.selected' : 'transparent',
+                                        cursor: 'pointer',
+                                        pr: 1,
+                                        my: 1,
+                                        opacity: countedUsersByCountry === 0 ? 0.4 : 1,
+                                        pointerEvents: countedUsersByCountry === 0 ? 'none' : 'auto'
+                                    }}
+                                
+                                >
+                                    <Checkbox
+                                        size='small'
+                                        checked={CountriesFilter.includes(countryC)}
+                                        disabled={countedUsersByCountry < 1}
+                                        />
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            flex: 1,
+                                        }}
+                                    >
+                                        <Typography
+                                            fontSize={14} 
+                                            color='text.secondary'
+                                        >
+                                            {countryC}
+                                        </Typography>
+    
+                                        <Typography fontWeight={700} fontSize={13} color='text.disabled'>
+                                            {countedUsersByCountry}
+                                        </Typography>
+                                    </Box>
+                            </Box>
+                            )
+                        })}
+                    </Paper>
+                    
+                </Grid>
+                
+                
 
-                <button onClick={() => navigateToUser(`/profiledashboard/${user._id}/profilemain`)}>To The User</button>
-                <hr />
-            </div>
-        ))}
+                <Grid size={{md:8}}>
+                    
+                </Grid>
 
-        {count < filtred.length ? (<button onClick={() => setCount(count + 10)}>Load More</button>) : (<p>No More Users Found</p>)}
-    </div>
-  )
+            </Grid>
+        </Container>
+    )
 }
 
 export default React.memo(UsersPage)
