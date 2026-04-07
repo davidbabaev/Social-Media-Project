@@ -12,7 +12,14 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useAuth } from '../providers/AuthProvider';
 
 
-export default function UserReusableCard({userObject, postsCount, onRemove, onSave, isSaved, onRemoveSaved}) {
+export default function UserReusableCard({
+    userObject, 
+    postsCount, 
+    onRemove, 
+    onSave, 
+    isSaved, 
+    onRemoveSaved,
+}) {
 
     // const {selectedUsers, handleRemoveUser, selectHandleUser} = useSelectedUsers();
     const{getFollowersCount, toggleFollow, isFollowByMe} = useFollowUser();
@@ -31,7 +38,6 @@ export default function UserReusableCard({userObject, postsCount, onRemove, onSa
             textAlign: 'center',
             bgcolor: 'background.paper',
             mb:2,
-            width: '48%',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between'

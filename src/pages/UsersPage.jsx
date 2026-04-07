@@ -365,12 +365,13 @@ function UsersPage() {
 
                     <Box
                         sx={{
-                            display: 'flex', 
-                            flexWrap: 'wrap',
+                            display: 'grid', 
+                            // flexWrap: 'wrap',
+                            gridTemplateColumns: 'repeat(2, 1fr)',
                             py: 3, 
                             gap: 2,
-                            width: '100%',
-                            justifyContent: 'space-between'
+                            // width: '100%',
+                            // justifyContent: 'space-between'
                         }}  
                     >
                         {visibleUsers.map((user) => {

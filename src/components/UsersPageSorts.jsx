@@ -6,7 +6,8 @@ export default function UsersPageSorts({
     title,
     options,
     selectedValue,
-    onSelect
+    onSelect,
+    style
 }) {
   return (
     <Paper
@@ -16,6 +17,7 @@ export default function UsersPageSorts({
             border: '0.5px solid',
             borderColor: 'divider',
             p: 2,
+            ...style
         }}
     >
         <Typography fontWeight={600} fontSize={13} mb={1.5}>
@@ -37,7 +39,7 @@ export default function UsersPageSorts({
                     py: 0.5,
                     my: 1,
                     bgcolor: selectedValue === option.value ? 'action.selected' : 'transparent',
-                    '&:hover': {bgcolor: 'action.hover'}
+                    '&:hover': {bgcolor: 'action.hover'},
                 }}
             >
 

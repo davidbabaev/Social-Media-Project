@@ -153,7 +153,7 @@ return (
                 sx={{cursor: 'pointer'}}
             />
             <Box>
-                <Typography fontWeight={600} fontSize={14}>
+                <Typography fontWeight={600} fontSize={14} color='text.primary'>
                     {user?.name} {user?.lastName}
                 </Typography>
                 <Typography fontSize={12} color='text.secondary'>

@@ -5,6 +5,7 @@ import { useAuth } from "../providers/AuthProvider";
 
     const [selectedUsers, setSelectedUsers] = useState([])
     const {user} = useAuth();
+    const [isUserLoaded, setIsUserLoaded] = useState(false)
 
     const selectedUserStorageKey = user ? `selectedUsers_${user._id}` : null;
     
@@ -33,13 +34,16 @@ import { useAuth } from "../providers/AuthProvider";
         if(savedSelected){
             setSelectedUsers(savedSelected)
         }
+
+        setIsUserLoaded(true)
     }, [selectedUserStorageKey])
 
     useEffect(() => {
+        if(!isUserLoaded) return;
         if(!selectedUserStorageKey) return;
 
         localStorage.setItem(selectedUserStorageKey, JSON.stringify(selectedUsers))
-    }, [selectedUsers, selectedUserStorageKey])
+    }, [selectedUsers, selectedUserStorageKey, isUserLoaded])
 
   return {selectedUsers, selectHandleUser, handleRemoveUser}
 }

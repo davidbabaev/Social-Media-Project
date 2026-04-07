@@ -320,7 +320,7 @@ export default function UserProfileLayout() {
                               <FavoriteBorderIcon sx={{fontSize: 20}}/>
                           </IconButton>
                         </Tooltip>
-                      )}
+                    )}
 
                     </>
                   )}

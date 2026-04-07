@@ -13,6 +13,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import ProfileSettingsPopup from './ProfileSettingsPopup';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import CreateCardModal from './CreateCardModal';
 
 export default function NavBar() {
 
@@ -23,6 +24,8 @@ export default function NavBar() {
     const ref = useRef(null);
     const profileRef = useRef(null);
     const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const {
         notifications,
         handleDeleteNotification,
@@ -106,13 +109,25 @@ export default function NavBar() {
                     </Box>
 
                     <Box
-                        onClick={() => navigate('/createnewcard')}
                         sx={navLinkSx('/createnewcard')}
-                        >
+                        onClick={() => setIsModalOpen(true)}
+                    >
                         <AddBoxIcon fontSize='small'/>
-                        <Typography variant='caption'>Add Post</Typography>
+                        <Typography 
+                            variant='caption'
+                        >
+                            Add Post
+                        </Typography>
                     </Box>
                 </Box>
+
+                {isModalOpen && (
+                    <CreateCardModal
+                        // onCardPosted={() => refreshFeed()}
+                        onClose={() => setIsModalOpen(false)}
+                        // mediaButton={mediaType}
+                    />
+                )}
 
                 <Box
                     onClick={() => handleToggle()}
