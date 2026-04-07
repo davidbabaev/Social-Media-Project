@@ -12,9 +12,9 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useAuth } from '../providers/AuthProvider';
 
 
-export default function UserReusableCard({userObject, postsCount, onRemove}) {
+export default function UserReusableCard({userObject, postsCount, onRemove, onSave, isSaved, onRemoveSaved}) {
 
-    const {selectedUsers, handleRemoveUser, selectHandleUser} = useSelectedUsers();
+    // const {selectedUsers, handleRemoveUser, selectHandleUser} = useSelectedUsers();
     const{getFollowersCount, toggleFollow, isFollowByMe} = useFollowUser();
     const {refreshFeed} = useCardsProvider();
     const navigate = useNavigate();
@@ -66,7 +66,7 @@ export default function UserReusableCard({userObject, postsCount, onRemove}) {
                 </IconButton>
             ): (
                 <Box sx={{display: userObject._id === user._id ? 'none' : 'block'}}>
-                    {selectedUsers.some(selUser => selUser._id === userObject._id) ? (
+                    {isSaved ? (
                         <Tooltip title="Unsave from favorites">
                         <IconButton
                             sx={{
@@ -78,7 +78,7 @@ export default function UserReusableCard({userObject, postsCount, onRemove}) {
                                 p:0.5,
                                 '&:hover': {bgcolor: 'rgba(0,0,0,0.7)'}
                             }}
-                            onClick={() => handleRemoveUser(userObject)}
+                            onClick={onRemoveSaved}
                         >
                             <FavoriteIcon fontSize='small'/>
                         </IconButton>
@@ -96,7 +96,7 @@ export default function UserReusableCard({userObject, postsCount, onRemove}) {
                                     p:0.5,
                                     '&:hover': {bgcolor: 'rgba(0,0,0,0.7)'}
                               }}
-                              onClick={() => selectHandleUser(userObject)}
+                              onClick={onSave}
                           >
                               <FavoriteBorderIcon sx={{fontSize: 20}}/>
                           </IconButton>

@@ -3,17 +3,22 @@ import useDebounce from '../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
 import useUsers from '../hooks/useUsers';
 import useSelectedUsers from '../hooks/useSelectedUsers';
-import { Box, Checkbox, Container, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Chip, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 import UsersPageSorts from '../components/UsersPageSorts';
+import SearchIcon from '@mui/icons-material/Search';
+import UserReusableCard from '../components/UserReusableCard';
+import { useCardsProvider } from '../providers/CardsProvider';
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 
 
 function UsersPage() {
 
     const {users, loading} = useUsers();
-    const {selectedUsers ,selectHandleUser} = useSelectedUsers();
+    const {selectedUsers ,selectHandleUser, handleRemoveUser} = useSelectedUsers();
     const [count, setCount] = useState(10);
     const [search, setSearch] = useState('')
     const debounceSearch = useDebounce(search, 2000);
+    const {registeredCards} = useCardsProvider();
     
     // sorts
     const [ageSort, setAgeSort] = useState('');
@@ -21,7 +26,7 @@ function UsersPage() {
 
     // filters
     const [genderFilter, setGenderFilter] = useState('');
-    const [CountriesFilter, setCountriesFilter] = useState([]);
+    const [countriesFilter, setCountriesFilter] = useState([]);
     
     const navigateToUser = useNavigate();
 
@@ -55,10 +60,56 @@ function UsersPage() {
             return prev.filter(c => c !== country)
         })
     }
+
+    const activeFilters = [];
+
+    if(ageSort !== ''){
+        activeFilters.push({
+            label: ageSort,
+            onDelete: () => setAgeSort('') 
+        })
+    }
+
+    if(nameSort !== ''){
+        activeFilters.push({
+            label: nameSort,
+            onDelete: () => setNameSort('') 
+        })
+    }
+
+    if(genderFilter !== ''){
+        activeFilters.push({
+            label: genderFilter,
+            onDelete: () => setGenderFilter('') 
+        })
+    }
+
+    if(countriesFilter.length > 0){
+        countriesFilter.forEach(country  => {
+            activeFilters.push({
+                label: country,
+                onDelete: () => handleCountryToggle(country) 
+            })
+        })
+    }
+
+    const handleClearAllFilters = () => {
+        setAgeSort(''),
+        setGenderFilter(''),
+        setCountriesFilter([]),
+        setNameSort(''),
+        setSearch('')
+    }
+
+    const maleCount = users.filter(u => u.gender === 'Male').length
     
     const filtred = useMemo(() => {
-
         let result = users;
+
+        // country filter:
+        if(countriesFilter.length > 0){
+            result = result.filter(user => countriesFilter.includes(user?.address?.country.toLowerCase()))
+        }
 
         // search by name;
         result = result.filter((user) => {
@@ -69,11 +120,6 @@ function UsersPage() {
         if(genderFilter !== ''){
             result = result.filter(user => user.gender === genderFilter)
         }
-
-        // country filter:
-        // if(countryFilter !== ''){
-        //     result = result.filter(user => user?.address?.country.toLowerCase() === countryFilter.toLowerCase())
-        // }
 
         // sorts:
         result.sort((a,b) => {
@@ -99,7 +145,25 @@ function UsersPage() {
         });
 
         return result;
-    }, [debounceSearch, users, ageSort, nameSort, genderFilter])
+    }, [debounceSearch, users, ageSort, nameSort, genderFilter, countriesFilter])
+
+
+    const filteredWithoutCountry = useMemo(() => {    
+        let result = users;
+
+        // search by name;
+        result = result.filter((user) => {
+            return user?.name?.toLowerCase().includes(debounceSearch.toLowerCase())
+        });
+
+        // filter: Gender
+        if(genderFilter !== ''){
+            result = result.filter(user => user.gender === genderFilter)
+        }
+
+        return result
+
+    }, [users, debounceSearch, genderFilter])
     
     const visibleUsers = filtred.slice(0, count)
     
@@ -129,23 +193,37 @@ function UsersPage() {
                 >   
                     {/* Sort Age*/}
                     <UsersPageSorts
+                        style={{
+                            opacity: nameSort ? 0.4 : 1,
+                            pointerEvents: nameSort ? 'none' : 'auto'
+                        }}
                         title = 'Sort by age'
                         options = {SORT_AGE}
                         selectedValue = {ageSort}
-                        onSelect = {setAgeSort}
+                        onSelect = {(value) => {
+                            setAgeSort(value), 
+                            setNameSort('')
+                        }}
                     />
                     
                     {/* Sort */}
                     <UsersPageSorts
+                        style={{
+                            opacity: ageSort ? 0.4 : 1,
+                            pointerEvents: ageSort ? 'none' : 'auto'
+                        }}
                         title = 'Sort by A-Z'
                         options = {SORT_NAME_AZ}
                         selectedValue = {nameSort}
-                        onSelect = {setNameSort}
+                        onSelect = {(value) => {
+                            setNameSort(value),
+                            setAgeSort('')
+                        }}
                     />
                     
                     {/* Sort */}
                     <UsersPageSorts
-                        title = 'Sort by A-Z'
+                        title = 'Sort by Gender'
                         options = {SORT_GENDER}
                         selectedValue = {genderFilter}
                         onSelect = {setGenderFilter}
@@ -161,7 +239,8 @@ function UsersPage() {
                         }}
                     >
                         {countries.slice(0, 10).map((countryC, index) => {
-                            const countedUsersByCountry = users.filter(u => u.address.country === countryC).length
+
+                            const countedUsersByCountry = filteredWithoutCountry.filter(u => u.address.country.toLowerCase() === countryC).length
 
                             return(
                                 <Box 
@@ -171,7 +250,7 @@ function UsersPage() {
                                         display: 'flex', 
                                         alignItems: 'center',
                                         borderRadius: 2,
-                                        bgcolor: CountriesFilter.includes(countryC) ? 'action.selected' : 'transparent',
+                                        bgcolor: countriesFilter.includes(countryC) ? 'action.selected' : 'transparent',
                                         cursor: 'pointer',
                                         pr: 1,
                                         my: 1,
@@ -182,7 +261,7 @@ function UsersPage() {
                                 >
                                     <Checkbox
                                         size='small'
-                                        checked={CountriesFilter.includes(countryC)}
+                                        checked={countriesFilter.includes(countryC)}
                                         disabled={countedUsersByCountry < 1}
                                         />
                                     <Box
@@ -214,7 +293,119 @@ function UsersPage() {
                 
 
                 <Grid size={{md:8}}>
+                    <TextField
+                        fullWidth
+                        size='small'
+                        placeholder='Search People..'
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                )
+                            }
+                        }}
+                        sx={{
+                            '& .MuiOutlinedInput-root':{
+                                borderRadius: 5,
+                                fontSize: 13
+                            }
+                        }}
+                    />
+
+                    <Box
+                        sx={{
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            p:1, 
+                        }}
+                    >
+                        <Typography 
+                            color='text.secondary'
+                            fontSize={15}
+                        >
+                            {filtred.length} Results
+                        </Typography>
+
+                        <Box
+                            sx={{
+                                display: 'flex', 
+                                gap: 1, 
+                                alignItems: 'center', 
+                                flexWrap: 'wrap'
+                            }}
+                        >
+                            {activeFilters.map((filter, index) => (
+                                <Chip
+                                    key={index}
+                                    label={filter.label}
+                                    size='small'
+                                    onDelete={filter.onDelete}
+                                />
+                            ))}
+
+                            {activeFilters.length > 0 && (
+                                <Button
+                                    size='small'
+                                    onClick={handleClearAllFilters}
+                                    sx={{p:1, borderRadius: 5, fontSize: 11}}
+                                    variant='outlined'
+                                >
+                                    Clear All Filters
+                                </Button>
+                           )}
+                        </Box>
+                    </Box>
+
                     
+                    {/* Users List */}
+
+                    <Box
+                        sx={{
+                            display: 'flex', 
+                            flexWrap: 'wrap',
+                            py: 3, 
+                            gap: 2,
+                            width: '100%',
+                            justifyContent: 'space-between'
+                        }}  
+                    >
+                        {visibleUsers.map((user) => {
+                            const myCardsCount = registeredCards.filter(card => card.userId === user?._id).length;
+                            return(
+                                <UserReusableCard
+                                    key={user._id}
+                                    userObject={user}
+                                    postsCount={myCardsCount}
+                                    onRemoveSaved={() => handleRemoveUser(user)}
+                                    onSave = {() => selectHandleUser(user)}
+                                    isSaved={selectedUsers.some(s => s._id === user._id)}
+                                />
+                            )
+                        })}
+                    </Box>
+
+
+                    {filtred.length > count &&(
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                width: '100%', 
+                                justifyContent: 'center'}}
+                        >
+                            <Button 
+                                onClick={() => setCount(count + 10)}
+                                endIcon={<ExpandCircleDownIcon/>} 
+                                variant='outlined'
+                                sx={{borderRadius: 5}}
+                                >
+                                    Load More
+                            </Button>
+                        </Box>
+                    )}
                 </Grid>
 
             </Grid>
