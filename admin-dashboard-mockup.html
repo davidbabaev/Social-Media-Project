@@ -1,0 +1,2270 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mirage Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS VARIABLES / THEME ===== */
+:root {
+  --primary: #7F77DD;
+  --primary-hover: #6B63C9;
+  --primary-light: rgba(127,119,221,0.12);
+  --success: #6BCB77;
+  --success-bg: rgba(107,203,119,0.12);
+  --danger: #FF6B6B;
+  --danger-bg: rgba(255,107,107,0.12);
+  --warning: #FFB347;
+  --warning-bg: rgba(255,179,71,0.12);
+  --info: #0088FE;
+  --info-bg: rgba(0,136,254,0.12);
+  --pink: #E44687;
+  --teal: #00C49F;
+}
+
+[data-theme="dark"] {
+  --bg: #0D0D14;
+  --bg-surface: #13131F;
+  --bg-elevated: #1A1A2E;
+  --bg-sidebar: #0A0A12;
+  --border: #2A2A3E;
+  --border-light: #1F1F30;
+  --text-primary: #EEEEEE;
+  --text-secondary: #888899;
+  --text-muted: #555566;
+  --hover-bg: rgba(255,255,255,0.04);
+  --table-header-bg: #1A1A2E;
+  --table-row-alt: rgba(255,255,255,0.02);
+  --table-row-hover: rgba(127,119,221,0.06);
+  --input-bg: #1A1A2E;
+  --shadow: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+[data-theme="light"] {
+  --bg: #F5F5F8;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --bg-sidebar: #FAFAFE;
+  --border: #E2E2EA;
+  --border-light: #EEEEEE;
+  --text-primary: #1A1A2E;
+  --text-secondary: #666680;
+  --text-muted: #9999AA;
+  --hover-bg: rgba(0,0,0,0.04);
+  --table-header-bg: #F5F5F8;
+  --table-row-alt: rgba(0,0,0,0.02);
+  --table-row-hover: rgba(127,119,221,0.06);
+  --input-bg: #F5F5F8;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== LAYOUT ===== */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ===== TOP APP BAR ===== */
+.app-bar {
+  height: 56px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.app-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-bar-left .logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+}
+
+.app-bar-left .logo span {
+  color: var(--text-secondary);
+  font-weight: 400;
+  font-size: 12px;
+  margin-left: 8px;
+  padding: 2px 8px;
+  background: var(--primary-light);
+  border-radius: 4px;
+  color: var(--primary);
+}
+
+.sidebar-toggle {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.sidebar-toggle:hover { background: var(--hover-bg); color: var(--text-primary); }
+
+.app-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.app-bar-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  position: relative;
+}
+.app-bar-btn:hover { background: var(--hover-bg); color: var(--text-primary); }
+
+.badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  background: var(--danger);
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  margin-left: 8px;
+  position: relative;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  width: 220px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  padding: 8px;
+  display: none;
+}
+.profile-dropdown.open { display: block; }
+
+.profile-dropdown-header {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.profile-dropdown-header .name { font-weight: 600; font-size: 13px; }
+.profile-dropdown-header .email { font-size: 11px; color: var(--text-secondary); }
+
+.profile-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.profile-dropdown-item:hover { background: var(--hover-bg); color: var(--text-primary); }
+.profile-dropdown-item.danger { color: var(--danger); }
+
+/* Notification Dropdown */
+.notification-dropdown {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  width: 360px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  display: none;
+}
+.notification-dropdown.open { display: block; }
+
+.notification-dropdown-header {
+  padding: 14px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.notification-dropdown-header .mark-read {
+  font-size: 11px;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.notif-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light);
+  cursor: pointer;
+}
+.notif-item:hover { background: var(--hover-bg); }
+.notif-item:last-child { border-bottom: none; }
+
+.notif-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.notif-text { flex: 1; }
+.notif-text .msg { font-size: 12px; line-height: 1.4; }
+.notif-text .msg strong { font-weight: 600; }
+.notif-text .time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: width 0.2s ease;
+  overflow: hidden;
+}
+.sidebar.collapsed { width: 64px; }
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  padding: 16px 12px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.sidebar.collapsed .nav-section-label { opacity: 0; height: 0; padding: 0; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-left: 3px solid transparent;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+.nav-item:hover { background: var(--hover-bg); color: var(--text-primary); }
+.nav-item.active {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-left-color: var(--primary);
+}
+
+.nav-item .icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.nav-item .label { overflow: hidden; }
+.sidebar.collapsed .nav-item .label { display: none; }
+.sidebar.collapsed .nav-item { justify-content: center; padding: 10px 0; border-left: none; }
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sidebar.collapsed .sidebar-footer .footer-info { display: none; }
+.sidebar.collapsed .sidebar-footer { justify-content: center; }
+
+.footer-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.footer-info .name { font-size: 12px; font-weight: 600; }
+.footer-info .role {
+  font-size: 10px;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 1px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+.page-header {
+  margin-bottom: 24px;
+}
+.page-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.page-header p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ===== CARDS & GRIDS ===== */
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+/* Dashboard mixed layout: 2x2 stat cards left + chart right */
+.grid-dashboard-top {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 16px;
+}
+.grid-dashboard-top .stats-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* 1fr + 2fr layout */
+.grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; }
+.grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+
+/* 3-column with one spanning 2 */
+.grid-analytics-mix {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.grid-analytics-mix .span-2 { grid-column: span 2; }
+.grid-analytics-mix .span-3 { grid-column: span 3; }
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Stat Cards */
+.stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-card .stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.stat-card .stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-card .stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.stat-card .stat-trend {
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  width: fit-content;
+}
+.stat-trend.up { color: var(--success); background: var(--success-bg); }
+.stat-trend.down { color: var(--danger); background: var(--danger-bg); }
+
+/* Retention Cards */
+.retention-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.retention-card .main-val {
+  font-size: 32px;
+  font-weight: 700;
+}
+.retention-card .sub-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.retention-card .compare {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.retention-card .compare .pct {
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+.retention-card .compare .pct.up { color: var(--success); background: var(--success-bg); }
+.retention-card .compare .pct.down { color: var(--danger); background: var(--danger-bg); }
+
+/* Highlight Cards (Most Active / Most Liked) */
+.highlight-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.highlight-card .highlight-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.highlight-card .highlight-thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+.highlight-card .highlight-info { flex: 1; }
+.highlight-card .highlight-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.highlight-card .highlight-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.highlight-card .highlight-stat {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Recent Activity Lists */
+.recent-list { list-style: none; }
+.recent-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.recent-list li:last-child { border-bottom: none; }
+
+.recent-list .avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.recent-list .thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+.recent-list .info { flex: 1; }
+.recent-list .info .name { font-size: 13px; font-weight: 500; }
+.recent-list .info .meta { font-size: 11px; color: var(--text-muted); }
+.recent-list .date { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+/* Chart Placeholder */
+.chart-placeholder {
+  background: var(--bg-elevated);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  min-height: 200px;
+  position: relative;
+}
+
+/* Sparkline (CSS-only mini chart) */
+.sparkline {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 40px;
+}
+.sparkline .bar {
+  flex: 1;
+  border-radius: 3px;
+  background: var(--primary);
+  opacity: 0.6;
+  transition: opacity 0.15s;
+  min-width: 0;
+}
+.sparkline .bar:hover { opacity: 1; }
+
+/* ===== ANALYTICS PAGE ===== */
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  margin-top: 32px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title:first-child { margin-top: 0; }
+.section-title .icon { color: var(--primary); }
+
+/* Country List */
+.country-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+.country-row .flag {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.country-row .country-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 100px;
+}
+.country-row .progress-bar {
+  flex: 2;
+  height: 8px;
+  background: var(--bg-elevated);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.country-row .progress-bar .fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+.country-row .count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  min-width: 40px;
+  text-align: right;
+}
+.country-row .pct {
+  font-size: 11px;
+  color: var(--text-muted);
+  min-width: 35px;
+  text-align: right;
+}
+
+/* Category Chips in Analytics */
+.category-list { display: flex; flex-direction: column; gap: 6px; }
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+.category-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.category-name { flex: 1; font-size: 13px; }
+.category-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ===== TABLES PAGE ===== */
+.filters-bar {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 12px;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+}
+.search-input .icon { color: var(--text-muted); font-size: 16px; }
+.search-input input {
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 0;
+  width: 100%;
+  outline: none;
+}
+.search-input:focus-within { border-color: var(--primary); }
+
+.filter-select {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 8px 28px 8px 10px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888899' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  outline: none;
+}
+.filter-select:focus { border-color: var(--primary); }
+.filter-select.active-filter {
+  border-color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+.filter-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.filter-chip .remove {
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  margin-left: 2px;
+}
+
+.table-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table thead th {
+  background: var(--table-header-bg);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  user-select: none;
+}
+.data-table thead th.sortable { cursor: pointer; }
+.data-table thead th.sortable:hover { color: var(--primary); }
+.data-table thead th .sort-icon { margin-left: 4px; font-size: 10px; }
+
+.data-table tbody tr {
+  border-bottom: 1px solid var(--border-light);
+  transition: background 0.1s;
+}
+.data-table tbody tr:nth-child(even) { background: var(--table-row-alt); }
+.data-table tbody tr:hover { background: var(--table-row-hover); cursor: pointer; }
+
+.data-table tbody td {
+  padding: 10px 16px;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+/* Table Cells */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-cell .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+.user-cell .name { font-weight: 500; }
+
+.flag-cell {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.role-badge, .status-badge, .category-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.role-badge.admin { background: var(--primary-light); color: var(--primary); }
+.role-badge.user { background: var(--hover-bg); color: var(--text-secondary); }
+.status-badge.active { background: var(--success-bg); color: var(--success); }
+.status-badge.banned { background: var(--danger-bg); color: var(--danger); }
+
+.category-badge { font-size: 11px; padding: 3px 10px; }
+.category-badge.tech { background: var(--info-bg); color: var(--info); }
+.category-badge.lifestyle { background: rgba(228,70,135,0.12); color: var(--pink); }
+.category-badge.food { background: var(--warning-bg); color: var(--warning); }
+.category-badge.travel { background: var(--success-bg); color: var(--success); }
+.category-badge.sports { background: rgba(0,196,159,0.12); color: var(--teal); }
+.category-badge.other { background: var(--hover-bg); color: var(--text-secondary); }
+
+.action-btns {
+  display: flex;
+  gap: 4px;
+}
+.action-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+.action-btn:hover { background: var(--hover-bg); color: var(--text-primary); }
+.action-btn.danger:hover { background: var(--danger-bg); color: var(--danger); }
+.action-btn.warn:hover { background: var(--warning-bg); color: var(--warning); }
+.action-btn.promote:hover { background: var(--primary-light); color: var(--primary); }
+
+.thumb-cell {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Pagination */
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-surface);
+  border-radius: 0 0 12px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.page-btn {
+  height: 30px;
+  min-width: 30px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  padding: 0 8px;
+}
+.page-btn:hover { background: var(--hover-bg); color: var(--text-primary); }
+.page-btn.active { background: var(--primary); color: white; }
+.page-btn:disabled { opacity: 0.3; cursor: default; }
+
+.rows-select {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 8px;
+  margin-left: 8px;
+}
+
+/* ===== SCROLLBAR ===== */
+.main-content::-webkit-scrollbar { width: 6px; }
+.main-content::-webkit-scrollbar-track { background: transparent; }
+.main-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.main-content::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ===== SECTION SPACING ===== */
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.mt-24 { margin-top: 24px; }
+.gap-16 { gap: 16px; }
+
+/* Top 5 Posts Cards */
+.post-card-sm {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.post-card-sm:last-child { border-bottom: none; }
+.post-card-sm .thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.post-card-sm .info { flex: 1; }
+.post-card-sm .title { font-size: 13px; font-weight: 500; }
+.post-card-sm .meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.post-card-sm .engagement {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  .sidebar { width: 64px; }
+  .sidebar .nav-item .label { display: none; }
+  .sidebar .nav-section-label { display: none; }
+  .sidebar .sidebar-footer .footer-info { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <!-- ===== TOP APP BAR ===== -->
+  <header class="app-bar">
+    <div class="app-bar-left">
+      <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">&#9776;</button>
+      <div class="logo">Mirage <span>Admin</span></div>
+    </div>
+    <div class="app-bar-right">
+      <button class="app-bar-btn" title="Search">&#128269;</button>
+      <div style="position:relative">
+        <button class="app-bar-btn" onclick="toggleNotifications()" title="Notifications">
+          &#128276;
+          <span class="badge">3</span>
+        </button>
+        <div class="notification-dropdown" id="notifDropdown">
+          <div class="notification-dropdown-header">
+            Notifications
+            <span class="mark-read">Mark all as read</span>
+          </div>
+          <div class="notif-item">
+            <img class="notif-avatar" src="https://i.pravatar.cc/36?img=1" alt="">
+            <div class="notif-text">
+              <div class="msg"><strong>Sarah Miller</strong> just registered a new account</div>
+              <div class="time">2 minutes ago</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <img class="notif-avatar" src="https://i.pravatar.cc/36?img=5" alt="">
+            <div class="notif-text">
+              <div class="msg"><strong>Alex Johnson</strong> reported a post for review</div>
+              <div class="time">15 minutes ago</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <img class="notif-avatar" src="https://i.pravatar.cc/36?img=8" alt="">
+            <div class="notif-text">
+              <div class="msg"><strong>Emma Davis</strong> reached 100 followers milestone</div>
+              <div class="time">1 hour ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="app-bar-btn" onclick="toggleTheme()" id="themeToggle" title="Toggle theme">&#127769;</button>
+      <div style="position:relative">
+        <div class="admin-avatar" onclick="toggleProfile()">DA</div>
+        <div class="profile-dropdown" id="profileDropdown">
+          <div class="profile-dropdown-header">
+            <div class="name">David Admin</div>
+            <div class="email">david@mirage.app</div>
+          </div>
+          <div class="profile-dropdown-item">&#9881; Settings</div>
+          <div class="profile-dropdown-item">&#128100; My Profile</div>
+          <div class="profile-dropdown-item danger">&#10145; Logout</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-body">
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a class="nav-item active" onclick="switchPage('dashboard', this)">
+          <span class="icon">&#127968;</span>
+          <span class="label">Dashboard</span>
+        </a>
+        <a class="nav-item" onclick="switchPage('analytics', this)">
+          <span class="icon">&#128200;</span>
+          <span class="label">Analytics</span>
+        </a>
+
+        <div class="nav-section-label">Management</div>
+        <a class="nav-item" onclick="switchPage('users', this)">
+          <span class="icon">&#128101;</span>
+          <span class="label">Users</span>
+        </a>
+        <a class="nav-item" onclick="switchPage('posts', this)">
+          <span class="icon">&#128196;</span>
+          <span class="label">Posts</span>
+        </a>
+
+        <div class="nav-section-label" style="margin-top:auto"></div>
+        <a class="nav-item" style="margin-top:auto">
+          <span class="icon">&#8592;</span>
+          <span class="label">Back to Feed</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="footer-avatar">DA</div>
+        <div class="footer-info">
+          <div class="name">David Admin</div>
+          <div class="role">Admin</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+
+      <!-- ==================== PAGE: DASHBOARD ==================== -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <h1>Dashboard</h1>
+          <p>Welcome back, David. Here's what's happening with your platform.</p>
+        </div>
+
+        <!-- Row 1: 2x2 Stat Cards + 30-Day Chart -->
+        <div class="grid-dashboard-top mb-24">
+          <div class="stats-2x2">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:var(--info-bg);color:var(--info)">&#128101;</div>
+              <div class="stat-value">1,248</div>
+              <div class="stat-label">Total Users</div>
+              <div class="stat-trend up">&#9650; 12.5% this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:var(--primary-light);color:var(--primary)">&#128196;</div>
+              <div class="stat-value">3,842</div>
+              <div class="stat-label">Total Posts</div>
+              <div class="stat-trend up">&#9650; 8.2% this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:var(--danger-bg);color:var(--danger)">&#10084;</div>
+              <div class="stat-value">24.6K</div>
+              <div class="stat-label">Total Likes</div>
+              <div class="stat-trend up">&#9650; 15.3% this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:var(--success-bg);color:var(--success)">&#128172;</div>
+              <div class="stat-value">6.4</div>
+              <div class="stat-label">Avg. Engagement</div>
+              <div class="stat-trend down">&#9660; 2.1% this week</div>
+            </div>
+          </div>
+          <!-- 30-Day Login Chart (right side) -->
+          <div class="card" style="display:flex;flex-direction:column">
+            <div class="card-header">
+              <div class="card-title">30-Day Login Activity</div>
+              <div style="font-size:12px;color:var(--text-secondary)">
+                <strong style="color:var(--text-primary)">847</strong> total logins
+              </div>
+            </div>
+            <div class="chart-placeholder" style="flex:1;min-height:160px;border:none;background:transparent">
+              <svg width="100%" height="100%" viewBox="0 0 600 180" preserveAspectRatio="none" style="padding:0 10px">
+                <defs>
+                  <linearGradient id="dashGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#7F77DD" stop-opacity="0.25"/>
+                    <stop offset="100%" stop-color="#7F77DD" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,160 L20,150 L40,140 L60,145 L80,130 L100,120 L120,125 L140,110 L160,105 L180,100 L200,95 L220,90 L240,85 L260,80 L280,75 L300,70 L320,65 L340,60 L360,55 L380,65 L400,50 L420,45 L440,40 L460,35 L480,30 L500,35 L520,25 L540,20 L560,15 L580,10 L600,5"
+                      fill="none" stroke="#7F77DD" stroke-width="2.5"/>
+                <path d="M0,160 L20,150 L40,140 L60,145 L80,130 L100,120 L120,125 L140,110 L160,105 L180,100 L200,95 L220,90 L240,85 L260,80 L280,75 L300,70 L320,65 L340,60 L360,55 L380,65 L400,50 L420,45 L440,40 L460,35 L480,30 L500,35 L520,25 L540,20 L560,15 L580,10 L600,5 L600,180 L0,180 Z"
+                      fill="url(#dashGrad)"/>
+              </svg>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);padding:0 10px">
+              <span>Mar 8</span><span>Mar 15</span><span>Mar 22</span><span>Mar 29</span><span>Apr 7</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Retention (3 cards) + Highlights (stacked) -->
+        <div class="grid-analytics-mix mb-24">
+          <div class="retention-card">
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-bottom:8px">Daily Active Users</div>
+            <div class="main-val">186</div>
+            <div class="sub-label">active today</div>
+            <div class="compare">vs 172 yesterday <span class="pct up">+8.1%</span></div>
+          </div>
+          <div class="retention-card">
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-bottom:8px">Weekly Active Users</div>
+            <div class="main-val">724</div>
+            <div class="sub-label">active this week</div>
+            <div class="compare">vs 698 last week <span class="pct up">+3.7%</span></div>
+          </div>
+          <div class="retention-card">
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-bottom:8px">New Registrations</div>
+            <div class="main-val">38</div>
+            <div class="sub-label">this week</div>
+            <div class="compare">vs 31 last week <span class="pct up">+22.6%</span></div>
+          </div>
+        </div>
+
+        <!-- Row 3: Highlights side by side -->
+        <div class="grid-2 mb-24">
+          <div class="highlight-card">
+            <img class="highlight-avatar" src="https://i.pravatar.cc/52?img=12" alt="">
+            <div class="highlight-info">
+              <div class="highlight-label">Most Active User</div>
+              <div class="highlight-name">Jessica Chen</div>
+              <div class="highlight-stat">147 posts &middot; 892 followers</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:24px;font-weight:700;color:var(--primary)">&#127942;</div>
+            </div>
+          </div>
+          <div class="highlight-card">
+            <img class="highlight-thumb" src="https://picsum.photos/52/52?random=1" alt="">
+            <div class="highlight-info">
+              <div class="highlight-label">Most Liked Post</div>
+              <div class="highlight-name">Sunset at the Beach</div>
+              <div class="highlight-stat">342 likes &middot; 58 comments</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:24px;font-weight:700;color:var(--danger)">&#10084;</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4: Recent Users (narrow) + Recent Posts (wide) -->
+        <div class="grid-1-2 mb-24">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Last 5 Users Joined</div>
+              <span style="font-size:11px;color:var(--primary);cursor:pointer;font-weight:500">View all</span>
+            </div>
+            <ul class="recent-list">
+              <li>
+                <img class="avatar" src="https://i.pravatar.cc/36?img=15" alt="">
+                <div class="info"><div class="name">Sarah Miller</div><div class="meta">sarah@email.com</div></div>
+                <div class="date">2 hrs ago</div>
+              </li>
+              <li>
+                <img class="avatar" src="https://i.pravatar.cc/36?img=22" alt="">
+                <div class="info"><div class="name">Tom Wilson</div><div class="meta">tom@email.com</div></div>
+                <div class="date">5 hrs ago</div>
+              </li>
+              <li>
+                <img class="avatar" src="https://i.pravatar.cc/36?img=33" alt="">
+                <div class="info"><div class="name">Maya Rodriguez</div><div class="meta">maya@email.com</div></div>
+                <div class="date">Yesterday</div>
+              </li>
+              <li>
+                <img class="avatar" src="https://i.pravatar.cc/36?img=44" alt="">
+                <div class="info"><div class="name">James Park</div><div class="meta">james@email.com</div></div>
+                <div class="date">Yesterday</div>
+              </li>
+              <li>
+                <img class="avatar" src="https://i.pravatar.cc/36?img=55" alt="">
+                <div class="info"><div class="name">Lisa Chang</div><div class="meta">lisa@email.com</div></div>
+                <div class="date">2 days ago</div>
+              </li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Last 5 Posts Created</div>
+              <span style="font-size:11px;color:var(--primary);cursor:pointer;font-weight:500">View all</span>
+            </div>
+            <ul class="recent-list">
+              <li>
+                <img class="thumb" src="https://picsum.photos/40/40?random=2" alt="">
+                <div class="info"><div class="name">Mountain Hiking Trip</div><div class="meta">by Sarah Miller</div></div>
+                <div class="date">1 hr ago</div>
+              </li>
+              <li>
+                <img class="thumb" src="https://picsum.photos/40/40?random=3" alt="">
+                <div class="info"><div class="name">Best Coffee Spots</div><div class="meta">by Tom Wilson</div></div>
+                <div class="date">3 hrs ago</div>
+              </li>
+              <li>
+                <img class="thumb" src="https://picsum.photos/40/40?random=4" alt="">
+                <div class="info"><div class="name">Coding Tips for Beginners</div><div class="meta">by Maya Rodriguez</div></div>
+                <div class="date">6 hrs ago</div>
+              </li>
+              <li>
+                <img class="thumb" src="https://picsum.photos/40/40?random=5" alt="">
+                <div class="info"><div class="name">My Art Collection</div><div class="meta">by James Park</div></div>
+                <div class="date">Yesterday</div>
+              </li>
+              <li>
+                <img class="thumb" src="https://picsum.photos/40/40?random=6" alt="">
+                <div class="info"><div class="name">Travel Photography</div><div class="meta">by Lisa Chang</div></div>
+                <div class="date">Yesterday</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE: ANALYTICS ==================== -->
+      <div class="page" id="page-analytics">
+        <div class="page-header">
+          <h1>Analytics</h1>
+          <p>Detailed insights into user activity, content performance, and demographics.</p>
+        </div>
+
+        <!-- Row 1: Registration chart (2/3) + Retention stats (1/3) -->
+        <div class="section-title" style="margin-top:0"><span class="icon">&#128101;</span> User Analytics</div>
+
+        <div class="grid-2-1 mb-24">
+          <div class="card" style="display:flex;flex-direction:column">
+            <div class="card-header">
+              <div class="card-title">User Registration by Month</div>
+            </div>
+            <div class="chart-placeholder" style="flex:1;min-height:200px;border:none;background:transparent">
+              <svg width="100%" height="100%" viewBox="0 0 600 200" preserveAspectRatio="none" style="padding:10px 20px">
+                <defs>
+                  <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#7F77DD" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#7F77DD" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,180 L50,160 L100,140 L150,120 L200,130 L250,100 L300,80 L350,90 L400,60 L450,40 L500,50 L550,30 L600,20"
+                      fill="none" stroke="#7F77DD" stroke-width="2.5"/>
+                <path d="M0,180 L50,160 L100,140 L150,120 L200,130 L250,100 L300,80 L350,90 L400,60 L450,40 L500,50 L550,30 L600,20 L600,200 L0,200 Z"
+                      fill="url(#lineGrad)"/>
+                <circle cx="0" cy="180" r="3" fill="#7F77DD"/>
+                <circle cx="100" cy="140" r="3" fill="#7F77DD"/>
+                <circle cx="200" cy="130" r="3" fill="#7F77DD"/>
+                <circle cx="300" cy="80" r="3" fill="#7F77DD"/>
+                <circle cx="400" cy="60" r="3" fill="#7F77DD"/>
+                <circle cx="500" cy="50" r="3" fill="#7F77DD"/>
+                <circle cx="600" cy="20" r="3" fill="#7F77DD"/>
+              </svg>
+              <div style="position:absolute;bottom:8px;left:20px;right:20px;display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)">
+                <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+                <span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+              </div>
+            </div>
+          </div>
+          <!-- Stacked retention stats on the right -->
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="retention-card">
+              <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-bottom:8px">User Retention Rate</div>
+              <div class="main-val" style="color:var(--success)">73%</div>
+              <div class="sub-label">of last week's registrants active this week</div>
+            </div>
+            <div class="retention-card">
+              <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-bottom:8px">Total Comments</div>
+              <div class="main-val">8,934</div>
+              <div class="sub-label">across all posts</div>
+            </div>
+            <div class="retention-card">
+              <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-bottom:8px">Total Likes</div>
+              <div class="main-val">24,612</div>
+              <div class="sub-label">across all posts</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Gender Pie (1/3) + Age Bar Chart (2/3) -->
+        <div class="grid-1-2 mb-24">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Gender Distribution</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:10px 0">
+              <svg width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="60" fill="none" stroke="var(--border)" stroke-width="20"/>
+                <circle cx="70" cy="70" r="60" fill="none" stroke="#0088FE" stroke-width="20"
+                        stroke-dasharray="207 170" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
+                <circle cx="70" cy="70" r="60" fill="none" stroke="#E44687" stroke-width="20"
+                        stroke-dasharray="170 207" stroke-dashoffset="-207" transform="rotate(-90 70 70)"/>
+                <text x="70" y="66" text-anchor="middle" fill="var(--text-primary)" font-size="18" font-weight="700">1,248</text>
+                <text x="70" y="82" text-anchor="middle" fill="var(--text-muted)" font-size="10">total</text>
+              </svg>
+              <div style="width:100%">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                  <div style="width:10px;height:10px;border-radius:50%;background:#0088FE"></div>
+                  <span style="font-size:13px">Male</span>
+                  <span style="font-size:13px;font-weight:600;margin-left:auto">55%</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:10px;height:10px;border-radius:50%;background:#E44687"></div>
+                  <span style="font-size:13px">Female</span>
+                  <span style="font-size:13px;font-weight:600;margin-left:auto">45%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Gender by Age Range</div>
+            </div>
+            <div class="chart-placeholder" style="height:220px;border:none;background:transparent">
+              <svg width="100%" height="100%" viewBox="0 0 420 160" preserveAspectRatio="none" style="padding:10px">
+                <g transform="translate(0,0)">
+                  <rect x="20" y="80" width="40" height="60" rx="3" fill="#0088FE" opacity="0.8"/>
+                  <rect x="20" y="40" width="40" height="40" rx="3" fill="#E44687" opacity="0.8"/>
+                  <text x="40" y="155" text-anchor="middle" fill="var(--text-muted)" font-size="9">13-17</text>
+                </g>
+                <g transform="translate(60,0)">
+                  <rect x="20" y="30" width="40" height="110" rx="3" fill="#0088FE" opacity="0.8"/>
+                  <rect x="20" y="0" width="40" height="30" rx="3" fill="#E44687" opacity="0.8"/>
+                  <text x="40" y="155" text-anchor="middle" fill="var(--text-muted)" font-size="9">18-24</text>
+                </g>
+                <g transform="translate(120,0)">
+                  <rect x="20" y="20" width="40" height="120" rx="3" fill="#0088FE" opacity="0.8"/>
+                  <rect x="20" y="0" width="40" height="20" rx="3" fill="#E44687" opacity="0.8"/>
+                  <text x="40" y="155" text-anchor="middle" fill="var(--text-muted)" font-size="9">25-34</text>
+                </g>
+                <g transform="translate(180,0)">
+                  <rect x="20" y="50" width="40" height="90" rx="3" fill="#0088FE" opacity="0.8"/>
+                  <rect x="20" y="20" width="40" height="30" rx="3" fill="#E44687" opacity="0.8"/>
+                  <text x="40" y="155" text-anchor="middle" fill="var(--text-muted)" font-size="9">35-44</text>
+                </g>
+                <g transform="translate(240,0)">
+                  <rect x="20" y="70" width="40" height="70" rx="3" fill="#0088FE" opacity="0.8"/>
+                  <rect x="20" y="40" width="40" height="30" rx="3" fill="#E44687" opacity="0.8"/>
+                  <text x="40" y="155" text-anchor="middle" fill="var(--text-muted)" font-size="9">45-54</text>
+                </g>
+                <g transform="translate(300,0)">
+                  <rect x="20" y="100" width="40" height="40" rx="3" fill="#0088FE" opacity="0.8"/>
+                  <rect x="20" y="75" width="40" height="25" rx="3" fill="#E44687" opacity="0.8"/>
+                  <text x="40" y="155" text-anchor="middle" fill="var(--text-muted)" font-size="9">55-64</text>
+                </g>
+                <g transform="translate(360,0)">
+                  <rect x="20" y="120" width="40" height="20" rx="3" fill="#0088FE" opacity="0.8"/>
+                  <rect x="20" y="105" width="40" height="15" rx="3" fill="#E44687" opacity="0.8"/>
+                  <text x="40" y="155" text-anchor="middle" fill="var(--text-muted)" font-size="9">65+</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Countries (1/3) + 30-Day Login Chart (2/3) -->
+        <div class="grid-1-2 mb-24">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Users by Country</div>
+              <span style="font-size:11px;color:var(--text-secondary)">Top 8</span>
+            </div>
+            <div class="country-row">
+              <img class="flag" src="https://flagcdn.com/w40/us.png" alt=""><div class="country-name">United States</div>
+              <div class="count">312</div><div class="pct">25%</div>
+            </div>
+            <div class="country-row">
+              <img class="flag" src="https://flagcdn.com/w40/il.png" alt=""><div class="country-name">Israel</div>
+              <div class="count">218</div><div class="pct">17%</div>
+            </div>
+            <div class="country-row">
+              <img class="flag" src="https://flagcdn.com/w40/gb.png" alt=""><div class="country-name">United Kingdom</div>
+              <div class="count">156</div><div class="pct">13%</div>
+            </div>
+            <div class="country-row">
+              <img class="flag" src="https://flagcdn.com/w40/de.png" alt=""><div class="country-name">Germany</div>
+              <div class="count">112</div><div class="pct">9%</div>
+            </div>
+            <div class="country-row">
+              <img class="flag" src="https://flagcdn.com/w40/fr.png" alt=""><div class="country-name">France</div>
+              <div class="count">98</div><div class="pct">8%</div>
+            </div>
+            <div class="country-row">
+              <img class="flag" src="https://flagcdn.com/w40/ca.png" alt=""><div class="country-name">Canada</div>
+              <div class="count">87</div><div class="pct">7%</div>
+            </div>
+            <div class="country-row">
+              <img class="flag" src="https://flagcdn.com/w40/au.png" alt=""><div class="country-name">Australia</div>
+              <div class="count">72</div><div class="pct">6%</div>
+            </div>
+            <div class="country-row">
+              <img class="flag" src="https://flagcdn.com/w40/br.png" alt=""><div class="country-name">Brazil</div>
+              <div class="count">64</div><div class="pct">5%</div>
+            </div>
+          </div>
+          <div class="card" style="display:flex;flex-direction:column">
+            <div class="card-header">
+              <div class="card-title">30-Day Login Activity</div>
+            </div>
+            <div class="chart-placeholder" style="flex:1;min-height:200px;border:none;background:transparent">
+              <svg width="100%" height="100%" viewBox="0 0 600 180" preserveAspectRatio="none" style="padding:10px 20px">
+                <defs>
+                  <linearGradient id="lineGrad2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#6BCB77" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="#6BCB77" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,160 L20,150 L40,140 L60,145 L80,130 L100,120 L120,125 L140,110 L160,105 L180,100 L200,95 L220,90 L240,85 L260,80 L280,75 L300,70 L320,65 L340,60 L360,55 L380,65 L400,50 L420,45 L440,40 L460,35 L480,30 L500,35 L520,25 L540,20 L560,15 L580,10 L600,5"
+                      fill="none" stroke="#6BCB77" stroke-width="2"/>
+                <path d="M0,160 L20,150 L40,140 L60,145 L80,130 L100,120 L120,125 L140,110 L160,105 L180,100 L200,95 L220,90 L240,85 L260,80 L280,75 L300,70 L320,65 L340,60 L360,55 L380,65 L400,50 L420,45 L440,40 L460,35 L480,30 L500,35 L520,25 L540,20 L560,15 L580,10 L600,5 L600,180 L0,180 Z"
+                      fill="url(#lineGrad2)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Analytics Section -->
+        <div class="section-title"><span class="icon">&#128196;</span> Content Analytics</div>
+
+        <!-- Row 4: Categories Pie (1/3) + Category List (1/3) + Top Posts (1/3) -->
+        <div class="grid-3 mb-24">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Popular Categories</div>
+            </div>
+            <svg width="100%" height="200" viewBox="0 0 200 200" style="display:block;margin:0 auto">
+              <circle cx="100" cy="100" r="80" fill="none" stroke="#7F77DD" stroke-width="25"
+                      stroke-dasharray="100 403" stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
+              <circle cx="100" cy="100" r="80" fill="none" stroke="#0088FE" stroke-width="25"
+                      stroke-dasharray="80 423" stroke-dashoffset="-100" transform="rotate(-90 100 100)"/>
+              <circle cx="100" cy="100" r="80" fill="none" stroke="#E44687" stroke-width="25"
+                      stroke-dasharray="65 438" stroke-dashoffset="-180" transform="rotate(-90 100 100)"/>
+              <circle cx="100" cy="100" r="80" fill="none" stroke="#00C49F" stroke-width="25"
+                      stroke-dasharray="55 448" stroke-dashoffset="-245" transform="rotate(-90 100 100)"/>
+              <circle cx="100" cy="100" r="80" fill="none" stroke="#FFB347" stroke-width="25"
+                      stroke-dasharray="50 453" stroke-dashoffset="-300" transform="rotate(-90 100 100)"/>
+              <circle cx="100" cy="100" r="80" fill="none" stroke="#6BCB77" stroke-width="25"
+                      stroke-dasharray="45 458" stroke-dashoffset="-350" transform="rotate(-90 100 100)"/>
+              <text x="100" y="96" text-anchor="middle" fill="var(--text-primary)" font-size="16" font-weight="700">3,842</text>
+              <text x="100" y="112" text-anchor="middle" fill="var(--text-muted)" font-size="9">total posts</text>
+            </svg>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Posts per Category</div>
+            </div>
+            <div class="category-list">
+              <div class="category-row"><div class="category-dot" style="background:#7F77DD"></div><div class="category-name">Technology</div><div class="category-count">486</div></div>
+              <div class="category-row"><div class="category-dot" style="background:#0088FE"></div><div class="category-name">Lifestyle</div><div class="category-count">412</div></div>
+              <div class="category-row"><div class="category-dot" style="background:#E44687"></div><div class="category-name">Food</div><div class="category-count">358</div></div>
+              <div class="category-row"><div class="category-dot" style="background:#00C49F"></div><div class="category-name">Travel</div><div class="category-count">301</div></div>
+              <div class="category-row"><div class="category-dot" style="background:#FFB347"></div><div class="category-name">Sports</div><div class="category-count">276</div></div>
+              <div class="category-row"><div class="category-dot" style="background:#6BCB77"></div><div class="category-name">Art</div><div class="category-count">248</div></div>
+              <div class="category-row"><div class="category-dot" style="background:#FF6B6B"></div><div class="category-name">Music</div><div class="category-count">215</div></div>
+              <div class="category-row"><div class="category-dot" style="background:#8884d8"></div><div class="category-name">Education</div><div class="category-count">189</div></div>
+              <div class="category-row"><div class="category-dot" style="background:#82ca9d"></div><div class="category-name">Gaming</div><div class="category-count">167</div></div>
+              <div class="category-row"><div class="category-dot" style="background:#ffc658"></div><div class="category-name">Health</div><div class="category-count">142</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Top 5 Posts</div>
+            </div>
+            <div class="post-card-sm">
+              <img class="thumb" src="https://picsum.photos/48/48?random=10" alt="">
+              <div class="info"><div class="title">Sunset at the Beach</div><div class="meta">&#10084; 342 &middot; &#128172; 58</div></div>
+            </div>
+            <div class="post-card-sm">
+              <img class="thumb" src="https://picsum.photos/48/48?random=11" alt="">
+              <div class="info"><div class="title">10 React Tips You Need</div><div class="meta">&#10084; 287 &middot; &#128172; 92</div></div>
+            </div>
+            <div class="post-card-sm">
+              <img class="thumb" src="https://picsum.photos/48/48?random=12" alt="">
+              <div class="info"><div class="title">Homemade Pasta Recipe</div><div class="meta">&#10084; 264 &middot; &#128172; 45</div></div>
+            </div>
+            <div class="post-card-sm">
+              <img class="thumb" src="https://picsum.photos/48/48?random=13" alt="">
+              <div class="info"><div class="title">Morning Yoga Routine</div><div class="meta">&#10084; 231 &middot; &#128172; 37</div></div>
+            </div>
+            <div class="post-card-sm">
+              <img class="thumb" src="https://picsum.photos/48/48?random=14" alt="">
+              <div class="info"><div class="title">Street Art Gallery</div><div class="meta">&#10084; 198 &middot; &#128172; 41</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 5: Active Users bar chart (2/3) + placeholder (right) would be empty, so use full 2-1 -->
+        <div class="section-title"><span class="icon">&#128200;</span> Engagement</div>
+
+        <div class="grid-2-1 mb-24">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Top 10 Most Active Users</div>
+            </div>
+            <div class="chart-placeholder" style="height:280px;border:none;background:transparent">
+              <svg width="100%" height="100%" viewBox="0 0 500 260" style="padding:10px 10px">
+                <g transform="translate(0,10)">
+                  <text x="90" y="14" text-anchor="end" fill="var(--text-secondary)" font-size="11">Jessica Chen</text>
+                  <rect x="95" y="2" width="320" height="18" rx="4" fill="#7F77DD" opacity="0.8"/>
+                  <text x="422" y="14" fill="var(--text-muted)" font-size="10">147</text>
+                </g>
+                <g transform="translate(0,35)">
+                  <text x="90" y="14" text-anchor="end" fill="var(--text-secondary)" font-size="11">Alex Johnson</text>
+                  <rect x="95" y="2" width="287" height="18" rx="4" fill="#7F77DD" opacity="0.7"/>
+                  <text x="389" y="14" fill="var(--text-muted)" font-size="10">132</text>
+                </g>
+                <g transform="translate(0,60)">
+                  <text x="90" y="14" text-anchor="end" fill="var(--text-secondary)" font-size="11">Maria Garcia</text>
+                  <rect x="95" y="2" width="257" height="18" rx="4" fill="#7F77DD" opacity="0.65"/>
+                  <text x="359" y="14" fill="var(--text-muted)" font-size="10">118</text>
+                </g>
+                <g transform="translate(0,85)">
+                  <text x="90" y="14" text-anchor="end" fill="var(--text-secondary)" font-size="11">David Kim</text>
+                  <rect x="95" y="2" width="228" height="18" rx="4" fill="#7F77DD" opacity="0.6"/>
+                  <text x="330" y="14" fill="var(--text-muted)" font-size="10">105</text>
+                </g>
+                <g transform="translate(0,110)">
+                  <text x="90" y="14" text-anchor="end" fill="var(--text-secondary)" font-size="11">Sophie Brown</text>
+                  <rect x="95" y="2" width="209" height="18" rx="4" fill="#7F77DD" opacity="0.55"/>
+                  <text x="311" y="14" fill="var(--text-muted)" font-size="10">96</text>
+                </g>
+                <g transform="translate(0,135)">
+                  <text x="90" y="14" text-anchor="end" fill="var(--text-secondary)" font-size="11">Tom Wilson</text>
+                  <rect x="95" y="2" width="183" height="18" rx="4" fill="#7F77DD" opacity="0.5"/>
+                  <text x="285" y="14" fill="var(--text-muted)" font-size="10">84</text>
+                </g>
+                <g transform="translate(0,160)">
+                  <text x="90" y="14" text-anchor="end" fill="var(--text-secondary)" font-size="11">Emma Davis</text>
+                  <rect x="95" y="2" width="165" height="18" rx="4" fill="#7F77DD" opacity="0.45"/>
+                  <text x="267" y="14" fill="var(--text-muted)" font-size="10">76</text>
+                </g>
+                <g transform="translate(0,185)">
+                  <text x="90" y="14" text-anchor="end" fill="var(--text-secondary)" font-size="11">James Park</text>
+                  <rect x="95" y="2" width="148" height="18" rx="4" fill="#7F77DD" opacity="0.4"/>
+                  <text x="250" y="14" fill="var(--text-muted)" font-size="10">68</text>
+                </g>
+                <g transform="translate(0,210)">
+                  <text x="90" y="14" text-anchor="end" fill="var(--text-secondary)" font-size="11">Lisa Chang</text>
+                  <rect x="95" y="2" width="128" height="18" rx="4" fill="#7F77DD" opacity="0.35"/>
+                  <text x="230" y="14" fill="var(--text-muted)" font-size="10">59</text>
+                </g>
+                <g transform="translate(0,235)">
+                  <text x="90" y="14" text-anchor="end" fill="var(--text-secondary)" font-size="11">Ryan Patel</text>
+                  <rect x="95" y="2" width="111" height="18" rx="4" fill="#7F77DD" opacity="0.3"/>
+                  <text x="213" y="14" fill="var(--text-muted)" font-size="10">51</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <!-- Sparkline activity on the right -->
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="card" style="flex:1;display:flex;flex-direction:column">
+              <div class="card-header">
+                <div class="card-title">Login Sparkline</div>
+                <div style="font-size:12px;color:var(--text-secondary)"><strong style="color:var(--text-primary)">847</strong> total</div>
+              </div>
+              <div class="sparkline" style="flex:1;height:80px;align-items:flex-end;padding:0 4px">
+                <div class="bar" style="height:30%"></div><div class="bar" style="height:45%"></div>
+                <div class="bar" style="height:35%"></div><div class="bar" style="height:55%"></div>
+                <div class="bar" style="height:40%"></div><div class="bar" style="height:60%"></div>
+                <div class="bar" style="height:50%"></div><div class="bar" style="height:70%"></div>
+                <div class="bar" style="height:65%"></div><div class="bar" style="height:55%"></div>
+                <div class="bar" style="height:80%"></div><div class="bar" style="height:75%"></div>
+                <div class="bar" style="height:60%"></div><div class="bar" style="height:45%"></div>
+                <div class="bar" style="height:50%"></div><div class="bar" style="height:65%"></div>
+                <div class="bar" style="height:70%"></div><div class="bar" style="height:85%"></div>
+                <div class="bar" style="height:90%"></div><div class="bar" style="height:75%"></div>
+                <div class="bar" style="height:60%"></div><div class="bar" style="height:55%"></div>
+                <div class="bar" style="height:70%"></div><div class="bar" style="height:80%"></div>
+                <div class="bar" style="height:65%"></div><div class="bar" style="height:90%"></div>
+                <div class="bar" style="height:95%"></div><div class="bar" style="height:85%"></div>
+                <div class="bar" style="height:100%"></div><div class="bar" style="height:88%"></div>
+              </div>
+            </div>
+            <div class="highlight-card">
+              <img class="highlight-avatar" src="https://i.pravatar.cc/52?img=12" alt="">
+              <div class="highlight-info">
+                <div class="highlight-label">Most Active User</div>
+                <div class="highlight-name">Jessica Chen</div>
+                <div class="highlight-stat">147 posts</div>
+              </div>
+            </div>
+            <div class="highlight-card">
+              <img class="highlight-thumb" src="https://picsum.photos/52/52?random=1" alt="">
+              <div class="highlight-info">
+                <div class="highlight-label">Most Liked Post</div>
+                <div class="highlight-name">Sunset at the Beach</div>
+                <div class="highlight-stat">342 likes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE: USERS ==================== -->
+      <div class="page" id="page-users">
+        <div class="page-header">
+          <h1>Users Management</h1>
+          <p>Manage all registered users, their roles, and account status.</p>
+        </div>
+
+        <div class="filters-bar">
+          <div class="search-input">
+            <span class="icon">&#128269;</span>
+            <input type="text" placeholder="Search users by name...">
+          </div>
+          <select class="filter-select">
+            <option>All Ages</option>
+            <option>Low &rarr; High</option>
+            <option>High &rarr; Low</option>
+          </select>
+          <select class="filter-select">
+            <option>A-Z Default</option>
+            <option>A &rarr; Z</option>
+            <option>Z &rarr; A</option>
+          </select>
+          <select class="filter-select">
+            <option>All Genders</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+          <select class="filter-select">
+            <option>All Roles</option>
+            <option>Admin</option>
+            <option>User</option>
+          </select>
+          <select class="filter-select">
+            <option>All Countries</option>
+            <option>United States</option>
+            <option>Israel</option>
+            <option>United Kingdom</option>
+            <option>Germany</option>
+          </select>
+        </div>
+
+        <div class="filter-chips mb-16" style="display:none" id="userFilterChips">
+          <div class="filter-chip">Gender: Male <span class="remove">&times;</span></div>
+          <div class="filter-chip">Role: Admin <span class="remove">&times;</span></div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>Email</th>
+                <th>Last Login</th>
+                <th>Country</th>
+                <th class="sortable">Joined <span class="sort-icon">&#8597;</span></th>
+                <th class="sortable">Posts <span class="sort-icon">&#8597;</span></th>
+                <th class="sortable">Followers <span class="sort-icon">&#8597;</span></th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=12"><div class="name">Jessica Chen</div></div></td>
+                <td style="color:var(--text-secondary)">jessica@email.com</td>
+                <td style="color:var(--text-secondary)">2025-04-07</td>
+                <td><img class="flag-cell" src="https://flagcdn.com/w40/us.png" alt="US"></td>
+                <td>2024-08-15</td>
+                <td style="font-weight:600">147</td>
+                <td style="font-weight:600">892</td>
+                <td><span class="role-badge admin">Admin</span></td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete user">&#128465;</button>
+                    <button class="action-btn warn" title="Ban user">&#9940;</button>
+                    <button class="action-btn promote" title="Promote user">&#11014;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=5"><div class="name">Alex Johnson</div></div></td>
+                <td style="color:var(--text-secondary)">alex@email.com</td>
+                <td style="color:var(--text-secondary)">2025-04-06</td>
+                <td><img class="flag-cell" src="https://flagcdn.com/w40/gb.png" alt="UK"></td>
+                <td>2024-09-22</td>
+                <td style="font-weight:600">132</td>
+                <td style="font-weight:600">654</td>
+                <td><span class="role-badge user">User</span></td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete user">&#128465;</button>
+                    <button class="action-btn warn" title="Ban user">&#9940;</button>
+                    <button class="action-btn promote" title="Promote user">&#11014;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=9"><div class="name">Maria Garcia</div></div></td>
+                <td style="color:var(--text-secondary)">maria@email.com</td>
+                <td style="color:var(--text-secondary)">2025-04-05</td>
+                <td><img class="flag-cell" src="https://flagcdn.com/w40/de.png" alt="DE"></td>
+                <td>2024-10-10</td>
+                <td style="font-weight:600">118</td>
+                <td style="font-weight:600">523</td>
+                <td><span class="role-badge user">User</span></td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete user">&#128465;</button>
+                    <button class="action-btn warn" title="Ban user">&#9940;</button>
+                    <button class="action-btn promote" title="Promote user">&#11014;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=11"><div class="name">David Kim</div></div></td>
+                <td style="color:var(--text-secondary)">david.k@email.com</td>
+                <td style="color:var(--text-secondary)">2025-04-07</td>
+                <td><img class="flag-cell" src="https://flagcdn.com/w40/il.png" alt="IL"></td>
+                <td>2024-07-03</td>
+                <td style="font-weight:600">105</td>
+                <td style="font-weight:600">412</td>
+                <td><span class="role-badge user">User</span></td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete user">&#128465;</button>
+                    <button class="action-btn warn" title="Ban user">&#9940;</button>
+                    <button class="action-btn promote" title="Promote user">&#11014;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=16"><div class="name">Sophie Brown</div></div></td>
+                <td style="color:var(--text-secondary)">sophie@email.com</td>
+                <td style="color:var(--text-secondary)">2025-04-04</td>
+                <td><img class="flag-cell" src="https://flagcdn.com/w40/fr.png" alt="FR"></td>
+                <td>2024-11-18</td>
+                <td style="font-weight:600">96</td>
+                <td style="font-weight:600">378</td>
+                <td><span class="role-badge user">User</span></td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete user">&#128465;</button>
+                    <button class="action-btn warn" title="Ban user">&#9940;</button>
+                    <button class="action-btn promote" title="Promote user">&#11014;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=22"><div class="name">Tom Wilson</div></div></td>
+                <td style="color:var(--text-secondary)">tom@email.com</td>
+                <td style="color:var(--text-secondary)">2025-04-03</td>
+                <td><img class="flag-cell" src="https://flagcdn.com/w40/ca.png" alt="CA"></td>
+                <td>2024-12-01</td>
+                <td style="font-weight:600">84</td>
+                <td style="font-weight:600">256</td>
+                <td><span class="role-badge user">User</span></td>
+                <td><span class="status-badge banned">Banned</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete user">&#128465;</button>
+                    <button class="action-btn warn" title="Unban user">&#9989;</button>
+                    <button class="action-btn promote" title="Promote user">&#11014;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=33"><div class="name">Emma Davis</div></div></td>
+                <td style="color:var(--text-secondary)">emma@email.com</td>
+                <td style="color:var(--text-secondary)">2025-04-07</td>
+                <td><img class="flag-cell" src="https://flagcdn.com/w40/au.png" alt="AU"></td>
+                <td>2025-01-14</td>
+                <td style="font-weight:600">76</td>
+                <td style="font-weight:600">198</td>
+                <td><span class="role-badge user">User</span></td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete user">&#128465;</button>
+                    <button class="action-btn warn" title="Ban user">&#9940;</button>
+                    <button class="action-btn promote" title="Promote user">&#11014;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=44"><div class="name">James Park</div></div></td>
+                <td style="color:var(--text-secondary)">james@email.com</td>
+                <td style="color:var(--text-secondary)">2025-04-06</td>
+                <td><img class="flag-cell" src="https://flagcdn.com/w40/us.png" alt="US"></td>
+                <td>2025-01-28</td>
+                <td style="font-weight:600">68</td>
+                <td style="font-weight:600">145</td>
+                <td><span class="role-badge user">User</span></td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete user">&#128465;</button>
+                    <button class="action-btn warn" title="Ban user">&#9940;</button>
+                    <button class="action-btn promote" title="Promote user">&#11014;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=55"><div class="name">Lisa Chang</div></div></td>
+                <td style="color:var(--text-secondary)">lisa@email.com</td>
+                <td style="color:var(--text-secondary)">2025-04-02</td>
+                <td><img class="flag-cell" src="https://flagcdn.com/w40/il.png" alt="IL"></td>
+                <td>2025-02-10</td>
+                <td style="font-weight:600">59</td>
+                <td style="font-weight:600">132</td>
+                <td><span class="role-badge user">User</span></td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete user">&#128465;</button>
+                    <button class="action-btn warn" title="Ban user">&#9940;</button>
+                    <button class="action-btn promote" title="Promote user">&#11014;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=60"><div class="name">Ryan Patel</div></div></td>
+                <td style="color:var(--text-secondary)">ryan@email.com</td>
+                <td style="color:var(--text-secondary)">2025-04-01</td>
+                <td><img class="flag-cell" src="https://flagcdn.com/w40/gb.png" alt="UK"></td>
+                <td>2025-03-05</td>
+                <td style="font-weight:600">51</td>
+                <td style="font-weight:600">98</td>
+                <td><span class="role-badge user">User</span></td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete user">&#128465;</button>
+                    <button class="action-btn warn" title="Ban user">&#9940;</button>
+                    <button class="action-btn promote" title="Promote user">&#11014;</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pagination-bar">
+            <span>Showing 1-10 of 1,248 users</span>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="pagination-controls">
+                <button class="page-btn" disabled>&#9664; Prev</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">...</button>
+                <button class="page-btn">125</button>
+                <button class="page-btn">Next &#9654;</button>
+              </div>
+              <div>
+                Rows:
+                <select class="rows-select">
+                  <option>10</option>
+                  <option>25</option>
+                  <option>50</option>
+                  <option>100</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE: POSTS ==================== -->
+      <div class="page" id="page-posts">
+        <div class="page-header">
+          <h1>Posts Management</h1>
+          <p>Manage all posts, moderate content, and review engagement metrics.</p>
+        </div>
+
+        <div class="filters-bar">
+          <div class="search-input">
+            <span class="icon">&#128269;</span>
+            <input type="text" placeholder="Search posts by title...">
+          </div>
+          <select class="filter-select">
+            <option>All Creators</option>
+            <option>Jessica Chen</option>
+            <option>Alex Johnson</option>
+            <option>Maria Garcia</option>
+            <option>David Kim</option>
+          </select>
+          <select class="filter-select">
+            <option>All Categories</option>
+            <option>Technology</option>
+            <option>Lifestyle</option>
+            <option>Food</option>
+            <option>Travel</option>
+            <option>Sports</option>
+            <option>Art</option>
+          </select>
+          <select class="filter-select">
+            <option>All / Favorites</option>
+            <option>My Favorites</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th class="sortable">Creator <span class="sort-icon">&#8597;</span></th>
+                <th>Thumbnail</th>
+                <th>Title</th>
+                <th class="sortable">Category <span class="sort-icon">&#8597;</span></th>
+                <th class="sortable">Created <span class="sort-icon">&#8597;</span></th>
+                <th class="sortable">Likes <span class="sort-icon">&#8597;</span></th>
+                <th>Comments</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=12"><div class="name">Jessica Chen</div></div></td>
+                <td><img class="thumb-cell" src="https://picsum.photos/50/50?random=20" alt=""></td>
+                <td style="font-weight:500">Sunset at the Beach</td>
+                <td><span class="category-badge travel">Travel</span></td>
+                <td style="color:var(--text-secondary)">2 days ago</td>
+                <td style="font-weight:600">342</td>
+                <td style="font-weight:600">58</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete post">&#128465;</button>
+                    <button class="action-btn warn" title="Ban post">&#9940;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=5"><div class="name">Alex Johnson</div></div></td>
+                <td><img class="thumb-cell" src="https://picsum.photos/50/50?random=21" alt=""></td>
+                <td style="font-weight:500">10 React Tips You Need</td>
+                <td><span class="category-badge tech">Technology</span></td>
+                <td style="color:var(--text-secondary)">3 days ago</td>
+                <td style="font-weight:600">287</td>
+                <td style="font-weight:600">92</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete post">&#128465;</button>
+                    <button class="action-btn warn" title="Ban post">&#9940;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=9"><div class="name">Maria Garcia</div></div></td>
+                <td><img class="thumb-cell" src="https://picsum.photos/50/50?random=22" alt=""></td>
+                <td style="font-weight:500">Homemade Pasta Recipe</td>
+                <td><span class="category-badge food">Food</span></td>
+                <td style="color:var(--text-secondary)">5 days ago</td>
+                <td style="font-weight:600">264</td>
+                <td style="font-weight:600">45</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete post">&#128465;</button>
+                    <button class="action-btn warn" title="Ban post">&#9940;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=16"><div class="name">Sophie Brown</div></div></td>
+                <td><img class="thumb-cell" src="https://picsum.photos/50/50?random=23" alt=""></td>
+                <td style="font-weight:500">Morning Yoga Routine</td>
+                <td><span class="category-badge lifestyle">Lifestyle</span></td>
+                <td style="color:var(--text-secondary)">1 week ago</td>
+                <td style="font-weight:600">231</td>
+                <td style="font-weight:600">37</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete post">&#128465;</button>
+                    <button class="action-btn warn" title="Ban post">&#9940;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=11"><div class="name">David Kim</div></div></td>
+                <td><img class="thumb-cell" src="https://picsum.photos/50/50?random=24" alt=""></td>
+                <td style="font-weight:500">Street Art Gallery</td>
+                <td><span class="category-badge other">Art</span></td>
+                <td style="color:var(--text-secondary)">1 week ago</td>
+                <td style="font-weight:600">198</td>
+                <td style="font-weight:600">41</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete post">&#128465;</button>
+                    <button class="action-btn warn" title="Ban post">&#9940;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=22"><div class="name">Tom Wilson</div></div></td>
+                <td><img class="thumb-cell" src="https://picsum.photos/50/50?random=25" alt=""></td>
+                <td style="font-weight:500">Best Coffee Spots in London</td>
+                <td><span class="category-badge food">Food</span></td>
+                <td style="color:var(--text-secondary)">2 weeks ago</td>
+                <td style="font-weight:600">176</td>
+                <td style="font-weight:600">33</td>
+                <td><span class="status-badge banned">Banned</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete post">&#128465;</button>
+                    <button class="action-btn warn" title="Unban post">&#9989;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=33"><div class="name">Emma Davis</div></div></td>
+                <td><img class="thumb-cell" src="https://picsum.photos/50/50?random=26" alt=""></td>
+                <td style="font-weight:500">Marathon Training Guide</td>
+                <td><span class="category-badge sports">Sports</span></td>
+                <td style="color:var(--text-secondary)">2 weeks ago</td>
+                <td style="font-weight:600">154</td>
+                <td style="font-weight:600">28</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete post">&#128465;</button>
+                    <button class="action-btn warn" title="Ban post">&#9940;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=44"><div class="name">James Park</div></div></td>
+                <td><img class="thumb-cell" src="https://picsum.photos/50/50?random=27" alt=""></td>
+                <td style="font-weight:500">My Art Collection 2025</td>
+                <td><span class="category-badge other">Art</span></td>
+                <td style="color:var(--text-secondary)">3 weeks ago</td>
+                <td style="font-weight:600">142</td>
+                <td style="font-weight:600">24</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete post">&#128465;</button>
+                    <button class="action-btn warn" title="Ban post">&#9940;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=55"><div class="name">Lisa Chang</div></div></td>
+                <td><img class="thumb-cell" src="https://picsum.photos/50/50?random=28" alt=""></td>
+                <td style="font-weight:500">Travel Photography Tips</td>
+                <td><span class="category-badge travel">Travel</span></td>
+                <td style="color:var(--text-secondary)">3 weeks ago</td>
+                <td style="font-weight:600">128</td>
+                <td style="font-weight:600">19</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete post">&#128465;</button>
+                    <button class="action-btn warn" title="Ban post">&#9940;</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td><div class="user-cell"><img class="avatar" src="https://i.pravatar.cc/32?img=60"><div class="name">Ryan Patel</div></div></td>
+                <td><img class="thumb-cell" src="https://picsum.photos/50/50?random=29" alt=""></td>
+                <td style="font-weight:500">JavaScript Best Practices</td>
+                <td><span class="category-badge tech">Technology</span></td>
+                <td style="color:var(--text-secondary)">1 month ago</td>
+                <td style="font-weight:600">115</td>
+                <td style="font-weight:600">47</td>
+                <td><span class="status-badge active">Active</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="action-btn danger" title="Delete post">&#128465;</button>
+                    <button class="action-btn warn" title="Ban post">&#9940;</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pagination-bar">
+            <span>Showing 1-10 of 3,842 posts</span>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="pagination-controls">
+                <button class="page-btn" disabled>&#9664; Prev</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">...</button>
+                <button class="page-btn">385</button>
+                <button class="page-btn">Next &#9654;</button>
+              </div>
+              <div>
+                Rows:
+                <select class="rows-select">
+                  <option>10</option>
+                  <option>25</option>
+                  <option>50</option>
+                  <option>100</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+// Page switching
+function switchPage(pageId, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  if (navEl) navEl.classList.add('active');
+  // Close dropdowns
+  document.getElementById('notifDropdown').classList.remove('open');
+  document.getElementById('profileDropdown').classList.remove('open');
+}
+
+// Sidebar toggle
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  if (html.dataset.theme === 'dark') {
+    html.dataset.theme = 'light';
+    btn.innerHTML = '&#9728;';
+  } else {
+    html.dataset.theme = 'dark';
+    btn.innerHTML = '&#127769;';
+  }
+}
+
+// Notification dropdown
+function toggleNotifications() {
+  const dd = document.getElementById('notifDropdown');
+  dd.classList.toggle('open');
+  document.getElementById('profileDropdown').classList.remove('open');
+}
+
+// Profile dropdown
+function toggleProfile() {
+  const dd = document.getElementById('profileDropdown');
+  dd.classList.toggle('open');
+  document.getElementById('notifDropdown').classList.remove('open');
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.app-bar-btn') && !e.target.closest('.notification-dropdown')) {
+    document.getElementById('notifDropdown').classList.remove('open');
+  }
+  if (!e.target.closest('.admin-avatar') && !e.target.closest('.profile-dropdown')) {
+    document.getElementById('profileDropdown').classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>

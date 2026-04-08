@@ -71,7 +71,6 @@ export default function NavBar() {
             boxShadow: 'none',
             borderBottom: '1px solid',
             borderColor: 'divider',
-            // height: '100vh',
         }}
     >
         <Container maxWidth="lg">
@@ -108,17 +107,19 @@ export default function NavBar() {
                         <Typography variant='caption'>Explore Posts</Typography>
                     </Box>
 
-                    <Box
-                        sx={navLinkSx('/createnewcard')}
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        <AddBoxIcon fontSize='small'/>
-                        <Typography 
-                            variant='caption'
+                    {isLoggedIn && (
+                        <Box
+                            sx={navLinkSx('/createnewcard')}
+                            onClick={() => setIsModalOpen(true)}
                         >
-                            Add Post
-                        </Typography>
-                    </Box>
+                            <AddBoxIcon fontSize='small'/>
+                            <Typography 
+                                variant='caption'
+                            >
+                                Add Post
+                            </Typography>
+                        </Box>
+                    )}
                 </Box>
 
                 {isModalOpen && (

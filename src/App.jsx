@@ -14,11 +14,12 @@ import CardDetailsPage from './pages/CardDetailsPage'
 import UserProfileLayout from './pages/userProfilePublicLayout/UserProfileLayout'
 import UsersPage from './pages/UsersPage'
 import FeedPage from './pages/FeedPage'
-import AdminDashboardLayout from './pages/adminUserDashboard/AdminDashboardLayout'
+import AdminDashboardLayout from './pages/adminUserDashboard/layout/AdminDashboardLayout'
 import AdminProtectedRoute from './components/AdminProtectedRoute'
 import PaginationDiagram from '../codes backups/Paigination'
 import PublicOnlyRoute from './components/PublicOnlyRoute'
 import { Box } from '@mui/material'
+import AdminNavBar from './pages/adminUserDashboard/layout/AdminNavBar'
 
 
 export default function App(){
