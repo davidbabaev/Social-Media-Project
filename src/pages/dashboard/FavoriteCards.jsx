@@ -23,6 +23,7 @@ export default function FavoriteCards() {
   return (
     <Box sx={{display: 'flex', justifyContent: 'center', pt: 3, flexDirection: 'column'}}>
         {!countedRegisterCards[0] && (<Typography color='text.secondary'>You didn't selected users yet</Typography>)}
+
         {countedRegisterCards.map((favCard) => {
             const currentUser = users.find(user => favCard.userId === user._id) 
             if(!currentUser) return;
@@ -39,7 +40,7 @@ export default function FavoriteCards() {
                             bgcolor: 'background.paper',
                             my: 2,
                             p: 2,
-                            gap: 2
+                            gap: 2,
                         }}
                     >
                         <MediaDisplay

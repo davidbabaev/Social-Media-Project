@@ -1,98 +1,160 @@
-import React from 'react'
+import React, { useState } from 'react'
 import getTimeAgo from '../../../../utils/getTimeAgo'
 import MediaDisplay from '../../../../components/MediaDisplay'
 import { useNavigate } from 'react-router-dom'
+import { Avatar, Box, Chip, Typography, useTheme } from '@mui/material';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
-export default function TopAndLastFiveCardReuse({topFiveValue, usersArrayValue, mainTitle, showInteractions}) {
+export default function TopAndLastFiveCardReuse({
+    topFiveValue, 
+    usersArrayValue, 
+    mainTitle, 
+    showInteractions
+}) {
 
     const navigate = useNavigate();
+    const [isExpanded, setIsExpanded] = useState(null)
+    const theme = useTheme();
+    
 
-  return (
-        <div 
-            style={{
-                width: "100%",
-                border:'1px solid lightgray', 
-                borderRadius: '10px', 
-                padding: '15px'
-            }}>
-            <h2>{mainTitle}</h2>
+    return (
+        <Box sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
             {(topFiveValue || []).map((card) => {
-            const cardCreator = usersArrayValue.find(u => u._id === card.userId)
+                const cardCreator = usersArrayValue.find(u => u._id === card.userId)
 
-            return(
-                <div 
-                key={card._id}
-                style={{display:'flex', gap: '10px', alignItems: 'center', marginBottom: '15px'}}  
-                >
-                
-                <div
-                    onClick={() => navigate(`/carddetails/${card._id}`)}
-                >
-                    <MediaDisplay
-                        mediaUrl={card.mediaUrl}
-                        mediaType={card.mediaType}
-                        style={{width: '200px', height: '120px',borderRadius: '10px', objectFit: 'cover', cursor: 'pointer'}}
-                    />
-
-                </div>
-                
-                <div>
-                    <div style={{display:'flex'}}>
-                        <img style={{
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        border: '2px, solid, white',
-                        objectFit: 'cover',
-                        cursor: 'pointer'
-                        }} 
-                        src={cardCreator?.profilePicture}
-                        onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
-                        />
-
-                        <div style={{display: 'flex', flexDirection:'column'}}>
-                        <p 
-                            style={{margin: '5px 0px', cursor: 'pointer'}}
-                            onClick={() => navigate(`/profiledashboard/${cardCreator?._id}/profilemain`)}
-                        >
-                            {cardCreator?.name} {cardCreator?.lastName}  
-                        </p>
-                        <p
-                            style={{
-                                color: 'gray', 
-                                fontSize:'13px', 
-                                margin: 0,
+                return(
+                    <Box key={card._id}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                width: '100%', 
+                                borderRadius: 3,
+                                border: '0.5px solid',
+                                borderColor: 'divider',
+                                bgcolor: 'background.paper',
+                                my: 2,
+                                p: 2,
+                                gap: 2,
                             }}
-                        >{getTimeAgo(card.createdAt)}</p>
-                        </div>
-                    </div>
-                    <p 
-                        style={{fontWeight: 'bold', margin: 0, cursor: 'pointer'}}
-                        onClick={() => navigate(`/carddetails/${card._id}`)}
-                        >{card.title}</p>
-                    <p 
-                        onClick={() => navigate(`/carddetails/${card._id}`)}
-                        style={{
-                        cursor: 'pointer',
-                        margin: '5px 0px',
-                        margin: 0,
-                        whiteSpace: 'nowrap',        // prevent text from wrapping
-                        overflow: 'hidden',          // hide overflow
-                        textOverflow: 'ellipsis',    // show "..." at the end
-                        maxWidth: '200px'
-                        }}>
-                            {card.content}
-                    </p>
-                    {showInteractions && 
-                        <p>
-                            {card.comments.length + card.likes.length} 
-                            {(card.comments + card.likes).length < 2 ? " Interactions" : " Interaction"}
-                        </p>
-                    }
-                </div>
-                </div>
-            )
-        })}
-      </div>
-  )
+                        >
+                            <MediaDisplay
+                                mediaUrl={card.mediaUrl}
+                                mediaType={card.mediaType}
+                                style={{
+                                    width: 180, 
+                                    height: 130, 
+                                    objectFit: 'cover',
+                                    borderRadius: 10,
+                                    flexShrink: 0
+                                }}
+                            />
+
+                            <Box flex={1}>
+
+                                {/* Title */}
+                                {card.title && (
+                                    <Typography lineHeight={0.8} component='div' fontWeight={600} fontSize={18} mb={1}>
+                                        {card.title}
+                                    </Typography>
+                                )}
+
+
+                                <Box sx={{display: 'flex', gap: 1, alignItems: 'center', mb:1}}>
+
+                                    <Avatar 
+                                        src={cardCreator?.profilePicture}
+                                        sx={{
+                                            width: 30, 
+                                            height: 30, 
+                                            cursor: 'pointer'
+                                        }}
+                                        onClick={() => navigate(`/profiledashboard/${cardCreator._id}/profilemain`)}
+                                    />
+                                    <Typography 
+                                        component={'div'} 
+                                        fontSize={12} 
+                                        color='text.secondary' 
+                                        lineHeight={0.9} 
+                                        onClick={() => navigate(`/profiledashboard/${cardCreator._id}/profilemain`)}
+                                        sx={{cursor: 'pointer'}}
+
+                                    >
+                                        {cardCreator?.name} {cardCreator?.lastName}
+                                    </Typography>
+
+                                    <Typography component={'div'} fontSize={22} color='text.secondary' lineHeight={0.9}>
+                                        ∙
+                                    </Typography>
+
+                                    <Typography component={'div'} fontSize={12} color='text.secondary' lineHeight={0.9}>
+                                        {getTimeAgo(card.createdAt)}
+                                    </Typography>
+
+                                    {card.category && (
+                                        <Chip 
+                                            label={card.category} 
+                                            size='small'  
+                                        />
+                                    )}
+
+                                </Box>
+
+                                {/* Contnet */}
+                                {card.content && (
+                                    <Typography component='div' fontWeight={400} fontSize={14} mb={1} sx={{whiteSpace: 'pre-wrap'}}>
+                
+                                        {isExpanded === card._id ? card.content : card.content.slice(0, 150)}
+                
+                                        {card.content.length > 150 && (
+                                            <span
+                                                onClick={() => setIsExpanded(isExpanded === card._id ? null : card._id)}
+                                                style={{
+                                                    color: theme.palette.primary.main, 
+                                                    cursor: 'pointer',
+                                                    fontWeight: 600,
+                                                    marginLeft: 4
+                
+                                                }}
+                                            >
+                                                {isExpanded === card._id ? '...showless' : '...read more'}
+                                            </span>
+                                        )}
+                
+                                    </Typography>
+                                )}
+
+                                {showInteractions && (
+                                    <Box sx={{display:'flex', gap:3}}>
+                                        <Box 
+                                            sx={{display:'flex', gap: 1}}
+                                        >
+                                            <ChatBubbleIcon 
+                                                sx={{color: theme.palette.primary.main}}
+                                            />
+                                            <Typography color='text.secondary'>
+                                                {card.comments.length} Comments
+                                            </Typography>
+                                        </Box>
+                                        <Box 
+                                            sx={{display:'flex', gap: 1}}
+                                        >
+                                            <ThumbUpIcon 
+                                                sx={{color: theme.palette.primary.main}}
+                                            />
+                                            <Typography
+                                                color='text.secondary'
+                                            >
+                                                {card.likes.length} Likes
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                )}
+                            </Box>
+                        </Box>
+                    </Box>
+                )
+            })}
+        </Box>
+    )
 }

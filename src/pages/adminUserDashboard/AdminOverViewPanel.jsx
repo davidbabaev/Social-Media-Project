@@ -33,9 +33,9 @@ export default function AdminOverViewPanel() {
           </Box>
       </div>
 
-      <div style={{display: 'flex', flexWrap: 'wrap'}}>
-        <TopAndLastFiveCards/>
-      </div>
+        <Box pt={2}>
+          <TopAndLastFiveCards/>
+        </Box>
 
       <div style={{display: 'flex', gap:'15px'}}>
         <LastFiveJoinedUsers/>
