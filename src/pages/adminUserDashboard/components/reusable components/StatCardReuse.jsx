@@ -2,8 +2,6 @@ import { Box, Typography } from "@mui/material"
 
 export default function StatCardReuse({value, label, icon, color}) {
 
-        const style = {border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}
-
   return (
     <Box sx={{
       display: 'flex',
@@ -15,10 +13,11 @@ export default function StatCardReuse({value, label, icon, color}) {
       borderColor: 'divider',
       borderRadius: 3,
       minWidth: 200,
-      minHeight: 200
+      minHeight: 200,
+      bgcolor: 'background.paper'
     }}>
       <Box sx={{
-        width: 40, height: 40, borderRadius: 1,
+        width: 40, height: 40, borderRadius: 2,
         bgcolor: color + '20', // adds transparency to the color
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         color: color

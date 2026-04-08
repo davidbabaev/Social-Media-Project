@@ -1,17 +1,42 @@
+import { Avatar, Box, Typography } from '@mui/material'
 import React from 'react'
 
 export default function MostPupularCardReuse({
     valueTitle, 
     valueCount, 
     title, 
-    description}) {
+    description,
+    icon,
+  }) {
 
   return (
-    <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-        <h2>{valueTitle}</h2>
-        <p>{title}</p>
-        <h2>{valueCount}</h2>
-        <p>{description}</p>
-    </div>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        p:3,
+        gap: 1,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 3,
+        minWidth: 200,
+        minHeight: 200,
+        bgcolor: 'background.paper'
+      }}
+    >   
+        <Box sx={{
+          width: 40, height: 40, borderRadius: 2,
+          bgcolor: "#7F77DD" + '20', // adds transparency to the color
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: "#7F77DD"
+        }}>
+          {icon}
+        </Box>
+        <Typography fontSize={15} color="text.secondary">{title}</Typography>
+        <Typography fontSize={23} fontWeight={700}>{valueTitle?.slice(0,20)+ '..'}</Typography>
+        <Typography fontSize={15} color="text.secondary">{description}</Typography>
+        <Typography fontSize={23} fontWeight={700}>{valueCount}</Typography>
+    </Box>
   )
 }

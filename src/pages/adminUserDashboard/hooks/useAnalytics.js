@@ -284,7 +284,9 @@ const avgEngagement = ((commentsCount + likesCount) / registeredCards.length).to
 // =========================================================   
 // Retention users -> Register + Loggings - Logics:
 
-  const weekLoginGrowth = (weeklyActiveUsersCount - moreThenSevenDaysCount) / moreThenSevenDaysCount * 100
+  const weekLoginGrowth = 
+    moreThenSevenDaysCount === 0 ? 0 :
+    (weeklyActiveUsersCount - moreThenSevenDaysCount) / moreThenSevenDaysCount * 100
 
 
   const retentionUsers = newRegisteredUsers_LastWeek.filter((user) => {
