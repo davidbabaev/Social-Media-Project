@@ -11,6 +11,7 @@ import TenMostPopularCategories from './components/TenMostPopularCategories';
 import GenderAndAgesAnalytics from './components/GenderAndAgesAnalytics';
 import UserRegistrationByMonths from './components/UserRegistrationByMonths';
 import CountriesAnalytics from './components/CountriesAnalytics';
+import { Box } from '@mui/material';
 
 export default function AdminOverViewPanel() {
   return (
@@ -24,10 +25,12 @@ export default function AdminOverViewPanel() {
           gap:'15px'
         }}>
           <TotalAnalytics/>
-          <MostPopular/>
-          <RetentionAnalyticsUsers/>
           <LoggedInThirtyDays/>
-          <RetentionUserRegisterLoginLastTwoWeeks/>
+          <MostPopular/>
+          <Box sx={{display:'flex', gap: 2}}>
+            <RetentionAnalyticsUsers/>
+            <RetentionUserRegisterLoginLastTwoWeeks/>
+          </Box>
       </div>
 
       <div style={{display: 'flex', flexWrap: 'wrap'}}>

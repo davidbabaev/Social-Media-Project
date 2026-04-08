@@ -1,5 +1,8 @@
 import React from 'react'
 import useAnalytics from '../hooks/useAnalytics'
+import { Box, Chip, Divider, Typography } from '@mui/material';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
 export default function RetentionUserRegisterLoginLastTwoWeeks() {
 
@@ -10,13 +13,59 @@ export default function RetentionUserRegisterLoginLastTwoWeeks() {
     } = useAnalytics();
 
   return (
-    <div style={{border:'1px solid lightgray' ,borderRadius: '10px', padding: '15px'}}>
-        <h2>{retention}%</h2>
-        <p>Retention Users</p>
-        <p>Logged In This week</p>
-        <p>{weeklyActiveUsersCount}</p>
-        <p>Registered Last Week</p>
-        <p>{newRegisteredUsers_LastWeek_count}</p>
-    </div>
+        <Box
+        sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            p:3,
+            gap: 1,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 3,
+            minWidth: 300,
+            minHeight: 250,
+            bgcolor: 'background.paper'
+        }}
+    >
+        <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+            <Typography fontSize={13} color="text.secondary">Retention Rate</Typography>
+            {retention >= 0 ? (
+                <TrendingUpIcon sx={{fontSize: 35, color: 'success.main'}}/>
+            ):(
+                <TrendingDownIcon sx={{fontSize: 35, color: 'error.main'}}/>
+            )}
+        </Box>
+
+        <Typography fontSize={28} fontWeight={700}>{retention}%</Typography>
+
+        <Typography fontSize={15} color='text.secondary'>
+            {newRegisteredUsers_LastWeek_count}{' '}
+            registered last week 
+        </Typography>
+
+        <Typography fontSize={15} color='text.secondary'>
+            {weeklyActiveUsersCount}{' '}
+            logged in this week 
+        </Typography>
+        
+        <Divider/>
+
+        
+
+            <Chip
+                label={`${retention}% returned`}
+                size='small'
+                sx={{
+                    bgcolor: retention >= 50 ? 'success.main' : 'error.main',
+                    color: 'white' ,
+                    fontWeight: 600,
+                    fontSize: 12,
+                    width: 'fit-content'
+                }}
+            />
+
+    </Box>
   )
 }
+
