@@ -15,6 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import BlockIcon from '@mui/icons-material/Block';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import CardPopupModal from '../../components/card/CardPopupModal';
 
 
 
@@ -22,7 +23,8 @@ export default function AdminCardsPanel() {
 
   const {loading, getUsers} = useUsers();
   const {registeredCards, refreshFeed, fetchCards, handleDeleteCard, handleBanCard} = useCardsProvider();
-
+  const [selectedCardId, setSelectedCardId] = useState(null);
+  
   // const pageSize = 10;
   const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -340,7 +342,7 @@ export default function AdminCardsPanel() {
                               <TableRow 
                                   key={card._id}
                                   hover
-                                  onClick={() => navigate(`/carddetails/${card._id}`)}
+                                  onClick={() => setSelectedCardId(card._id)}
                                   sx={{cursor: 'pointer'}}
                               >
                                   <TableCell>{indexM + (currentPage - 1) * pageSize + 1}</TableCell>
@@ -420,6 +422,15 @@ export default function AdminCardsPanel() {
               </Table>
           </Box>
       </Box>
+      
+
+      {/* open card popup modal */}
+      {selectedCardId && (
+        <CardPopupModal
+            cardId = {selectedCardId}
+            onClose = {() => setSelectedCardId(null)}
+        />
+      )}
 
       {/* Confirmation Dialog */}
       {confirmCard && (

@@ -3,6 +3,28 @@
   outline: none;
 }
 
+/* target the scroll bar itself - controls width (vertical) and height (horizontal) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* the 'track os the background lane the thumb slides on */
+::-webkit-scrollbar-track {
+  background: rgba(127, 119, 221, 0.20);
+}
+
+/* the 'thumb' is the draggaable part you grab to scroll  */
+::-webkit-scrollbar-thumb {
+  background: rgba(127, 119, 221, 0.3);
+  border-radius: 4px;
+}
+
+/* when you hover over the thumb, it gets slightly more visible */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(127, 119, 221, 0.5);
+}
+
 /* table {
   border-collapse: collapse;
   width: 100%;
@@ -24,3 +46,4 @@ tbody tr:hover {
   background-color: #f9f9f9;
   cursor: pointer;
 } */
+
