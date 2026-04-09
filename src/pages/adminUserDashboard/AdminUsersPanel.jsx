@@ -6,20 +6,27 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../providers/AuthProvider';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 import useCountries from '../../hooks/useCountries';
-
+import { Box, InputAdornment, MenuItem, TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { Avatar, Button, Chip, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import BlockIcon from '@mui/icons-material/Block';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 export default function AdminUsersPanel() {
 
   const {users, handleDeleteUser, loading, handleBanUser, handlePromoteUser, getUsers} = useUsers();
   const {registeredCards, refreshFeed, fetchCards} = useCardsProvider();
   const {apiCountriesList} = useCountries(); 
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('');
   const debounceSearch = useDebounce(search, 2000);
   const {user} = useAuth();
 
   // const pageSize = 10;
-  const [pageSize, setPageSize] = useState(10)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [confirmUser, setConfirmUser] = useState(null);
  
@@ -151,6 +158,9 @@ export default function AdminUsersPanel() {
   const endPage = Math.min(currentPage * pageSize, filtred.length);
   const total = filtred.length 
 
+  const headCellSx = {fontWeight: 600, fontSize: 12, whiteSpace: 'nowrap'}
+  const sortableSx = {...headCellSx, cursor: 'pointer', userSelect: 'none'}
+
   
   if(loading){
       return <p>Loading...</p>
@@ -158,301 +168,417 @@ export default function AdminUsersPanel() {
   
   
   return(
-    <div>
-      <div style={{border: '1px solid lightgray', margin: '20px 0px', padding: '15px', borderRadius: '10px'}}>
-          <div>
-            <input 
-                type="text" 
+    <Box sx={{my: 2, mr: 2,}}>
+        {/* Filters */}
+        <Box sx={{
+            display: 'flex',
+            gap: 2,
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            mb: 3,
+            p: 2,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 3,
+            bgcolor: 'background.paper'
+        }}>
+            <TextField
+                size='small'
+                placeholder='Search by name...'
                 value={search}
                 onChange={(e) => {
-                  setSearch(e.target.value)
-                  setCurrentPage(1)
+                    setSearch(e.target.value)
+                    setCurrentPage(1)
+                }}
+                slotProps={{
+                    input: {
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon/>
+                            </InputAdornment>
+                        )
+                    }
+                }}
+                sx={{
+                    minWidth: 200,
+                    '& .MuiOutlinedInput-root': {
+                        borderRadius: 5,
+                        fontSize: 13
+                    }
                 }}
             />
-            </div>
-            <select 
-              disabled={nameSort}
-              style={{
-                  backgroundColor: ageSort ? 'lightblue' : 'white', 
-                  border: 'none', 
-                  marginRight: '8px',
-                  padding: '8px',
-              }}
-              value={ageSort} 
-              onChange={(e) => {
-                setAgeSort(e.target.value)
-                setCurrentPage(1)  
-              }}>
-                  <option value="">All Ages</option>
-                  <option value="low">Low → High</option>
-                  <option value="high">High → Low</option>
-            </select>
-            
-            <select
-              disabled={ageSort}
-              style={{
-                  backgroundColor: nameSort ? 'lightblue' : 'white', 
-                  border: 'none', 
-                  marginRight: '8px',
-                  padding: '8px',
-              }}
-              value={nameSort} 
-              onChange={(e) => {
-                setNameSort(e.target.value)
-                setCurrentPage(1)  
-              }}>
-                  <option value="">A-Z Default</option>
-                  <option value="az">A → Z</option>
-                  <option value="za">Z → A</option>
-            </select>
 
-            <select
-              style={{
-                  backgroundColor: genderFilter ? 'lightblue' : 'white', 
-                  border: 'none', 
-                  marginRight: '8px',
-                  padding: '8px',
-              }}
-              value={genderFilter} 
-              onChange={(e) => {
-                setGenderFilter(e.target.value)
-                setCurrentPage(1)  
-              }}>
-                  <option value="">All Genders</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-            </select>
+            <TextField
+                select
+                size='small'
+                value={ageSort}
+                onChange={(e) => {
+                    setAgeSort(e.target.value)
+                    setCurrentPage(1)
+                }}
+                disabled={!!nameSort}
+                slotProps={{
+                  select: {
+                    displayEmpty: true,
+                    renderValue: (value) => value === '' ? 'All Ages' : value === 'low' ? 'Low → High' : 'High → Low'
+                  }
+                }}
+                sx={{minWidth: 130, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+            >
+                <MenuItem value="">All Ages</MenuItem>
+                <MenuItem value="low">Low → High</MenuItem>
+                <MenuItem value="high">High → Low</MenuItem>
+            </TextField>
 
-            <select
-              style={{
-                  backgroundColor: roleFilter ? 'lightblue' : 'white', 
-                  border: 'none', 
-                  marginRight: '8px',
-                  padding: '8px',
-              }}
-              value={roleFilter} 
-              onChange={(e) => {
-                setRoleFilter(e.target.value)
-                setCurrentPage(1)  
-              }}>
-                  <option value="">All Roles</option>
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-            </select>
+            <TextField
+                select
+                size='small'
+                value={nameSort}
+                onChange={(e) => {
+                    setNameSort(e.target.value)
+                    setCurrentPage(1)
+                }}
+                disabled={!!ageSort}
+                slotProps={{
+                  select: {
+                    displayEmpty: true,
+                    renderValue: (value) => value === '' ? 'A/Z Mixed' : value === 'az' ? 'A → Z' : 'Z → A'
+                  }
+                }}
+                sx={{minWidth: 130, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+            >
+                <MenuItem value="">A/Z Mixed</MenuItem>
+                <MenuItem value="az">A → Z</MenuItem>
+                <MenuItem value="za">Z → A</MenuItem>
+            </TextField>
 
-            <select
-              style={{
-                  backgroundColor: countryFilter ? 'lightblue' : 'white', 
-                  border: 'none', 
-                  marginRight: '8px',
-                  padding: '8px',
-              }}
-              value={countryFilter} 
-              onChange={(e) => {
-                setCountryFilter(e.target.value)
-                setCurrentPage(1)  
-              }}>
-                  <option value="">All countries</option>
-                  {countries.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                  ))}
-            </select>
-        </div>
-        <div>
-      </div>
+            <TextField
+                select
+                size='small'
+                value={genderFilter}
+                onChange={(e) => {
+                    setGenderFilter(e.target.value)
+                    setCurrentPage(1)
+                }}
+                slotProps={{
+                  select: {
+                    displayEmpty: true,
+                    renderValue: (value) => value === '' ? 'All Genders' : value === 'Male' ? 'Male' : 'Female'
+                  }
+                }}
+                sx={{minWidth: 130, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+            >
+                <MenuItem value="">All Genders</MenuItem>
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+            </TextField>
 
-      <div>
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th>#Count</th>
-              <th>Profile</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Last Logged In</th>
-              <th>country</th>
-              <th onClick={() => handleSortTable('joined')} 
-                  style={{cursor: 'pointer'}}
-                  >
-                  Joined
-                {sortConfig.column === 'joined' ? 
-                (sortConfig.direction === 'asc' ? '▲': '▼')
-                : ' ↕'}
-              </th>
-              <th 
-                onClick={() => handleSortTable('posts')} 
-                style={{cursor: 'pointer'}}
+            <TextField
+                select
+                size='small'
+                value={roleFilter}
+                onChange={(e) => {
+                    setRoleFilter(e.target.value)
+                    setCurrentPage(1)
+                }}
+                slotProps={{
+                  select: {
+                    displayEmpty: true,
+                    renderValue: (value) => value === '' ? 'All Roles' : value === 'admin' ? 'admin' : 'user'
+                  }
+                }}
+                sx={{minWidth: 130, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+            >
+                <MenuItem value="">All Roles</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="user">User</MenuItem>
+            </TextField>
+
+            <TextField
+                select
+                size='small'
+                value={countryFilter}
+                onChange={(e) => {
+                    setCountryFilter(e.target.value)
+                    setCurrentPage(1)
+                }}
+                slotProps={{
+                  select: {
+                    displayEmpty: true,
+                    renderValue: (value) => value || 'All Countries'
+                  }
+                }}
+                sx={{minWidth: 150, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+            >
+                <MenuItem value="">All Countries</MenuItem>
+                {countries.map((c) => (
+                    <MenuItem key={c} value={c}>{c}</MenuItem>
+                ))}
+            </TextField>
+        </Box>
+      
+      {/* Table */}
+      <Box sx={{
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 3,
+          overflow: 'hidden',
+          bgcolor: 'background.paper'
+      }}>
+          <Box sx={{overflowX: 'auto'}}>
+              <Table 
+                size='small' 
+                sx={{
+                  minWidth: 1400,
+                  '& .MuiTableCell-root': {
+                  border: 'none',
+                  py: 2,
+                  fontSize: 13
+                  },
+                  '& .MuiTableBody-root .MuiTableRow-root': {
+                      borderBottom: '1px solid',
+                      borderColor: 'divider'
+                  },
+                  '& .MuiTableBody-root .MuiTableRow-root:last-child': {
+                      borderBottom: 'none'
+                  }
+                }}
+                
               >
-                Posts
-                {sortConfig.column === 'posts' ? 
-                (sortConfig.direction === 'asc' ? '▲' : '▼')
-                : ' ↕'
-              }
-              </th>
-              <th 
-                onClick={() => handleSortTable('followers')}
-                style={{cursor: 'pointer'}}
+                  <TableHead sx={{
+                      '& .MuiTableCell-root': {
+                        color: 'text.secondary',
+                        fontWeight: 600,
+                        fontSize: 12,
+                        border: 'none',
+                        pb: 1.5
+                      }
+                    }}>
+                      <TableRow>
+                          <TableCell sx={headCellSx}>#</TableCell>
+                          <TableCell sx={headCellSx}>Profile</TableCell>
+                          <TableCell sx={headCellSx}>Name</TableCell>
+                          <TableCell sx={headCellSx}>Email</TableCell>
+                          <TableCell sx={headCellSx}>Last Login</TableCell>
+                          <TableCell sx={headCellSx}>Country</TableCell>
+                          <TableCell 
+                              sx={sortableSx}
+                              onClick={() => handleSortTable('joined')}
+                          >
+                              Joined {sortConfig.column === 'joined' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '↕'}
+                          </TableCell>
+                          <TableCell 
+                              sx={sortableSx}
+                              onClick={() => handleSortTable('posts')}
+                          >
+                              Posts {sortConfig.column === 'posts' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '↕'}
+                          </TableCell>
+                          <TableCell 
+                              sx={sortableSx}
+                              onClick={() => handleSortTable('followers')}
+                          >
+                              Followers {sortConfig.column === 'followers' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '↕'}
+                          </TableCell>
+                          <TableCell sx={headCellSx}>Role</TableCell>
+                          <TableCell sx={headCellSx}>Status</TableCell>
+                          <TableCell sx={headCellSx}>Delete</TableCell>
+                          <TableCell sx={headCellSx}>Ban</TableCell>
+                          <TableCell sx={headCellSx}>Promote</TableCell>
+                      </TableRow>
+                  </TableHead>
+                  <TableBody>
+                      {sliced.map((userM, indexM) => {
+                          const userCardsCount = registeredCards.filter((card) => card.userId === userM._id).length;
+                          const userFollowersCount = users.filter((userF) => userF.following.includes(userM._id)).length;
+                          const userFlag = apiCountriesList.find(f => f.name === userM.address?.country);
+
+                          return (
+                              <TableRow 
+                                  key={userM._id}
+                                  hover
+                                  onClick={() => navigate(`/profiledashboard/${userM._id}/profilemain`)}
+                                  sx={{cursor: 'pointer'}}
+                              >
+                                  <TableCell sx={{fontSize: 13}}>{indexM + (currentPage - 1) * pageSize + 1}</TableCell>
+                                  <TableCell>
+                                      <Avatar src={userM.profilePicture} sx={{width: 36, height: 36}}/>
+                                  </TableCell>
+                                  <TableCell sx={{fontWeight: 500, fontSize: 13, whiteSpace: 'nowrap'}}>{userM.name} {userM.lastName}</TableCell>
+                                  <TableCell sx={{color: 'text.secondary', fontSize: 12}}>{userM.email}</TableCell>
+                                  <TableCell sx={{color: 'text.secondary', fontSize: 12}}>{userM.lastLoginAt.split("T")[0]}</TableCell>
+                                  <TableCell>
+                                      <Box
+                                          component='img'
+                                          src={userFlag?.flag || "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"}
+                                          onError={(e) => e.target.src = "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"}
+                                          sx={{width: 30, height: 20, borderRadius: 0.5, objectFit: 'cover'}}
+                                      />
+                                  </TableCell>
+                                  <TableCell sx={{fontSize: 12}}>{userM.createdAt.split("T")[0]}</TableCell>
+                                  <TableCell sx={{fontSize: 13, fontWeight: 600}}>{userCardsCount}</TableCell>
+                                  <TableCell sx={{fontSize: 13, fontWeight: 600}}>{userFollowersCount}</TableCell>
+                                  <TableCell>
+                                      <Chip 
+                                          label={userM.isAdmin ? "Admin" : "User"} 
+                                          size='small'
+                                          sx={{
+                                              bgcolor: userM.isAdmin ? 'primary.main' : 'action.selected',
+                                              color: userM.isAdmin ? 'white' : 'text.secondary',
+                                              fontWeight: 600,
+                                              fontSize: 11
+                                          }}
+                                      />
+                                  </TableCell>
+                                  <TableCell>
+                                      <Chip 
+                                          label={userM.isBanned ? "Banned" : "Active"} 
+                                          size='small'
+                                          sx={{
+                                              bgcolor: userM.isBanned ? 'error.main' : 'success.main',
+                                              color: 'white',
+                                              fontWeight: 600,
+                                              fontSize: 11
+                                          }}
+                                      />
+                                  </TableCell>
+                                  <TableCell>
+                                      {userM._id !== user._id ? (
+                                          <Tooltip title="Delete User">
+                                              <IconButton size='small' color='error' onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  setConfirmUser(userM)
+                                              }}>
+                                                  <DeleteIcon fontSize='small'/>
+                                              </IconButton>
+                                          </Tooltip>
+                                      ) : (
+                                          <Typography fontSize={11} color='text.secondary'>You</Typography>
+                                      )}
+                                  </TableCell>
+                                  <TableCell>
+                                      {userM._id !== user._id ? (
+                                          <Tooltip title={userM.isBanned ? "Unban User" : "Ban User"}>
+                                              <IconButton size='small' color='warning' onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  handleBanUser(userM._id);
+                                              }}>
+                                                  <BlockIcon fontSize='small'/>
+                                              </IconButton>
+                                          </Tooltip>
+                                      ) : (
+                                          <Typography fontSize={11} color='text.secondary'>You</Typography>
+                                      )}
+                                  </TableCell>
+                                  <TableCell>
+                                      {userM._id !== user._id ? (
+                                          <Tooltip title={userM.isAdmin ? "Unpromote" : "Promote"}>
+                                              <IconButton size='small' color='info' onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  handlePromoteUser(userM._id);
+                                              }}>
+                                                  <AdminPanelSettingsIcon fontSize='small'/>
+                                              </IconButton>
+                                          </Tooltip>
+                                      ) : (
+                                          <Typography fontSize={11} color='text.secondary'>You</Typography>
+                                      )}
+                                  </TableCell>
+                              </TableRow>
+                          )
+                      })}
+                  </TableBody>
+              </Table>
+          </Box>
+      </Box>
+
+      {
+        confirmUser && (
+          <ConfirmationDialog
+              message={`Delete user ${confirmUser.name} ${confirmUser.lastName}?`}
+              onClose={() => setConfirmUser(null)}
+              onConfirm={async () => {
+                  await handleDeleteUser(confirmUser._id);
+                  await getUsers();
+                  await fetchCards();
+                  await refreshFeed();
+                  setConfirmUser(null);
+              }}
+          />
+        )
+      }
+
+    {/* Paigination */}
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      mt: 2,
+      p: 1.5,
+      border: '1px solid',
+      borderColor: 'divider',
+      borderRadius: 3,
+      bgcolor: 'background.paper'
+    }}>
+      <Typography fontSize={13} color='text.secondary'>
+          {startPage} - {endPage} of {total} users
+      </Typography>
+
+      <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+          <IconButton 
+              size='small'
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+          >
+              <NavigateBeforeIcon/>
+          </IconButton>
+
+          {pagesNumbers.map((page) => (
+              <Button
+                  key={page}
+                  size='small'
+                  variant={currentPage === page ? 'contained' : 'text'}
+                  onClick={() => setCurrentPage(page)}
+                  sx={{
+                      minWidth: 32,
+                      height: 32,
+                      borderRadius: 2,
+                      fontSize: 12
+                  }}
               >
-                Followers
-                {sortConfig.column === 'followers' ? 
-                  (sortConfig.direction === 'asc' ? '▲' : '▼')
-                  : ' ↕'
-                }
-                </th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Remove</th>
-              <th>Ban</th>
-              <th>Promote</th>
-            </tr>
-          </thead>
-        <tbody>
+                  {page}
+              </Button>
+          ))}
 
-        {sliced.map((userM, indexM) => {
-          const userCardsCount = registeredCards.filter((card) => {
-            return card.userId === userM._id
-          }).length;
-    
-          const userFollowersCount = users.filter((userF) => {
-            return userF.following.includes(userM._id)
-          }).length;
+          <IconButton 
+              size='small'
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(currentPage + 1)}
+          >
+              <NavigateNextIcon/>
+          </IconButton>
 
-          if(!apiCountriesList) return;
-          const userFlag = apiCountriesList.find(f => f.name === userM.address?.country);
+          <TextField
+              select
+              size='small'
+              value={pageSize}
+              onChange={(e) => {
+                  setPageSize(Number(e.target.value))
+                  setCurrentPage(1)
+              }}
+              sx={{
+                  minWidth: 70,
+                  '& .MuiOutlinedInput-root': {borderRadius: 2, fontSize: 12}
+              }}
+          >
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={25}>25</MenuItem>
+              <MenuItem value={50}>50</MenuItem>
+              <MenuItem value={100}>100</MenuItem>
+          </TextField>
+      </Box>
+    </Box>
 
-          return(
-                  <tr 
-                    key={userM._id} 
-                    onClick={() => navigate(`/profiledashboard/${userM._id}/profilemain`)}>
-                    <td>{indexM + (currentPage - 1) * pageSize + 1}</td>
-                    <td>
-                      <img src={userM.profilePicture} style={{
-                          width: '40px',
-                          height: '40px',
-                          borderRadius: '50%',
-                          border: '2px, solid, white',
-                          objectFit: 'cover',
-                          cursor: 'pointer'
-                      }}/>
-                    </td>
-                    <td>{userM.name} {userM.lastName}</td>
-                    <td>{userM.email}</td>
-                    <td>{userM.lastLoginAt.split("T")[0]}</td>
-                    <td>
-                      <img 
-                      style={{
-                          width: '35px',
-                          height: '35px',
-                          borderRadius: '50%',
-                          border: '2px, solid, white',
-                          objectFit: 'cover',
-                          cursor: 'pointer'
-                      }}
-                      src={userFlag?.flag || "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"}
-                      onError={(e) => {
-                        e.target.src = "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                      }}
-                    /></td>
-                    <td>{userM.createdAt.split("T")[0]}</td>
-                    <td>{userCardsCount}</td>
-                    <td>{userFollowersCount}</td>
-                    <td>{userM.isAdmin ? "Admin" : "User"}</td>
-                    <td>{userM.isBanned ? "Banned" : "Not Banned"}</td>
-                    <td>
-                      {userM._id !== user._id ? (
-                        <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setConfirmUser(userM)
-                            }}>
-                          Delete User
-                        </button>
-                      ):(
-                        <p>You Admin</p>
-                      )}
-                    </td>
-                    <td>
-                      {userM._id !== user._id ? (
-                        <button onClick={(e) => {
-                          e.stopPropagation();
-                          handleBanUser(userM._id);
-                        }}>{userM.isBanned ? "Unban User" : "Ban User"}</button>
-                      ):(
-                        <p>You Admin</p>
-                      )}
-                    </td>
-                    <td>
-                      {userM._id !== user._id ? (
-                        <button onClick={(e) => {
-                          e.stopPropagation();
-                          handlePromoteUser(userM._id);
-                        }}>{userM.isAdmin ? "Unpromote" : "Promote User"}</button>
-                      ):(
-                        <p>You Admin</p>
-                      )}
-                    </td>
-                  </tr>  
-              )})}
-              </tbody>
-            </table>
-        </div>
-              {
-                confirmUser && (
-                  <ConfirmationDialog
-                      message={`Delete user ${confirmUser.name} ${confirmUser.lastName}?`}
-                      onClose={() => setConfirmUser(null)}
-                      onConfirm={async () => {
-                          await handleDeleteUser(confirmUser._id);
-                          await getUsers();
-                          await fetchCards();
-                          await refreshFeed();
-                          setConfirmUser(null);
-                      }}
-                  />
-                )
-              }
-    </div>
-    
-    <div>
-      <button 
-        disabled = {currentPage === 1}
-        style={{margin: '4px', padding: '8px 20px'}}
-        onClick={() => setCurrentPage(currentPage - 1)}
-      >◀ Previous</button>
-      {pagesNumbers.map((page) => (
-        <button 
-          style={{margin: '4px', padding: '8px 10px'}}
-          key={page}
-          onClick={() => setCurrentPage(page)}
-          disabled = {currentPage === page}
-        >
-          {page}
-        </button>
-      ))}
-      <button 
-        disabled = {currentPage === totalPages}
-        style={{margin: '4px', padding: '8px 20px'}}
-        onClick={() => setCurrentPage(currentPage + 1)}
-      >Next ▶</button>
 
-      <select
-        style={{margin: '4px', padding: '8px 20px'}}
-        onChange={
-          (e) => {
-            setPageSize(Number(e.target.value))
-            setCurrentPage(1)
-          }
-        }
-        >
-        <option value={10}>10</option>
-        <option value={25}>25</option>
-        <option value={50}>50</option>
-        <option value={100}>100</option>
-      </select>
-        
-      <p>{startPage} - {endPage} of {total} results</p>
-    </div>
-  </div>
+  </Box>
   )
 }
