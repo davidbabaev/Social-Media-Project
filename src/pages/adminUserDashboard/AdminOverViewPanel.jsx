@@ -26,10 +26,10 @@ export default function AdminOverViewPanel() {
       </Box>
 
       {/* Row 1: stat cards + 30 day cahrt */}
-      <Box sx={{mb: 3, display: 'flex', gap: 2}}>
+      <Box sx={{mb: 3, display: 'flex', gap:2}}>
         <TotalAnalytics/>
 
-        <Box sx={{display:'grid', gap:2}}>
+        <Box sx={{display:'grid', gap:2, flex: 1}}>
           <Box sx={{display: 'grid', gridTemplateColumns: '1fr 1fr' ,gap: 2}}>
             <UserRegistrationByMonths/>
             <Box sx={{display: 'flex', flexDirection: 'column',gap: 2}}>

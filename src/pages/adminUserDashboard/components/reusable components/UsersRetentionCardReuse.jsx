@@ -24,7 +24,7 @@ export default function UsersRetentionCardReuse({
             border: '1px solid',
             borderColor: 'divider',
             borderRadius: 3,
-            minWidth: 300,
+            flex: 1,
             minHeight: 250,
             bgcolor: 'background.paper'
         }}

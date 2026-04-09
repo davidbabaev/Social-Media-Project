@@ -12,7 +12,7 @@ export default function StatCardReuse({value, label, icon, color}) {
       border: '1px solid',
       borderColor: 'divider',
       borderRadius: 3,
-      minWidth: 200,
+      // minWidth: 200,
       minHeight: 200,
       bgcolor: 'background.paper'
     }}>

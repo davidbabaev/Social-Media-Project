@@ -28,7 +28,7 @@ export default function RetentionAnalyticsUsers() {
         display: 'flex',
         gap: 2,
         alignItems: 'start',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
     }}>
         <UsersRetentionCardReuse 
             mainCount = {dailyActiveUsersCount}
