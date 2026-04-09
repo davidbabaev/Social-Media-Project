@@ -20,7 +20,7 @@ export default function MostPupularCardReuse({
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: 3,
-        minWidth: 200,
+        width: '100%',
         minHeight: 200,
         bgcolor: 'background.paper'
       }}

@@ -33,7 +33,7 @@ export default function LastFiveJoinedUsers() {
             borderColor: 'divider',
             p: 2,
             bgcolor: 'background.paper',
-            width: 400,
+            width: '100%',
         }}
     >
 

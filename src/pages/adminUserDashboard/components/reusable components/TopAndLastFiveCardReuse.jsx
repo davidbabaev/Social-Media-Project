@@ -19,7 +19,12 @@ export default function TopAndLastFiveCardReuse({
     
 
     return (
-        <Box sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
+        <Box sx={{
+            display: 'flex', 
+            justifyContent: 'center', 
+            flexDirection: 'column'
+            
+        }}>
             {(topFiveValue || []).map((card) => {
                 const cardCreator = usersArrayValue.find(u => u._id === card.userId)
 
@@ -29,8 +34,7 @@ export default function TopAndLastFiveCardReuse({
                             sx={{
                                 display: 'flex',
                                 width: '100%', 
-                                borderRadius: 3,
-                                border: '0.5px solid',
+                                borderBottom: '0.5px solid',
                                 borderColor: 'divider',
                                 bgcolor: 'background.paper',
                                 my: 2,
@@ -94,7 +98,7 @@ export default function TopAndLastFiveCardReuse({
                                     {card.category && (
                                         <Chip 
                                             label={card.category} 
-                                            size='small'  
+                                            size='small' 
                                         />
                                     )}
 
@@ -127,22 +131,23 @@ export default function TopAndLastFiveCardReuse({
                                 {showInteractions && (
                                     <Box sx={{display:'flex', gap:3}}>
                                         <Box 
-                                            sx={{display:'flex', gap: 1}}
+                                            sx={{display:'flex', gap: 1, alignItems: 'center'}}
                                         >
                                             <ChatBubbleIcon 
-                                                sx={{color: theme.palette.primary.main}}
+                                                sx={{color: theme.palette.primary.main, fontSize: 15}}
                                             />
-                                            <Typography color='text.secondary'>
+                                            <Typography fontSize={13} color='text.secondary'>
                                                 {card.comments.length} Comments
                                             </Typography>
                                         </Box>
                                         <Box 
-                                            sx={{display:'flex', gap: 1}}
+                                            sx={{display:'flex', gap: 1, alignItems: 'center'}}
                                         >
                                             <ThumbUpIcon 
-                                                sx={{color: theme.palette.primary.main}}
+                                                sx={{color: theme.palette.primary.main, fontSize: 15}}
                                             />
                                             <Typography
+                                                fontSize={13}
                                                 color='text.secondary'
                                             >
                                                 {card.likes.length} Likes

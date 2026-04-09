@@ -14,7 +14,16 @@ export default function TopAndLastFiveCards() {
 
   return (
     <Box sx={{display: 'flex', gap: 2}}>
-        <Box sx={{flex: 1}}>
+        <Box
+            sx={{
+                flex: 1,
+                border: '1px solid',
+                borderRadius: 3,
+                p:3,
+                borderColor: 'divider',
+                bgcolor: 'background.paper'
+            }}
+        >
             <Typography fontWeight={700} fontSize={23}>Top 5 Posts</Typography>
             <Typography fontSize={14} color='text.secondary'>
                 The most recently published posts across the platform.
@@ -27,7 +36,14 @@ export default function TopAndLastFiveCards() {
                 />
         </Box>
 
-        <Box sx={{flex: 1}}>
+        <Box sx={{
+            flex: 1,
+            border: '1px solid',
+            borderRadius: 3,
+            p:3,
+            borderColor: 'divider',
+            bgcolor: 'background.paper'
+        }}>
             <Typography fontWeight={700} fontSize={23}>Last 5 Posts</Typography>
             <Typography fontSize={14} color='text.secondary'>
                 The highest-performing posts on the platform, ranked by total engagement (likes + comments).

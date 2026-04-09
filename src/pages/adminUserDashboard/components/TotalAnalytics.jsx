@@ -7,6 +7,7 @@ import { Box } from '@mui/material';
 import ArticleIcon from '@mui/icons-material/Article';
 import GroupIcon from '@mui/icons-material/Group';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import LoggedInThirtyDays from './LoggedInThirtyDays';
 
 export default function TotalAnalytics() {
 
@@ -20,9 +21,8 @@ export default function TotalAnalytics() {
 
   return (
     <Box sx={{
-      display: 'flex', 
-      justifyContent: 'start', 
-      alignItems: 'start', 
+      display: 'grid ', 
+      gridTemplateColumns: 'repeat(2, 1fr)',
       gap: 2
     }}>
         <StatCardReuse 
@@ -55,6 +55,8 @@ export default function TotalAnalytics() {
           icon={<InsertEmoticonIcon/>}
           color={"#7F77DD"}
         />
+
+        {/* <LoggedInThirtyDays/> */}
     </Box>
   )
 }

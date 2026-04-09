@@ -2,6 +2,7 @@ import React from 'react'
 import useAnalytics from '../hooks/useAnalytics'
 import UsersRetentionCardReuse from './reusable components/UsersRetentionCardReuse';
 import { Box } from '@mui/material';
+import RetentionUserRegisterLoginLastTwoWeeks from './RetentionUserRegisterLoginLastTwoWeeks';
 
 export default function RetentionAnalyticsUsers() {
 
@@ -26,7 +27,8 @@ export default function RetentionAnalyticsUsers() {
     <Box sx={{
         display: 'flex',
         gap: 2,
-        alignItems: 'start'
+        alignItems: 'start',
+        flexWrap: 'wrap'
     }}>
         <UsersRetentionCardReuse 
             mainCount = {dailyActiveUsersCount}
@@ -54,6 +56,8 @@ export default function RetentionAnalyticsUsers() {
             pVsValue = {" vs Previous week"}
             pPercentsValue = {" Then previous week "}
         />
+
+        <RetentionUserRegisterLoginLastTwoWeeks/>
     </Box>
   )
 }

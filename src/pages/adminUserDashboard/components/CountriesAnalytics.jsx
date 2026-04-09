@@ -1,44 +1,92 @@
 import React from 'react'
 import useAnalytics from '../hooks/useAnalytics'
+import { Box, LinearProgress, Typography } from '@mui/material';
 
 export default function CountriesAnalytics() {
 
     const {group_countCountriesPerUsers} = useAnalytics();
 
   return (
-    <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-        <h2>Countries</h2>
+    <Box
+      sx={{
+        display: 'flex', 
+        flexDirection: 'column',
+        border: '1px solid',
+        borderRadius: 3,
+        borderColor: 'divider',
+        p: 2,
+        bgcolor: 'background.paper',
+        width: '100%'
+      }}
+    >
+        <Typography fontWeight={700} fontSize={15} mb={3}>
+          Users by Country
+        </Typography>
+
         {group_countCountriesPerUsers.map((item, index) => (
-          <div key={index} style={{display: 'flex'}}>
-            <p style={{margin: '10px 0px'}}>{item.country}</p>
-            <img 
-              style={{
-                width: '40px', 
-                height: '25px', 
-                borderRadius: '5px', 
-                objectFit:'cover',
-                margin: '10px'
-              }} 
-              onError= {(e) => e.target.src = "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"}
+          <Box 
+            key={index}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5,
+              mb:1.5
+            }}
+          >
+            <Box
+              component={'img'} 
               src={item.flag} 
+              onError= {(e) => e.target.src = "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"}
+              sx={{
+                width: 35,
+                height: 20,
+                borderRadius: 1,
+                objectFit: 'cover',
+                flexShrink: 0
+              }}
             />
-            <div 
-              style={{
-                backgroundColor: 'lightgray', 
-                width: '100%',
-                height: '20%', 
-                borderRadius: '5px',
-                margin: '10px 0px'
+            <Typography fontSize={14} lineHeight={1}>
+              {item.country}
+            </Typography>
+
+            <Box
+              sx={{
+                flex: 1,
+                position: 'relative'
               }}
             >
-              <div 
-                style={{backgroundColor: '#00C49F', width:`${item.percent}%`, borderRadius: '5px'}}>
-                <p style={{color: 'white',margin: '0px', minWidth: '40px', padding: '10px'}}>{item.percent}%</p>
-              </div>
-            </div>
-            <p style={{margin: '10px'}}>{item.count} {item.count < 2 ? "user" : "users"}</p>
-          </div>
+
+              <LinearProgress
+                variant='determinate'
+                value={Number(item.percent)}
+                sx={{
+                  height: 22,
+                  borderRadius: 5,
+                  bgcolor: 'action.hover',
+                  '& .MuiLinearProgress-bar' : {
+                    bgcolor: 'primary',
+                    borderRadius: 5
+                  }
+                }}
+              />
+
+              <Typography sx={{
+                position: 'absolute',
+                top: '50%',
+                left: 8,
+                transform: 'translateY(-50%)',
+                fontSize: 11,
+                fontWeight: 600,
+                color: 'white'
+              }}>
+                {item.percent}%
+              </Typography>  
+            </Box>
+            <Typography color='text.secondary' fontSize={14} fontWeight={700}>
+              {item.count}
+            </Typography>
+          </Box>
         ))}
-    </div>
+    </Box>
   )
 }

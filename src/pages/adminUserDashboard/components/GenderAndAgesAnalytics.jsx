@@ -12,7 +12,7 @@ export default function GenderAndAgesAnalytics() {
     const ICONS = { Male: <MaleIcon sx={{color:'#3B82F6', fontSize: 28}}/>, Female: <FemaleIcon sx={{color:'#EC4899', fontSize: 28}}/> };
 
   return (
-    <Box sx={{display: 'flex', gap:2, my:2}}>
+    <Box sx={{display: 'flex', gap:2, width: '100%'}}>
     
     {/* Left:  Gender Distribution*/}
     <Box
@@ -113,7 +113,7 @@ export default function GenderAndAgesAnalytics() {
             bgcolor: 'background.paper'
         }}
     >
-        <Typography fontWeight={700} fontSize={15}>
+        <Typography fontWeight={700} fontSize={15} pb={3}>
            Gender by Age Range
         </Typography>
 
@@ -133,7 +133,7 @@ export default function GenderAndAgesAnalytics() {
                     axisLine={false}
                     tick={{fontSize: 13}}  
                 />
-                <Tooltip />
+                <Tooltip cursor={false}/>
                 <Bar dataKey="Male" stackId="a" fill={COLORS.Male} radius={10}/>
                 <Bar dataKey="Female" stackId="a" fill={COLORS.Female} radius={10}/>
             </BarChart>

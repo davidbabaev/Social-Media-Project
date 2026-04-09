@@ -21,7 +21,8 @@ export default function CountPostsByCategoriesList() {
             borderRadius: 3,
             borderColor: 'divider',
             p: 2,
-            bgcolor: 'background.paper'
+            bgcolor: 'background.paper',
+            width: '40%'
         }}
     >
         <Typography fontWeight={700} fontSize={15}>Posts per catrgories</Typography>

@@ -11,47 +11,70 @@ import TenMostPopularCategories from './components/TenMostPopularCategories';
 import GenderAndAgesAnalytics from './components/GenderAndAgesAnalytics';
 import UserRegistrationByMonths from './components/UserRegistrationByMonths';
 import CountriesAnalytics from './components/CountriesAnalytics';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 export default function AdminOverViewPanel() {
   return (
-    <div>
-      <h1>Overview</h1>
-      <div 
-        style={{
-          width: '80vw', 
-          display: 'flex', 
-          flexWrap: 'wrap', 
-          gap:'15px'
-        }}>
-          <TotalAnalytics/>
-          <LoggedInThirtyDays/>
-          <MostPopular/>
-          <Box sx={{display:'flex', gap: 2}}>
-            <RetentionAnalyticsUsers/>
-            <RetentionUserRegisterLoginLastTwoWeeks/>
+    <Box sx={{p:3, maxWidth: '100%'}}>
+
+      {/* Page header */}
+      <Box mb={3}>
+        <Typography fontSize={25} fontWeight={700}>Dashboard</Typography>
+        <Typography fontSize={15} color='text.secondary' lineHeight={1}>
+          Welcome back. Here's what's happening with your platform.
+        </Typography>
+      </Box>
+
+      {/* Row 1: stat cards + 30 day cahrt */}
+      <Box sx={{mb: 3, display: 'flex', gap: 2}}>
+        <TotalAnalytics/>
+
+        <Box sx={{display:'grid', gap:2}}>
+          <Box sx={{display: 'grid', gridTemplateColumns: '1fr 1fr' ,gap: 2}}>
+            <UserRegistrationByMonths/>
+            <Box sx={{display: 'flex', flexDirection: 'column',gap: 2}}>
+              <MostPopular/>
+              <LoggedInThirtyDays/>
+            </Box>
           </Box>
-      </div>
-
-        <Box pt={2}>
-          <TopAndLastFiveCards/>
+          <Box sx={{display:'flex', flexDirection: 'column', gap: 2}}>
+            <RetentionAnalyticsUsers/>
+          </Box>
         </Box>
+      </Box>
 
-      <div style={{display: 'flex', gap:'15px'}}>
+      {/* Users header */}
+      <Box mb={3}>
+        <Typography fontSize={25} fontWeight={700}>Users</Typography>
+        <Typography fontSize={15} color='text.secondary' lineHeight={1}>
+          Welcome back. Here's what's happening with your platform.
+        </Typography>
+      </Box>
+      <Box sx={{display: 'flex', gap: 2, mb: 2}}>
         <LastFiveJoinedUsers/>
-      </div>
+        <TopTenActiveUsers/>
+        <CountriesAnalytics/>
+      </Box>
 
-      <TopTenActiveUsers/>
 
       <Box sx={{display: 'flex', gap: 2}}>
         <TenMostPopularCategories/>
         <CountPostsByCategoriesList/>
+        <GenderAndAgesAnalytics/>
       </Box>
-      
-      <GenderAndAgesAnalytics/>
-      <UserRegistrationByMonths/>
-      <CountriesAnalytics/>
-    </div>
+
+      {/* posts header */}
+      <Box mb={3} mt={3}>
+        <Typography fontSize={25} fontWeight={700}>Posts</Typography>
+        <Typography fontSize={15} color='text.secondary' lineHeight={1}>
+          Welcome back. Here's what's happening with your platform.
+        </Typography>
+      </Box>
+
+      <Box mb={2}>
+        <TopAndLastFiveCards/>
+      </Box>
+    </Box>
 )
 }
 

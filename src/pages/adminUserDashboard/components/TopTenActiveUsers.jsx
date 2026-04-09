@@ -1,18 +1,23 @@
 import React from 'react'
 import useAnalytics from '../hooks/useAnalytics'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 export default function TopTenActiveUsers() {
 
     const {topTenUsers} = useAnalytics();
 
   return (
-    <div 
-        style={{
-            border:'1px solid lightgray', 
-            borderRadius: '10px', 
-            padding: '15px'
+    <Box 
+        sx={{
+            display: 'flex', 
+            flexDirection: 'column',
+            border: '1px solid',
+            borderRadius: 3,
+            borderColor: 'divider',
+            p: 2,
+            bgcolor: 'background.paper',
+            width: "100%"
         }}>
         <Typography fontWeight={700} fontSize={15}>Top 10 Active Users</Typography>
         <ResponsiveContainer  
@@ -27,11 +32,11 @@ export default function TopTenActiveUsers() {
                     dataKey="name" 
                     type='category'
                     width={120}
-                    tick={{fontSize:14, color: 'text.secondary'}}
+                    tick={{fontSize:14}}
                     tickLine={false}
                     axisLine={false}
                 />
-                <Tooltip />
+                <Tooltip cursor={false}/>
                 <Bar 
                     dataKey="posts" 
                     fill="#7F77DD" 
@@ -42,6 +47,6 @@ export default function TopTenActiveUsers() {
                 />
             </BarChart>
         </ResponsiveContainer>
-    </div>
+    </Box>
   )
 }
