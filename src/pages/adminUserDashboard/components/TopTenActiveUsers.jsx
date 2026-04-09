@@ -1,6 +1,7 @@
 import React from 'react'
 import useAnalytics from '../hooks/useAnalytics'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Typography } from '@mui/material';
 
 export default function TopTenActiveUsers() {
 
@@ -13,18 +14,32 @@ export default function TopTenActiveUsers() {
             borderRadius: '10px', 
             padding: '15px'
         }}>
-        <h2>Top 10 Active Users</h2>
+        <Typography fontWeight={700} fontSize={15}>Top 10 Active Users</Typography>
         <ResponsiveContainer  
-            width="90%" height={300}>
+            width="100%" height={400}>
             <BarChart 
-                responsive
                 data={topTenUsers}
-                margin={{top: 5, right: 30, left: 20, bottom: 5}}
+                layout='vertical'
+                margin={{top: 5, right: 40, left: 20, bottom: 5}}
             >
-                <XAxis dataKey="name" />
-                <YAxis/>
+                <XAxis type='number' hide/>
+                <YAxis 
+                    dataKey="name" 
+                    type='category'
+                    width={120}
+                    tick={{fontSize:14, color: 'text.secondary'}}
+                    tickLine={false}
+                    axisLine={false}
+                />
                 <Tooltip />
-                <Bar dataKey="posts" fill="gray" />
+                <Bar 
+                    dataKey="posts" 
+                    fill="#7F77DD" 
+                    radius={10}
+                    barSize={30}
+                    label={{position: 'right', fontSize:13}}
+
+                />
             </BarChart>
         </ResponsiveContainer>
     </div>

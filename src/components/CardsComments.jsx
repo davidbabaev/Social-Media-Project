@@ -30,7 +30,7 @@ export default function CardsComments({card, users, addComment, removeComment, f
         }
     }
 
-        const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
+    const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
 
 
     const countedComments = (card?.comments || []).sort((a,b) => b.createdAt.localeCompare(a.createdAt)).slice(0, commentsCount)
@@ -133,7 +133,7 @@ export default function CardsComments({card, users, addComment, removeComment, f
                             </Box>
             
             
-                        <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                         <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                             {/* Right: Follow button */}
 
                             {loggedInUser && loggedInUser._id !== userComment?._id && !isFollowByMe(userComment?._id) &&(

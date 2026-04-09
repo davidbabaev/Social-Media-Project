@@ -1,50 +1,144 @@
 import React from 'react'
 import useAnalytics from '../hooks/useAnalytics'
 import { ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar ,PieChart, Pie, Cell, CartesianGrid, Legend} from 'recharts';
-
+import { Box, Typography } from '@mui/material';
+import MaleIcon from '@mui/icons-material/Male';
+import FemaleIcon from '@mui/icons-material/Female';
 
 export default function GenderAndAgesAnalytics() {
 
-    const {arrayGroup_countPerGender, group_genderByAge} = useAnalytics();
+    const {arrayGroup_countPerGender, group_genderByAge, usersLength} = useAnalytics();
+    const COLORS = { Male: '#3B82F6', Female: '#EC4899' };
+    const ICONS = { Male: <MaleIcon sx={{color:'#3B82F6', fontSize: 28}}/>, Female: <FemaleIcon sx={{color:'#EC4899', fontSize: 28}}/> };
 
   return (
-    <div style={{border:'1px solid lightgray', borderRadius: '10px', padding: '15px'}}>
-    <h2>Gender & Ages Analytics</h2>
-    <div>
-        <PieChart  width={700} height={400} style={{outline: 'none'}}>
-            <Pie 
-                data={arrayGroup_countPerGender} 
-                nameKey="gender" 
-                dataKey="count"
-                label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}>
-                {arrayGroup_countPerGender.map((entry, index) => (
-                <Cell key={index} fill={entry.gender === 'Male' ? '#0088FE' : ' #E44687'}/>
-                ))}
-            </Pie>
-            <Tooltip />
-        </PieChart>
-    </div>
-    <div>
-        <ResponsiveContainer width="90%" height={400}>
-            <BarChart
-            data={group_genderByAge}
-            margin={{
-                top: 20,
-                right: 0,
-                left: 0,
-                bottom: 5,
-            }}
+    <Box sx={{display: 'flex', gap:2, my:2}}>
+    
+    {/* Left:  Gender Distribution*/}
+    <Box
+        sx={{
+            flex: 1,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 3,
+            p: 2,
+            bgcolor: 'background.paper',
+        }}
+    >
+        <Typography fontWeight={700} fontSize={15}>
+            Gender Distribution
+        </Typography>
+
+        <Box
+            sx={{position: 'relative', display: 'flex', justifyContent: 'center'}}
+        >
+            <PieChart  width={250} height={250} style={{outline: 'none'}}>
+                <Pie 
+                    data={arrayGroup_countPerGender} 
+                    nameKey="gender" 
+                    dataKey="count"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={2}
+                    // label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    
+                    >
+                    {arrayGroup_countPerGender.map((entry, index) => (
+                        <Cell key={index} fill={COLORS[entry.gender] || '#ccc'}/>
+                    ))}
+                </Pie>
+                <Tooltip />
+            </PieChart>
+
+            {/* Center label */}
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    textAlign: 'center'
+                }}
             >
-            <Legend />
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="ages" niceTicks="snap125" />
-            <YAxis niceTicks="snap125" />
-            <Tooltip />
-            <Bar dataKey="Male" stackId="a" fill="#0088FE" background />
-            <Bar dataKey="Female" stackId="a" fill="#E44687" background />
+                <Typography fontWeight={700} fontSize={18}>{usersLength}</Typography>
+                <Typography fontSize={15} color='text.secondary' lineHeight={0.5}>total</Typography>
+            </Box>
+        </Box>
+
+        
+        {/* Legend */}
+        <Box
+            sx={{
+                display: 'flex', 
+                justifyContent: 'center',
+                gap: 3,
+                mt: 1
+            }}
+        >               
+            {arrayGroup_countPerGender.map((entry) => (
+                <Box 
+                key={entry.gender}
+                sx={{
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 0.5
+                }}
+                >
+                    {/* <Box
+                        sx={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: '50%',
+                            bgcolor: COLORS[entry.gender]
+                        }}
+                    /> */}
+                        {ICONS[entry.gender]}
+                        <Typography fontSize={14}>{entry.gender}</Typography>
+                        <Typography fontSize={14} fontWeight={600}>
+                            {(entry.count / usersLength * 100).toFixed(0)}%
+                        </Typography>
+                </Box>
+            ))}
+        </Box>
+    </Box>
+
+    {/* Right: Gender by Age Range*/}
+    <Box
+        sx={{
+            flex: 2,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 3,
+            p: 2,
+            bgcolor: 'background.paper'
+        }}
+    >
+        <Typography fontWeight={700} fontSize={15}>
+           Gender by Age Range
+        </Typography>
+
+        <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={group_genderByAge}>
+                
+                {/* <Legend /> */}
+                <CartesianGrid strokeDasharray="3 3" vertical={false}/>
+                <XAxis
+                    dataKey="ages" 
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{fontSize: 13}} 
+                    />
+                <YAxis 
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{fontSize: 13}}  
+                />
+                <Tooltip />
+                <Bar dataKey="Male" stackId="a" fill={COLORS.Male} radius={10}/>
+                <Bar dataKey="Female" stackId="a" fill={COLORS.Female} radius={10}/>
             </BarChart>
         </ResponsiveContainer>
-    </div>
-    </div>
+    </Box>
+    </Box>
   )
 }

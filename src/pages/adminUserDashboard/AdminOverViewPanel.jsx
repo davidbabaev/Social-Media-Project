@@ -39,11 +39,15 @@ export default function AdminOverViewPanel() {
 
       <div style={{display: 'flex', gap:'15px'}}>
         <LastFiveJoinedUsers/>
-        <CountPostsByCategoriesList/>
       </div>
 
       <TopTenActiveUsers/>
-      <TenMostPopularCategories/>
+
+      <Box sx={{display: 'flex', gap: 2}}>
+        <TenMostPopularCategories/>
+        <CountPostsByCategoriesList/>
+      </Box>
+      
       <GenderAndAgesAnalytics/>
       <UserRegistrationByMonths/>
       <CountriesAnalytics/>
