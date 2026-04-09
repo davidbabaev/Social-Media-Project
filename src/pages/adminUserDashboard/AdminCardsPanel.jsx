@@ -9,6 +9,15 @@ import useFavoriteCards from '../../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../../constants/cardsCategories';
 import getTimeAgo from '../../utils/getTimeAgo';
 import MediaDisplay from '../../components/MediaDisplay';
+import { Avatar, Box, Button, Chip, IconButton, InputAdornment, MenuItem, Table, TableBody, TableCell, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import DeleteIcon from '@mui/icons-material/Delete';
+import BlockIcon from '@mui/icons-material/Block';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+
+
+
 export default function AdminCardsPanel() {
 
   const {loading, getUsers} = useUsers();
@@ -135,238 +144,368 @@ export default function AdminCardsPanel() {
   const start = (currentPage - 1) * pageSize + 1;
   const endPage = Math.min(currentPage * pageSize ,filteredCards.length)
   const total = filteredCards.length
+
+  const headCellSx = {fontWeight: 600, fontSize: 12, whiteSpace: 'nowrap'}
+  const sortableSx = {...headCellSx, cursor: 'pointer', userSelect: 'none'}
   
   if(loading){
       return <p>Loading...</p>
   }
 
   return(
-    <div>
-      <div style={{border: '1px solid lightgray', margin: '20px 0px', padding: '15px', borderRadius: '10px'}}>
-          
-        <div>
-            <select 
-                value={creatorId}
-                onChange={(e) => {
-                  setCreatorId(e.target.value)
-                  setCurrentPage(1)
-                }}    
-            >
-                <option value="">All Users</option>
-                {users.map((user) => (
-                    <option key={user._id} value={user._id}>{user?.name}</option>
-                ))}
-            </select>
-        </div>
+    <Box sx={{p: 3}}>
 
-        <div>
-            <select
-                value={categoryFilter}
-                onChange={(e) => {
-                  setCategoryFilter(e.target.value)
-                  setCurrentPage(1)
-                }}
-            >
-                <option value="">All Categories</option>
-                {CARD_CATEGORIES.map((category, index) => (
-                    <option key={index} value={category}>
-                        {category}
-                    </option>
-                ))}
-            </select>
-        </div>
+      {/* Page Header */}
+      <Box mb={3}>
+          <Typography fontSize={25} fontWeight={700}>Posts Management</Typography>
+          <Typography fontSize={14} color='text.secondary'>
+              {total} posts found
+          </Typography>
+      </Box>
 
-        <div>
-            <select 
-                value={favorites}
-                onChange={(e) => {
-                  setFavorites(e.target.value)
-                  setCurrentPage(1)
-                }}
-            >
-                <option value="">All / Favorites</option>
-                <option value="myFavorites">My Favorites Cards</option>
-            </select>
-        </div>
-
-        <div>
-            <input 
-                type="text" 
-                value={searchCard}
-                onChange={(e) => {
+      {/* Filters */}
+      <Box sx={{
+          display: 'flex',
+          gap: 2,
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          mb: 3,
+          p: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 3,
+          bgcolor: 'background.paper'
+      }}>
+          <TextField
+              size='small'
+              placeholder='Search by title...'
+              value={searchCard}
+              onChange={(e) => {
                   setSearchCard(e.target.value)
                   setCurrentPage(1)
-                }}
-            />
-        </div>
-        
-      </div>
+              }}
+              slotProps={{
+                  input: {
+                      startAdornment: (
+                          <InputAdornment position="start">
+                              <SearchIcon/>
+                          </InputAdornment>
+                      )
+                  }
+              }}
+              sx={{minWidth: 200, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+          />
 
-      <div>
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th>#Count</th>
-              <th
-                onClick={
-                  () => handleSortTable('creators')} 
-                  style={{cursor: 'pointer'}}
+          <TextField
+              select
+              size='small'
+              value={creatorId}
+              onChange={(e) => {
+                  setCreatorId(e.target.value)
+                  setCurrentPage(1)
+              }}
+              slotProps={{
+                  select: {
+                      displayEmpty: true,
+                      renderValue: (value) => {
+                          if(!value) return 'All Users'
+                          const found = users.find(u => u._id === value)
+                          return found ? found.name + ' ' + found.lastName : 'All Users'
+                      }
+                  }
+              }}
+              sx={{minWidth: 150, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+          >
+              <MenuItem value="">All Users</MenuItem>
+              {users.map((userM) => (
+                  <MenuItem key={userM._id} value={userM._id}>{userM.name} {userM.lastName}</MenuItem>
+              ))}
+          </TextField>
+
+          <TextField
+              select
+              size='small'
+              value={categoryFilter}
+              onChange={(e) => {
+                  setCategoryFilter(e.target.value)
+                  setCurrentPage(1)
+              }}
+              slotProps={{
+                  select: {
+                      displayEmpty: true,
+                      renderValue: (value) => value || 'All Categories'
+                  }
+              }}
+              sx={{minWidth: 150, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+          >
+              <MenuItem value="">All Categories</MenuItem>
+              {CARD_CATEGORIES.map((category, index) => (
+                  <MenuItem key={index} value={category}>{category}</MenuItem>
+              ))}
+          </TextField>
+
+          <TextField
+              select
+              size='small'
+              value={favorites}
+              onChange={(e) => {
+                  setFavorites(e.target.value)
+                  setCurrentPage(1)
+              }}
+              slotProps={{
+                  select: {
+                      displayEmpty: true,
+                      renderValue: (value) => value === 'myFavorites' ? 'My Favorites' : 'All Posts'
+                  }
+              }}
+              sx={{minWidth: 140, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+          >
+              <MenuItem value="">All Posts</MenuItem>
+              <MenuItem value="myFavorites">My Favorites</MenuItem>
+          </TextField>
+      </Box>
+
+      {/* Table */}
+      <Box sx={{
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 3,
+          overflow: 'hidden',
+          bgcolor: 'background.paper'
+      }}>
+          <Box sx={{overflowX: 'auto'}}>
+              <Table size='small' sx={{
+                  minWidth: 1200,
+                  '& .MuiTableCell-root': {
+                      border: 'none',
+                      py: 2,
+                      fontSize: 13
+                  },
+                  '& .MuiTableBody-root .MuiTableRow-root': {
+                      borderBottom: '1px solid',
+                      borderColor: 'divider'
+                  },
+                  '& .MuiTableBody-root .MuiTableRow-root:last-child': {
+                      borderBottom: 'none'
+                  }
+              }}>
+                  <TableHead sx={{
+                      '& .MuiTableCell-root': {
+                          color: 'text.secondary',
+                          fontWeight: 600,
+                          fontSize: 12,
+                          border: 'none',
+                          pb: 1.5
+                      }
+                  }}>
+                      <TableRow>
+                          <TableCell sx={headCellSx}>#</TableCell>
+                          <TableCell 
+                              sx={sortableSx}
+                              onClick={() => handleSortTable('creators')}
+                          >
+                              Creator {sortConfig.column === 'creators' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '↕'}
+                          </TableCell>
+                          <TableCell sx={headCellSx}>Thumbnail</TableCell>
+                          <TableCell sx={headCellSx}>Title</TableCell>
+                          <TableCell 
+                              sx={sortableSx}
+                              onClick={() => handleSortTable('categories')}
+                          >
+                              Category {sortConfig.column === 'categories' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '↕'}
+                          </TableCell>
+                          <TableCell 
+                              sx={sortableSx}
+                              onClick={() => handleSortTable('createdAt')}
+                          >
+                              Created {sortConfig.column === 'createdAt' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '↕'}
+                          </TableCell>
+                          <TableCell 
+                              sx={sortableSx}
+                              onClick={() => handleSortTable('likes')}
+                          >
+                              Likes {sortConfig.column === 'likes' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '↕'}
+                          </TableCell>
+                          <TableCell sx={headCellSx}>Comments</TableCell>
+                          <TableCell sx={headCellSx}>Delete</TableCell>
+                          <TableCell sx={headCellSx}>Ban</TableCell>
+                          <TableCell sx={headCellSx}>Status</TableCell>
+                      </TableRow>
+                  </TableHead>
+                  <TableBody>
+                      {sliced.map((card, indexM) => {
+                          const creator = users.find(u => u._id === card.userId);
+
+                          return (
+                              <TableRow 
+                                  key={card._id}
+                                  hover
+                                  onClick={() => navigate(`/carddetails/${card._id}`)}
+                                  sx={{cursor: 'pointer'}}
+                              >
+                                  <TableCell>{indexM + (currentPage - 1) * pageSize + 1}</TableCell>
+                                  <TableCell>
+                                      <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                          <Avatar src={creator?.profilePicture} sx={{width: 32, height: 32}}/>
+                                          <Typography fontSize={13} fontWeight={500} noWrap>
+                                              {creator?.name} {creator?.lastName}
+                                          </Typography>
+                                      </Box>
+                                  </TableCell>
+                                  <TableCell>
+                                      <MediaDisplay
+                                          mediaUrl={card.mediaUrl}
+                                          mediaType={card.mediaType}
+                                          style={{
+                                              width: 60,
+                                              height: 60,
+                                              borderRadius: 8,
+                                              objectFit: 'cover'
+                                          }}
+                                      />
+                                  </TableCell>
+                                  <TableCell sx={{fontWeight: 500, maxWidth: 200}}>
+                                      <Typography fontSize={13} noWrap>{card.title}</Typography>
+                                  </TableCell>
+                                  <TableCell>
+                                      <Chip label={card.category} size='small' sx={{fontSize: 11}}/>
+                                  </TableCell>
+                                  <TableCell sx={{color: 'text.secondary', fontSize: 12}}>{getTimeAgo(card.createdAt)}</TableCell>
+                                  <TableCell sx={{fontWeight: 600}}>{card.likes.length}</TableCell>
+                                  <TableCell sx={{fontWeight: 600}}>{card.comments.length}</TableCell>
+                                  <TableCell>
+                                      {creator?._id !== user._id ? (
+                                          <Tooltip title="Delete Post">
+                                              <IconButton size='small' color='error' onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  setConfirmCard(card)
+                                              }}>
+                                                  <DeleteIcon fontSize='small'/>
+                                              </IconButton>
+                                          </Tooltip>
+                                      ) : (
+                                          <Typography fontSize={11} color='text.secondary'>You</Typography>
+                                      )}
+                                  </TableCell>
+                                  <TableCell>
+                                      {creator?._id !== user._id ? (
+                                          <Tooltip title={card.isBanned ? "Unban Post" : "Ban Post"}>
+                                              <IconButton size='small' color='warning' onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  handleBanCard(card._id);
+                                              }}>
+                                                  <BlockIcon fontSize='small'/>
+                                              </IconButton>
+                                          </Tooltip>
+                                      ) : (
+                                          <Typography fontSize={11} color='text.secondary'>You</Typography>
+                                      )}
+                                  </TableCell>
+                                  <TableCell>
+                                      <Chip 
+                                          label={card.isBanned ? "Banned" : "Active"} 
+                                          size='small'
+                                          sx={{
+                                              bgcolor: card.isBanned ? 'error.main' : 'success.main',
+                                              color: 'white',
+                                              fontWeight: 600,
+                                              fontSize: 11
+                                          }}
+                                      />
+                                  </TableCell>
+                              </TableRow>
+                          )
+                      })}
+                  </TableBody>
+              </Table>
+          </Box>
+      </Box>
+
+      {/* Confirmation Dialog */}
+      {confirmCard && (
+          <ConfirmationDialog
+              message={`Delete card: ${confirmCard.title}?`}
+              onClose={() => setConfirmCard(null)}
+              onConfirm={async () => {
+                  await handleDeleteCard(confirmCard._id);
+                  await getUsers();
+                  await fetchCards();
+                  await refreshFeed();
+                  setConfirmCard(null);
+              }}
+          />
+      )}
+
+      {/* Pagination */}
+      <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mt: 2,
+          p: 1.5,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 3,
+          bgcolor: 'background.paper'
+      }}>
+          <Typography fontSize={13} color='text.secondary'>
+              {start} - {endPage} of {total} posts
+          </Typography>
+
+          <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+              <IconButton 
+                  size='small'
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
               >
-                Creator
-                {sortConfig.column === 'creators' ? 
-                (sortConfig.direction === 'asc' ? '▲': '▼')
-                : ' ↕'}
-              </th>
-              <th>Thumbnail Image</th>
-              <th>Title</th>
-              <th onClick={() => handleSortTable('categories')} 
-                  style={{cursor: 'pointer'}}
-                  >
-                  Category
-                {sortConfig.column === 'categories' ? 
-                (sortConfig.direction === 'asc' ? '▲': '▼')
-                : ' ↕'}
-              </th>
-              <th onClick={() => handleSortTable('createdAt')} 
-                  style={{cursor: 'pointer'}}
-                  >
-                  Created Date
-                {sortConfig.column === 'createdAt' ? 
-                (sortConfig.direction === 'asc' ? '▲': '▼')
-                : ' ↕'}
-              </th>
-              <th onClick={() => handleSortTable('likes')} 
-                  style={{cursor: 'pointer'}}
-                  >
-                  Likes
-                {sortConfig.column === 'likes' ? 
-                (sortConfig.direction === 'asc' ? '▲': '▼')
-                : ' ↕'}
-              </th>
-              <th>Comments</th>
-              <th>Delete</th>
-              <th>Ban</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-        <tbody>
+                  <NavigateBeforeIcon/>
+              </IconButton>
 
-        {sliced.map((card, indexM) => {
-          
-          const creator = users.find(user => user._id === card.userId);
-          
-          return(
-                  <tr 
-                    key={card._id} 
-                    onClick={() => navigate(`/carddetails/${card._id}`)}>
-                    <td>{indexM + (currentPage - 1) * pageSize + 1}</td>
-                      <td><img
-                      src={creator?.profilePicture} style={{
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            border: '2px, solid, white',
-                            objectFit: 'cover',
-                            cursor: 'pointer'
-                        }}
-                      /> {creator?.name} {creator?.lastName}</td>
-                    <td>
-                      <MediaDisplay
-                        mediaUrl={card.mediaUrl}
-                        mediaType={card.mediaType}
-                        style={{
-                            width: '100px',
-                            height: '100px',
-                            borderRadius: '10px',
-                            border: '2px, solid, white',
-                            objectFit: 'cover',
-                            cursor: 'pointer'
-                        }}
-                      />
-                    </td>
-                    <td>{card.title}</td>
-                    <td>{card.category}</td>
-                    <td>{getTimeAgo(card.createdAt)}</td>
-                    <td>{card.likes.length}</td>
-                    <td>{card.comments.length}</td>
-                    <td>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setConfirmCard(card)
-                        }}>
-                      Delete Post
-                    </button>
-                    </td>
-                    <td>
-                      {creator?._id !== user._id ? (
-                        <button onClick={(e) => {
-                          e.stopPropagation();
-                          handleBanCard(card._id);
-                        }}>{card.isBanned ? "Unban Post" : "Ban Post"}</button>
-                      ):(
-                        <p>You Admin</p>
-                      )}
-                    </td>
-                    <td>{card.isBanned ? "Banned" : "Not Banned"}</td>
-                  </tr>  
-              )})}
-              </tbody>
-            </table>
-        </div>
-              {
-                confirmCard && (
-                  <ConfirmationDialog
-                      message={`Delete card: ${confirmCard.title}?`}
-                      onClose={() => setConfirmCard(null)}
-                      onConfirm={async () => {
-                          await handleDeleteCard(confirmCard._id);
-                          await getUsers();
-                          await fetchCards();
-                          await refreshFeed();
-                          setConfirmCard(null);
+              {pagesNumbers.map((page) => (
+                  <Button
+                      key={page}
+                      size='small'
+                      variant={currentPage === page ? 'contained' : 'text'}
+                      onClick={() => setCurrentPage(page)}
+                      sx={{
+                          minWidth: 32,
+                          height: 32,
+                          borderRadius: 2,
+                          fontSize: 12
                       }}
-                  />
-                )
-              }
-    </div>
-    <div style={{display: 'flex', width: '100%'}}>
-      <button 
-        disabled = {currentPage === 1}
-        style={{margin: '4px', padding: '8px 20px'}}
-        onClick={() => setCurrentPage(currentPage - 1)}
-      >◀ Previous</button>
-      {pagesNumbers.map((page, index) => (
-        <div key={page}>
-            <button 
-              style={{margin: '4px', padding: '8px 10px'}} 
-              disabled = {currentPage === page}
-              onClick={() => setCurrentPage(page)}
-            >{page}</button>
-        </div>
-      ))}
-      <button 
-        disabled = {currentPage === totalPages}
-        style={{margin: '4px', padding: '8px 20px'}}
-        onClick={() => setCurrentPage(currentPage + 1)}
-      >Next ▶</button>
+                  >
+                      {page}
+                  </Button>
+              ))}
 
-    <select 
-      style={{margin: '4px', padding: '8px 20px'}}
-      onChange={(e) => {
-        setPageSize(Number(e.target.value))
-        setCurrentPage(1)
-      }}  
-    >
-        <option value={10}>10</option>
-        <option value={25}>25</option>
-        <option value={50}>50</option>
-        <option value={100}>100</option>
-      </select>
-      <p>{start} - {endPage} of {total}</p>
-    </div>
+              <IconButton 
+                  size='small'
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                  <NavigateNextIcon/>
+              </IconButton>
 
-  </div>
+              <TextField
+                  select
+                  size='small'
+                  value={pageSize}
+                  onChange={(e) => {
+                      setPageSize(Number(e.target.value))
+                      setCurrentPage(1)
+                  }}
+                  sx={{
+                      minWidth: 70,
+                      '& .MuiOutlinedInput-root': {borderRadius: 2, fontSize: 12}
+                  }}
+              >
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={25}>25</MenuItem>
+                  <MenuItem value={50}>50</MenuItem>
+                  <MenuItem value={100}>100</MenuItem>
+              </TextField>
+          </Box>
+      </Box>
+    </Box>
   )
 }
