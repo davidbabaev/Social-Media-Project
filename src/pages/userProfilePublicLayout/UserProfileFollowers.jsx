@@ -6,6 +6,7 @@ import useFollowUser from '../../hooks/useFollowUser';
 import { useCardsProvider } from '../../providers/CardsProvider';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Avatar, Box, Button, Paper, Typography } from '@mui/material';
+import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
 
 
 export default function UserProfileFollowers() {
@@ -21,7 +22,7 @@ export default function UserProfileFollowers() {
   const currentUserProfile = users.find((userP) => userP._id === id);
   
   if(!currentUserProfile){
-    return <p>Loading...</p>
+    return <OnLoadingSkeletonBox/>
   }
 
   const currentUserFollowers = users.filter((userF) => userF.following.includes(currentUserProfile._id));

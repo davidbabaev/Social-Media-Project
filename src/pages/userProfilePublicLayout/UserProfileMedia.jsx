@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 import useUsers from '../../hooks/useUsers';
 import CardPopupModal from '../../components/card/CardPopupModal';
 import { useAuth } from '../../providers/AuthProvider';
+import LoginPopup from '../../components/LoginPopup';
+import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
 
 export default function UserProfileMedia() {
 
@@ -13,15 +15,18 @@ export default function UserProfileMedia() {
     const {registeredCards} = useCardsProvider();
     const {id} = useParams();
     const [selectedCardId, setSelectedCardId] = useState(null);
-    
+    const {user, isLoggedIn} = useAuth();
 
-
+    const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+    function onCloseLoginPopup(){
+        setIsLoginPopupOpen(false)
+    }
 
     const userProfile = users.find(u => u._id === id);
 
     
     if(!userProfile){
-        return <p>Loading..</p>
+        return <OnLoadingSkeletonBox/>
     }
 
     const userCards = registeredCards.filter(uCard => uCard.userId === userProfile._id).sort((a,b) => b.createdAt.localeCompare(a.createdAt))
@@ -54,7 +59,7 @@ export default function UserProfileMedia() {
                         cursor: 'pointer',
                         '&:hover': {opacity: 0.85}
                     }}
-                    onClick = {() => setSelectedCardId(image._id)}
+                    onClick = {() => isLoggedIn ? setSelectedCardId(image._id): setIsLoginPopupOpen(true)}
                 />
             ))}
             {selectedCardId && (
@@ -64,7 +69,12 @@ export default function UserProfileMedia() {
                 />
             )}
         </Paper>
-
+        
+        {isLoginPopupOpen && (
+            <LoginPopup
+                onCloseLoginPopup={onCloseLoginPopup}
+            />
+        )}
     </Box>
   )
 }

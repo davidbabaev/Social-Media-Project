@@ -8,7 +8,7 @@ import { useCardsProvider } from '../providers/CardsProvider';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function CardsComments({card, users, addComment, removeComment, focusRef}) {
+export default function CardsComments({card, users, addComment, removeComment, focusRef, closeOnNav}) {
 
     const [commentText, setCommentText] = useState('');
     const {user: loggedInUser} = useAuth();
@@ -105,7 +105,10 @@ export default function CardsComments({card, users, addComment, removeComment, f
                                 <Avatar
                                     src={userComment?.profilePicture}
                                     sx={{cursor: 'pointer', width: 36, height: 36}}
-                                    onClick={() => navigate(`/profiledashboard/${userComment?._id}/profilemain`)}
+                                    onClick={() => {
+                                        navigate(`/profiledashboard/${userComment?._id}/profilemain`)
+                                        closeOnNav()
+                                }}
                                 />
             
                                 <Box sx={{display: 'flex', flexDirection: 'column', gap: 0.5}}>

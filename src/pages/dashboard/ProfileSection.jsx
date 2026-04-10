@@ -5,10 +5,14 @@ import { JOB_INDUSTRIES } from '../../constants/usersJobIndustries';
 import useCities from '../../hooks/useCities';
 import { getMaxBirthDate, getAgeByDate } from '../../utils/getAgeByBirthDate';
 import { useLocation } from 'react-router-dom';
-import { Alert, Avatar, Box, Button, Container, Grid, IconButton, MenuItem, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Container, Grid, IconButton, InputAdornment, MenuItem, Paper, Stack, TextField, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import EmojiPicker from 'emoji-picker-react';
+import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
+
 
 export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
 
@@ -39,6 +43,12 @@ export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
     const handleCountryChange = (e) => {
         setEditCountry(e.target.value);
         setEditCity('');
+    }
+
+    const [isEmojiOpen, setIsEmojiOpen] = useState(false);
+    const onEmojiClick = (emojiData) => {
+        setEditAboutMe(prev => prev + emojiData.emoji);
+        setIsEmojiOpen(false);
     }
 
     const previewProfilePicture = useMemo(() => {
@@ -153,7 +163,7 @@ export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
         ))
     }, [])
 
-    if(!user) return <p>Loading...</p>
+    if(!user) return <OnLoadingSkeletonBox/>
 
 return (
 <Box mb={2}>
@@ -177,7 +187,7 @@ return (
                     <Typography fontSize={20} fontWeight={700} pb={1}>
                         About            
                     </Typography>
-                    <Typography>
+                    <Typography fontSize={15} sx={{lineHeight: 1.2, whiteSpace: 'pre-wrap'}}>
                         {user.aboutMe}            
                     </Typography>
                 </Paper>
@@ -275,7 +285,10 @@ return (
                             bgcolor: 'background.paper',
                             border: '1px solid',
                             borderColor: 'divider',
-                            p:0.5
+                            p:0.5,
+                            '&:hover': {
+                                bgcolor: 'background.paper'
+                            }
                         }}
                     >
                         <EditIcon fontSize='small'/>
@@ -317,7 +330,10 @@ return (
                                 bgcolor: 'background.paper',
                                 border: '1px solid',
                                 borderColor: 'divider',
-                                p:0.5
+                                p:0.5,
+                                '&:hover': {
+                                    bgcolor: 'background.paper'
+                                }
                             }}
                         >
                             <EditIcon fontSize='small'/>
@@ -349,13 +365,13 @@ return (
                     <TextField 
                         fullWidth
                         multiline
-                        rows={6}
+                        rows={13}
                         placeholder='About me...'
                         value={editAboutMe}
                         onChange={(e) => setEditAboutMe(e.target.value)}
                         variant='standard'
                         sx={{
-                            p: 1,
+                            // p: 1,
                             '& .MuiInput-input::placeholder': {
                                 fontSize: 15,
                                 color: 'text.secondary'
@@ -370,9 +386,28 @@ return (
                             '& .MuiInput-underline:hover:before' : {borderBottom: 'none'},
                             '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: 'none' },
                         }}
+                        slotProps={{
+                            input : {
+                                endAdornment: (
+                                    <InputAdornment position='end' sx={{alignSelf: 'flex-end'}}>
+                                        <IconButton onClick={() => setIsEmojiOpen(!isEmojiOpen)}>
+                                            <EmojiEmotionsIcon/>
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }
+                        }}
                     />
 
                 </Paper>
+    
+                {isEmojiOpen && 
+                    <Box style={{position: 'fixed',  bottom: '80px', left: '50%',zIndex: 1050, transform: 'translateX(-50)'}}>
+                        <EmojiPicker  
+                            onEmojiClick={onEmojiClick}
+                        />
+                    </Box>
+                }
 
                 {/* Name Row */}
                 <Stack direction='row' spacing={2} sx={{ mt: 3, mb: 2}}>
@@ -398,6 +433,7 @@ return (
                 <TextField
                     fullWidth
                     variant='outlined'
+                    disabled
                     label='Email'
                     type='email'
                     value={editEmail}
@@ -496,6 +532,7 @@ return (
                             sx={{
                                 borderRadius: 5
                             }}
+                            disabled={!editName.trim() || !editLastName.trim()}
                             onClick={async() => {
                                 if(editCountry === ''){
                                     setError('Country is required')

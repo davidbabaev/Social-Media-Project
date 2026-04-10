@@ -13,6 +13,7 @@ import LoginPopup from '../components/LoginPopup';
 import useCommentsCards from '../hooks/useCommentsCards';
 import getTimeAgo from '../utils/getTimeAgo';
 import MediaDisplay from '../components/MediaDisplay';
+import OnLoadingSkeletonBox from '../components/OnLoadingSkeletonBox';
 
 export default function CardDetailsPage() {
 
@@ -34,7 +35,7 @@ export default function CardDetailsPage() {
     const currentCard = registeredCards.find((card) => card._id === id);
     
         if(!currentCard){
-            return <p>Loading..</p>
+            return <OnLoadingSkeletonBox/>
         }
     
     const creator = users.find((userC) => userC._id === currentCard.userId)

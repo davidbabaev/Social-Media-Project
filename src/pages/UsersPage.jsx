@@ -9,6 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import UserReusableCard from '../components/UserReusableCard';
 import { useCardsProvider } from '../providers/CardsProvider';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
+import OnLoadingSkeletonBox from '../components/OnLoadingSkeletonBox';
 
 
 function UsersPage() {
@@ -167,9 +168,8 @@ function UsersPage() {
     
     const visibleUsers = filtred.slice(0, count)
     
-    if(loading){
-        return <p>Loading...</p>
-    }
+    if(loading) return <OnLoadingSkeletonBox/>
+    
 
     return(
         <Container maxWidth='lg' sx={{py:3}}>

@@ -14,6 +14,7 @@ import ProfileSettingsPopup from './ProfileSettingsPopup';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import CreateCardModal from './CreateCardModal';
+import MirageLogo from '../assets/MirageLogo';
 
 export default function NavBar() {
 
@@ -71,6 +72,7 @@ export default function NavBar() {
             boxShadow: 'none',
             borderBottom: '1px solid',
             borderColor: 'divider',
+            zIndex: 500
         }}
     >
         <Container maxWidth="lg">
@@ -79,10 +81,10 @@ export default function NavBar() {
                     onClick={() => navigate('/')} 
                     sx={{cursor: 'pointer', mr: 4}}
                 >
-                    <img src="/src/assets/mirage_logo.svg" height='36' alt='mirage'/>
+                    <MirageLogo/>
                 </Box>
 
-                <Box sx={{display: 'flex', flex: '1'}}>
+                <Box sx={{display: 'flex', flex: '1', justifyContent: 'center'}}>
                     <Box
                         onClick={() => navigate('/')}
                         sx={navLinkSx('/')}
@@ -163,8 +165,18 @@ export default function NavBar() {
                                     }
                                     }} 
                                 >
-                                    <Badge badgeContent={unreadCount}>
-                                        <NotificationsIcon />
+                                    <Badge 
+                                        badgeContent={unreadCount}
+                                        color='error'
+                                        sx={{
+                                            '& .MuiBadge-badge':{
+                                                fontSize: 10,
+                                                height: 18,
+                                                minWidth: 18
+                                            }
+                                        }}
+                                    >
+                                        <NotificationsIcon/>
                                     </Badge>
                                 </IconButton>
 
@@ -186,14 +198,30 @@ export default function NavBar() {
                                 />
 
                             {isProfileAvaterOpen && (
-                                <ProfileSettingsPopup/>
+                                <ProfileSettingsPopup
+                                    onClose = {() => setIsProfileAvaterOpen(false)}
+                                />
                             )}
                         </Box>
                     </Box>
                 ): (
-                    <Box>
-                        <Button variant="outlined" onClick={() => navigate('/login')}>login</Button>
-                        <Button variant="outlined" onClick={() => navigate('/registered')}>Register</Button>
+                    <Box sx={{display: 'flex', gap:1, ml: 1}}>
+                        <Button 
+                            variant="outlined" 
+                            onClick={() => navigate('/login')}
+                            size='small'
+                            sx={{borderRadius: 5, fontSize: 12, px: 2}}
+                        >
+                            login
+                        </Button>
+                        <Button 
+                            variant="contained" 
+                            onClick={() => navigate('/registered')}
+                            size='small'
+                            sx={{borderRadius: 5, fontSize: 12, px: 2}}
+                        >
+                            Register
+                        </Button>
                     </Box>
                 )}
 

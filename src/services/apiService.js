@@ -25,7 +25,7 @@ const httpRequest = async (endpoint, method, body) => {
     const response = await fetch(BASE_URL + endpoint, options)
 
     if(!response.ok){
-        const message = response.text()
+        const message = await response.text()
         throw new Error(message);
     }
     return await response.json();

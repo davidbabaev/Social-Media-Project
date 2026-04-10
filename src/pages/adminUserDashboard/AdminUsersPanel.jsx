@@ -14,6 +14,7 @@ import BlockIcon from '@mui/icons-material/Block';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
 
 export default function AdminUsersPanel() {
 
@@ -162,9 +163,7 @@ export default function AdminUsersPanel() {
   const sortableSx = {...headCellSx, cursor: 'pointer', userSelect: 'none'}
 
   
-  if(loading){
-      return <p>Loading...</p>
-  }
+  if(loading) return <OnLoadingSkeletonBox/>
   
   
   return(

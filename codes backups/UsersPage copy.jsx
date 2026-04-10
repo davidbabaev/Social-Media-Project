@@ -3,6 +3,7 @@ import useDebounce from '../hooks/useDebounce';
 import { Link, useNavigate } from 'react-router-dom';
 import useUsers from '../hooks/useUsers';
 import useSelectedUsers from '../hooks/useSelectedUsers';
+import OnLoadingSkeletonBox from '../src/components/OnLoadingSkeletonBox';
 
 
 function UsersPage({value}) {
@@ -72,9 +73,7 @@ function UsersPage({value}) {
     
     const visibleUsers = filtred.slice(0, count)
     
-    if(loading){
-        return <p>Loading...</p>
-    }
+    if(loading) return <OnLoadingSkeletonBox/>
 
   return (
     <div>

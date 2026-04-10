@@ -41,10 +41,9 @@ export default function AllCardsPage() {
     const {registeredCards} = useCardsProvider();
     const [count, setCount] = useState(10);
     const {users} = useUsers(); 
-    const {favoriteCards} = useFavoriteCards();
+    const {favoriteCards ,handleFavoriteCards, handleRemoveCard} = useFavoriteCards();
 
     const [showAllCategories, setShowAllCategories] = useState(false)
-
     
     const handleCategoryToggle = (category) => {
         setCategoriesFilter((prev) => {
@@ -528,6 +527,9 @@ export default function AllCardsPage() {
                         onOpenCard={() => setSelectedCardId(card._id)}
                         openCommentCardId={openCommentCardId}
                         setOpenCommentCardId = {setOpenCommentCardId}
+                        onRemoveSavedCard = {() => handleRemoveCard(card)}
+                        onSaveCard = {() => handleFavoriteCards(card)}
+                        isSavedCard = {favoriteCards.some(c => c._id === card._id)}
                     />
                 ))}
 

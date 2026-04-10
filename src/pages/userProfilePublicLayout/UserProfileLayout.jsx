@@ -18,13 +18,19 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import UserProfileMedia from './UserProfileMedia';
+import LoginPopup from '../../components/LoginPopup';
+import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
 
 export default function UserProfileLayout() {
 
     const {id} = useParams();
     const{users} = useUsers();
-    const {user} = useAuth();
+    const {user, isLoggedIn} = useAuth();
     const {refreshFeed, registeredCards} = useCardsProvider();
+    const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+    function onCloseLoginPopup(){
+        setIsLoginPopupOpen(false)
+    }
     
     const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
     const {selectedUsers ,selectHandleUser} = useSelectedUsers();
@@ -48,7 +54,7 @@ export default function UserProfileLayout() {
     const postsAmount = registeredCards.filter((card) => card.userId === id).length
     
     if(!userProfile){
-        return <p>Loading..</p>
+        return <OnLoadingSkeletonBox/>
     }
 
   return (
@@ -80,7 +86,7 @@ export default function UserProfileLayout() {
                   mb:1,
                   display: 'flex',
               }} 
-              onClick={() => navigate(`/profiledashboard/${userProfile?._id}/following`)}
+            //   onClick={() => navigate(`/profiledashboard/${userProfile?._id}/following`)}
           >
               <Avatar
                   src={userProfile?.profilePicture}
@@ -91,7 +97,6 @@ export default function UserProfileLayout() {
                       mx:3,
                       border: '4px solid',
                       borderColor: 'background.paper',
-                      cursor: 'pointer',
                   }}
               />
 
@@ -218,8 +223,10 @@ export default function UserProfileLayout() {
                         size='small'
                         sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
                         onClick={async() => {
-                          await toggleFollow(userProfile._id)
-                          await refreshFeed();
+                            isLoggedIn ? 
+                          await toggleFollow(userProfile._id) &&
+                          await refreshFeed()
+                          : setIsLoginPopupOpen(true)
                         }}
                         color={isFollowByMe(userProfile._id) ? 'inherit' : 'primary'}
                       >
@@ -231,7 +238,7 @@ export default function UserProfileLayout() {
                         sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
                         // onClick={() => navigate(`/dashboard/myprofile`)}
                         startIcon={<ChatIcon/>}
-                        onClick={() => setMessageOpen(!messageOpen)}
+                        onClick={() => isLoggedIn ? setMessageOpen(!messageOpen) : setIsLoginPopupOpen(true)}
                       >
                           Message
                       </Button>
@@ -298,7 +305,7 @@ export default function UserProfileLayout() {
                                   borderColor: 'primary.main',
                                   color: 'primary.main'
                               }}
-                             onClick={() => selectHandleUser(userProfile)}
+                             onClick={() => isLoggedIn ? selectHandleUser(userProfile) : setIsLoginPopupOpen(true)}
                           >
                               <FavoriteIcon sx={{fontSize: 20}}/>
                           </IconButton>
@@ -315,7 +322,7 @@ export default function UserProfileLayout() {
                                   bgcolor: 'background.paper',
                                   color: 'text.secondary',
                               }}
-                              onClick={() => selectHandleUser(userProfile)}
+                              onClick={() => isLoggedIn ? selectHandleUser(userProfile) : setIsLoginPopupOpen(true)}
                           >
                               <FavoriteBorderIcon sx={{fontSize: 20}}/>
                           </IconButton>
@@ -378,6 +385,12 @@ export default function UserProfileLayout() {
             />
 
         </Tabs>
+
+        {isLoginPopupOpen && (
+            <LoginPopup
+                onCloseLoginPopup={onCloseLoginPopup}
+            />
+        )}
 
       <Routes>
         <Route index element = {<UserProfileMain/>}/>

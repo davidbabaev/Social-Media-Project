@@ -2,6 +2,7 @@ import React from 'react'
 import useUsers from '../../hooks/useUsers'
 import { useParams } from 'react-router-dom';
 import { Box, Paper, Typography } from '@mui/material';
+import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
 
 export default function UserProfileAbout() {
 
@@ -11,7 +12,7 @@ export default function UserProfileAbout() {
   const userProfile = users.find((user) => user._id === id);
 
   if(!userProfile) {
-    return <p>Loading...</p>
+    return <OnLoadingSkeletonBox/>
   }
 
     const userData = [
@@ -47,7 +48,7 @@ export default function UserProfileAbout() {
                   <Typography fontSize={20} fontWeight={700} pb={1}>
                       About            
                   </Typography>
-                  <Typography>
+                  <Typography fontSize={15} sx={{lineHeight: 1.2, whiteSpace: 'pre-wrap'}}>
                       {userProfile.aboutMe}            
                   </Typography>
               </Paper>

@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, IconButton, Paper, Tooltip, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import CheckIcon from '@mui/icons-material/Check';
@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useAuth } from '../providers/AuthProvider';
+import LoginPopup from './LoginPopup';
 
 
 export default function UserReusableCard({
@@ -25,7 +26,12 @@ export default function UserReusableCard({
     const{getFollowersCount, toggleFollow, isFollowByMe} = useFollowUser();
     const {refreshFeed} = useCardsProvider();
     const navigate = useNavigate();
-    const {user} = useAuth();
+    const {user, isLoggedIn} = useAuth();
+
+    const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+    function onCloseLoginPopup(){
+        setIsLoginPopupOpen(false)
+    }
 
   return (
     <Paper 
@@ -71,7 +77,7 @@ export default function UserReusableCard({
                     <CloseIcon fontSize='small'/>
                 </IconButton>
             ): (
-                <Box sx={{display: userObject._id === user._id ? 'none' : 'block'}}>
+                <Box sx={{display: userObject._id === user?._id ? 'none' : 'block'}}>
                     {isSaved ? (
                         <Tooltip title="Unsave from favorites">
                         <IconButton
@@ -102,7 +108,7 @@ export default function UserReusableCard({
                                     p:0.5,
                                     '&:hover': {bgcolor: 'rgba(0,0,0,0.7)'}
                               }}
-                              onClick={onSave}
+                              onClick={isLoggedIn ? onSave : () => setIsLoginPopupOpen(true)}
                           >
                               <FavoriteBorderIcon sx={{fontSize: 20}}/>
                           </IconButton>
@@ -111,9 +117,6 @@ export default function UserReusableCard({
                 </Box>
             )}
         </Box>
-
-        
-
 
         <Box 
             sx={{mt: '-40px', mb:1}} 
@@ -238,8 +241,8 @@ export default function UserReusableCard({
                 variant={isFollowByMe(userObject._id) ? 'outlined' : 'outlined'}
                 startIcon={isFollowByMe(userObject._id) ? <CheckIcon/> : <PersonAddIcon/>}
                 onClick={async () => {
-                    await toggleFollow(userObject._id)
-                    await refreshFeed()
+                    isLoggedIn ? await toggleFollow(userObject._id) && await refreshFeed()
+                    : setIsLoginPopupOpen(true)
                 }}
                 fullWidth
                 sx={{
@@ -255,6 +258,12 @@ export default function UserReusableCard({
                 {isFollowByMe(userObject._id) ? 'Following' : 'Follow'}
             </Button>
         </Box>
+
+        {isLoginPopupOpen && (
+            <LoginPopup
+                onCloseLoginPopup={onCloseLoginPopup}
+            />
+        )}
     </Paper>
   )
 }

@@ -21,6 +21,7 @@ import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import OnLoadingSkeletonBox from '../OnLoadingSkeletonBox';
 
 export default function CardDetailsModal({cardId, onClose}) {
 
@@ -48,7 +49,7 @@ export default function CardDetailsModal({cardId, onClose}) {
         const currentCard = registeredCards.find((card) => card._id === cardId);
         
             if(!currentCard){
-                return <p>Loading..</p>
+                return <OnLoadingSkeletonBox/>
             }
         
         const creator = users.find((userC) => userC._id === currentCard.userId)
@@ -95,6 +96,7 @@ export default function CardDetailsModal({cardId, onClose}) {
                 borderBottom: '1px solid',
                 borderColor: 'divider',
                 mx:2,
+                width: '88%'
                 }}>
 
                 {/* left avatar + info */}
@@ -102,7 +104,10 @@ export default function CardDetailsModal({cardId, onClose}) {
                     <Avatar
                         src={creator?.profilePicture}
                         sx={{cursor: 'pointer', width: 48, height: 48}}
-                        onClick={() => navigate(`/profiledashboard/${creator?._id}/profilemain`)}
+                        onClick={() => {
+                            navigate(`/profiledashboard/${creator?._id}/profilemain`)
+                            onClose()
+                        }}
                     />
 
                     <Box sx={{display: 'flex', flexDirection: 'column', gap: 0.5}}>
@@ -134,13 +139,13 @@ export default function CardDetailsModal({cardId, onClose}) {
                 {user && user._id !== creator?._id && !isFollowByMe(creator?._id) &&(
                     <Button
                         size='small'
-                        variant={'contained'}
+                        variant={'outlined'}
                         startIcon={<PersonAddIcon/>}
                         onClick={async () => {
                             await toggleFollow(creator?._id)
                             await refreshFeed()
                         }}
-                        sx={{fontSize: 11, minWidth: 70}}
+                        sx={{fontSize: 10, minWidth: 70}}
                     >
                         Follow
                     </Button>
@@ -288,6 +293,7 @@ export default function CardDetailsModal({cardId, onClose}) {
                     addComment={addComment}
                     removeComment = {removeComment}
                     focusRef = {inputRef}
+                    closeOnNav = {onClose}
                 />
             </Box>
         </Box>

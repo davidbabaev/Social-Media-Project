@@ -10,7 +10,7 @@ import Diversity1Icon from '@mui/icons-material/Diversity1';
 import LogoutIcon from '@mui/icons-material/Logout';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 
-export default function ProfileSettingsPopup() {
+export default function ProfileSettingsPopup({onClose}) {
 
   const {user, handleLogout, isLoggedIn} = useAuth();
   const navigate = useNavigate();
@@ -89,7 +89,10 @@ export default function ProfileSettingsPopup() {
                   }
                 }}
                 key={index}
-                onClick = {item.action}
+                onClick = {() => {
+                  item.action();
+                  onClose();
+                }}
               >
                 {item.icon}
                 <Typography fontSize={14}>{item.label}</Typography>

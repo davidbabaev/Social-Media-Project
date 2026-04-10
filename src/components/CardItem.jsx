@@ -20,14 +20,21 @@ import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
-
-
-export default function CardItem({card, onOpenCard ,openCommentCardId, setOpenCommentCardId}) {
+export default function CardItem({
+    card, 
+    onOpenCard,
+    openCommentCardId, 
+    setOpenCommentCardId,
+    onSaveCard, 
+    isSavedCard, 
+    onRemoveSavedCard,
+}) {
 
     const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
     function onCloseLoginPopup(){
         setIsLoginPopupOpen(false)
     }
+    
     const {addComment, countComments, removeComment} = useCommentsCards();
     const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
     const {refreshFeed} = useCardsProvider();
@@ -39,7 +46,7 @@ export default function CardItem({card, onOpenCard ,openCommentCardId, setOpenCo
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
     const {user, isLoggedIn} = useAuth();
     const {users} = useUsers(); 
-    const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
+    // const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
 
     const creator = users.find(u => u._id === card.userId);
 
@@ -247,13 +254,23 @@ export default function CardItem({card, onOpenCard ,openCommentCardId, setOpenCo
             }}>
 
                 {/* Favorite */}
-                <Button
-                    size='small'
-                    startIcon={favoriteCards.some(c => c._id === card._id) ? <BookmarkAddedIcon/> : <BookmarkBorderOutlinedIcon/>}
-                    onClick={() => isLoggedIn ? handleFavoriteCards(card) : setIsLoginPopupOpen(true)}
-                    >
-                    {favoriteCards.some(c => c._id === card._id) ? 'saved' : 'save'}
-                </Button>
+                {isSavedCard ? (
+                    <Button
+                        size='small'
+                        startIcon={<BookmarkAddedIcon/>}
+                        onClick={() => isLoggedIn ? onRemoveSavedCard() : setIsLoginPopupOpen(true)}
+                        >
+                        saved
+                    </Button>
+                ) : (
+                    <Button
+                        size='small'
+                        startIcon={<BookmarkBorderOutlinedIcon/>}
+                        onClick={() => isLoggedIn ? onSaveCard() : setIsLoginPopupOpen(true)}
+                        >
+                        save
+                    </Button>
+                )}
 
                 {/* Like */}
                 <Button

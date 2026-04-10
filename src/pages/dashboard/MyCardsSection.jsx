@@ -10,6 +10,7 @@ import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import CreateCardModal from '../../components/CreateCardModal';
 import { getAllCards } from '../../services/apiService';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
+import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
 
 
 
@@ -29,7 +30,7 @@ export default function MyCardsSection() {
 
 
     if(!user){
-        return <p>Loading ...</p>
+        return <OnLoadingSkeletonBox/>
     }
 
 return (

@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmationDialog from '../../components/ConfirmationDialog'
 import useUsers from '../../hooks/useUsers'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox'
 
 export default function DashboardLayout() {
 
@@ -33,7 +34,7 @@ export default function DashboardLayout() {
     const postsAmount = registeredCards.filter((card) => card.userId === user._id).length
 
     if(!user){
-        return <p>Loading..</p>
+        return <OnLoadingSkeletonBox/>
     }
 
     return (
@@ -223,7 +224,7 @@ export default function DashboardLayout() {
                                 size='small'
                                 sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
                                 endIcon={<EditIcon/>}
-                                onClick={() => setEditMode(true)}
+                                onClick={() => navigate(`/dashboard/myprofile`, { state: {editMode: true} })}
                                 
                             >
                                 Edit Profile

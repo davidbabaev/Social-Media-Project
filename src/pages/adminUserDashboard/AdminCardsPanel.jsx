@@ -16,6 +16,7 @@ import BlockIcon from '@mui/icons-material/Block';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import CardPopupModal from '../../components/card/CardPopupModal';
+import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
 
 
 
@@ -150,9 +151,7 @@ export default function AdminCardsPanel() {
   const headCellSx = {fontWeight: 600, fontSize: 12, whiteSpace: 'nowrap'}
   const sortableSx = {...headCellSx, cursor: 'pointer', userSelect: 'none'}
   
-  if(loading){
-      return <p>Loading...</p>
-  }
+  if(loading) return <OnLoadingSkeletonBox/>
 
   return(
     <Box sx={{p: 3}}>

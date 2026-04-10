@@ -13,6 +13,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import CreateCardModal from '../components/CreateCardModal';
 import CreateCardTrigger from '../components/CreateCardTrigger';
 import CardPopupModal from '../components/card/CardPopupModal';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import useFavoriteCards from '../hooks/useFavoriteCards';
+
 
 export default function FeedPage() {
 
@@ -27,6 +30,7 @@ export default function FeedPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [mediaType, setMediaType] = useState(null);
     const [selectedCardId, setSelectedCardId] = useState(null);
+    const {favoriteCards ,handleFavoriteCards, handleRemoveCard} = useFavoriteCards();
 
 
     // ----------------------------------------------------
@@ -35,9 +39,9 @@ export default function FeedPage() {
 
     const isUserDataFill = () => {
         if(
-            user?.address.country === "Not Defined" ||
-            user?.phone === null ||
-            user?.age === null ||
+            user?.address.country === "Not Defined" && "" ||
+            user?.phone === '' ||
+            user?.age === '' ||
             user?.job === "Not Defined" ||
             user?.gender === "Unknown" ||
             user?.birthDate === null ||
@@ -105,7 +109,7 @@ export default function FeedPage() {
 
                         <Box 
                             sx={{mt: '-40px', mb:1}} 
-                            onClick={() => navigate(`/profiledashboard/${user?._id}/following`)}
+                            onClick={() => navigate(`/profiledashboard/${user?._id}/profilemain`)}
                         >
                             <Avatar
                                 src={user?.profilePicture}
@@ -336,6 +340,9 @@ export default function FeedPage() {
                             onOpenCard={() => setSelectedCardId(card._id)}
                             openCommentCardId={openCommentCardId}
                             setOpenCommentCardId = {setOpenCommentCardId}
+                            onRemoveSavedCard = {() => handleRemoveCard(card)}
+                            onSaveCard = {() => handleFavoriteCards(card)}
+                            isSavedCard = {favoriteCards.some(c => c._id === card._id)}
                         />
                     ))}
 
@@ -358,7 +365,7 @@ export default function FeedPage() {
                             border: '0.5px solid',
                             borderColor: 'divider',
                             bgcolor: 'background.paper',
-                            overflow: 'hidden'
+                            overflow: 'hidden',
                         }}
                     >
                         {/* Header */}
@@ -379,9 +386,9 @@ export default function FeedPage() {
                         </Box>
 
                         {/* List */}
-                        <Box sx={{p:2}}>
+                        <Box>
                             {uniqueFriendsOfFriends.length === 0 && (
-                                <Typography fontSize={13} color='text.secondary'>
+                                <Typography fontSize={13} color='text.secondary' p={2}>
                                     No suggestions yet
                                 </Typography>
                             )}
@@ -393,13 +400,74 @@ export default function FeedPage() {
                                 key={userF._id}
                                 sx={{
                                     display:'flex',
-                                    alignItems: 'center',
-                                    gap: 1.5,
-                                    mb: 2,
-                                    px:2
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'flex-start',
+                                    gap: 1,
+                                    // mb: 2,
+                                    // px:2
+                                    my: 2
                                 }}
                             >
-                                <Avatar
+                                {/* avatar + info */}
+                                <Box sx={{display: 'flex', gap: 1.5, px: 2}}>
+                                    <Avatar
+                                        src={userF?.profilePicture}
+                                        sx={{cursor: 'pointer', width: 48, height: 48}}
+                                        onClick={() => navigate(`/profiledashboard/${userF?._id}/profilemain`)}
+                                    />
+                
+                                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 0.5}}>
+                                        <Typography component={'div'} fontWeight={600} fontSize={14} lineHeight={1.2}>
+                                            {userF?.name} {userF?.lastName}
+                                            <Typography 
+                                                component='span' 
+                                                color='text.secondary'
+                                                fontSize={11}
+                                                fontWeight={400}
+                                            >
+                                                {isFollowByMe(userF?._id) && ' · following'}
+                                            </Typography>
+                                        </Typography>
+                
+                                        <Typography component={'div'} fontSize={11} color='text.secondary' lineHeight={0.9}>
+                                            {userF?.job}
+                                        </Typography>
+                
+                                        <Typography component={'div'} fontSize={11} color='text.secondary' lineHeight={0.9}>
+                                            {getFollowersCount(userF?._id)} followers
+                                        </Typography>
+                                    </Box>
+                                </Box>
+
+                                <Box>
+                                    {user && user._id !== userF?._id && !isFollowByMe(userF?._id) &&(
+                                        <Button
+                                            size='small'
+                                            variant={'outlined'}
+                                            startIcon={<PersonAddIcon/>}
+                                            onClick={async () => {
+                                                await toggleFollow(userF?._id)
+                                                await refreshFeed();
+                                            }}
+                                            sx={{
+                                                fontSize: 9, 
+                                                minWidth: 70, 
+                                                borderRadius: 5, 
+                                                py: 0.3,
+                                                mx: 2,
+                                                '& .MuiButton-startIcon' : {mb: 0.2}, lineHeight: 0 
+                                            }}
+                                        >
+                                            Follow
+                                        </Button>
+                                    )}
+                                </Box>
+                            </Box>
+                        ))}
+
+
+{/*                                 <Avatar
                                     src={userF.profilePicture}
                                     sx={{
                                         width: 40,
@@ -430,9 +498,7 @@ export default function FeedPage() {
                                     sx={{fontSize: 11, minWidth: 70}}
                                 >
                                     {isFollowByMe(userF._id) ? 'Unfollow' : 'Follow'}
-                                </Button>
-                            </Box>
-                        ))}
+                                </Button> */}
 
                     </Paper>
                 </Grid>

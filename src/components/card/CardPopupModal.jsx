@@ -45,11 +45,14 @@ export default function CardPopupModal({cardId, onClose}) {
               onClick={onClose}
               sx={{
                 position: 'absolute',
-                top: 8,
-                right: 8,
-                m: 1,
+                top: 9,
+                right: 3,
+                // m: 1,
                 bgcolor: 'background.paper',
-                zIndex: 1100
+                // zIndex: 1100,
+                // '&:hover':{
+                //   bgcolor: 'background.paper'
+                // }
               }}
             >
               <CloseIcon/>
