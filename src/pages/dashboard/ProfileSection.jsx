@@ -5,7 +5,7 @@ import { JOB_INDUSTRIES } from '../../constants/usersJobIndustries';
 import useCities from '../../hooks/useCities';
 import { getMaxBirthDate, getAgeByDate } from '../../utils/getAgeByBirthDate';
 import { useLocation } from 'react-router-dom';
-import { Avatar, Box, Button, Container, Grid, IconButton, MenuItem, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Container, Grid, IconButton, MenuItem, Paper, Stack, TextField, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
@@ -32,6 +32,7 @@ export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
     const [mediaFile, setMediaFile] = useState(null);
     const fileInputRef = useRef(null);
     const fileCoverImgInputRef = useRef(null);
+    const [error, setError] = useState('');
 
     const maxDate = useMemo(() => getMaxBirthDate(13), []);
 
@@ -497,11 +498,11 @@ return (
                             }}
                             onClick={async() => {
                                 if(editCountry === ''){
-                                    alert('Country is required')
+                                    setError('Country is required')
                                     return;
                                 }
                                 if(editCity === 'Not Defined' || editCity === ''){
-                                    alert('City is required')
+                                    setError('City is required')
                                     return;
                                 }
                                 const formData = new FormData();
@@ -524,7 +525,7 @@ return (
                                 if(result.success){
                                     onCloseEdit();
                                 } else{
-                                    alert(result.message)
+                                    setError(result.message)
                                 }
                             }}
                         >
@@ -540,6 +541,11 @@ return (
                         >
                             Discard
                         </Button>
+                        {error && (
+                            <Alert severity='error' sx={{mb:2}}>
+                                {error}
+                            </Alert>
+                        )}
                 </Box>
 
             </Paper>

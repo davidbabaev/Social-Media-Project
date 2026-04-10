@@ -33,12 +33,11 @@ export default function CardItem({card, onOpenCard ,openCommentCardId, setOpenCo
     const {refreshFeed} = useCardsProvider();
     const [isExpanded, setIsExpanded] = useState(false)
     const theme = useTheme();
-    const inputRef = useRef(null);
-    
+    const inputRef = useRef(null);    
 
     const navigate = useNavigate();
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
-    const {user} = useAuth();
+    const {user, isLoggedIn} = useAuth();
     const {users} = useUsers(); 
     const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
 
@@ -187,7 +186,7 @@ export default function CardItem({card, onOpenCard ,openCommentCardId, setOpenCo
 
             {/* Media display */}
 
-            <Box onClick={onOpenCard} sx={{cursor: 'pointer'}}>
+            <Box onClick={isLoggedIn ? onOpenCard : () => setIsLoginPopupOpen(true)} sx={{cursor: 'pointer'}}>
                 <MediaDisplay
                     mediaUrl={card.mediaUrl}
                     mediaType={card.mediaType}
@@ -246,11 +245,12 @@ export default function CardItem({card, onOpenCard ,openCommentCardId, setOpenCo
                 justifyContent: 'space-between',
                 px: 1
             }}>
+
                 {/* Favorite */}
                 <Button
                     size='small'
                     startIcon={favoriteCards.some(c => c._id === card._id) ? <BookmarkAddedIcon/> : <BookmarkBorderOutlinedIcon/>}
-                    onClick={() => user ? handleFavoriteCards(card) : setIsLoginPopupOpen(true)}
+                    onClick={() => isLoggedIn ? handleFavoriteCards(card) : setIsLoginPopupOpen(true)}
                     >
                     {favoriteCards.some(c => c._id === card._id) ? 'saved' : 'save'}
                 </Button>
@@ -259,7 +259,7 @@ export default function CardItem({card, onOpenCard ,openCommentCardId, setOpenCo
                 <Button
                     size='small'
                     startIcon={isLikeByMe(card._id) ? <ThumbUpIcon/> : <ThumbUpOffAltIcon/>}
-                    onClick={() => toggleLike(card._id)}
+                    onClick={() => isLoggedIn ? toggleLike(card._id) : setIsLoginPopupOpen(true)}
                 >
                     {isLikeByMe(card._id) ? "Unlike" : "Like"}
                 </Button>
@@ -268,9 +268,9 @@ export default function CardItem({card, onOpenCard ,openCommentCardId, setOpenCo
                 <Button
                     size='small'
                     startIcon={<ChatBubbleOutlineIcon/>}
-                    onClick={() => {
-                        setOpenCommentCardId(openCommentCardId === card._id ? null : card._id)
-                        inputRef.current && inputRef.current.focus()
+                    onClick={() => { 
+                        isLoggedIn ? setOpenCommentCardId(openCommentCardId === card._id ? null : card._id) &&
+                        inputRef.current && inputRef.current.focus() : setIsLoginPopupOpen(true)
                     }}   
                 >
                     comment
@@ -284,6 +284,12 @@ export default function CardItem({card, onOpenCard ,openCommentCardId, setOpenCo
                     addComment={addComment}
                     removeComment = {removeComment}
                     focusRef = {inputRef}
+                />
+            )}
+
+            {isLoginPopupOpen && (
+                <LoginPopup
+                    onCloseLoginPopup={onCloseLoginPopup}
                 />
             )}
 

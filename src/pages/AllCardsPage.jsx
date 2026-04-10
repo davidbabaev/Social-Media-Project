@@ -168,7 +168,7 @@ export default function AllCardsPage() {
                 size={{md:4}} 
                 sx={{
                     position: 'sticky',
-                    top: 0,
+                    top: 90,
                     overflow: 'auto',
                     height: 'calc(100vh - 94px)',
                     overscrollBehavior: 'contain',
