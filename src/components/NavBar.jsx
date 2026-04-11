@@ -27,7 +27,7 @@ export default function NavBar() {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // scroll logic:
+    // mobile scroll logic:
     const [isBottomBarVisible, setIsBottomBarVisible] = useState(true);
     const lastScrollY = useRef(0);
 
@@ -48,6 +48,8 @@ export default function NavBar() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll)
     }, []);
+
+    
 
     const {
         notifications,
@@ -89,7 +91,7 @@ export default function NavBar() {
 
 
   return (
-    
+<>
     <AppBar 
         position='sticky'
         sx={{
@@ -257,66 +259,68 @@ export default function NavBar() {
             </Toolbar>
         </Container>
 
-        {/* Mobile Bottom navbar */}
-        <Box
-            position={'fixed'}
-            sx={{
-                bgcolor: 'background.paper',
-                boxShadow: 'none',
-                borderBottom: '1px solid',
-                borderColor: 'divider',
-                zIndex: 500,
-                bottom: 0,
-                width:'100%',
-                px: 2,
-                display: {xs: 'flex', md: 'none'},
-                transform: isBottomBarVisible ? 'translateY(0)' : 'translateY(100%)',
-                transition: 'transform 0.3s ease'
-            }}
-        >
-            <Box 
-                sx={{display: 'flex', flex: '1', justifyContent: 'space-between'}}
-            >
-                <Box
-                    onClick={() => navigate('/')}
-                    sx={navLinkSx('/')}
-                    >
-                    <HomeIcon fontSize='small'/>
-                    <Typography variant='caption'>Feed</Typography>
-                </Box>
-
-                <Box
-                    onClick={() => navigate('/allusers')}
-                    sx={navLinkSx('/allusers')}
-                    >
-                    <PeopleIcon fontSize='small'/>
-                    <Typography variant='caption'>Users</Typography>
-                </Box>
-
-                <Box
-                    onClick={() => navigate('/allcards')}
-                    sx={navLinkSx('/allcards')}
-                    >
-                    <ExploreIcon fontSize='small'/>
-                    <Typography variant='caption'>Posts</Typography>
-                </Box>
-
-                {isLoggedIn && (
-                    <Box
-                        sx={navLinkSx('/createnewcard')}
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        <AddBoxIcon fontSize='small'/>
-                        <Typography 
-                            variant='caption'
-                        >
-                            Create
-                        </Typography>
-                    </Box>
-                )}
-            </Box>
-        </Box>
     </AppBar>
 
+    {/* Mobile Bottom navbar */}
+    <Box
+        position={'fixed'}
+        sx={{
+            bgcolor: 'background.paper',
+            boxShadow: 'none',
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+            zIndex: 500,
+            bottom: 0,
+            width:'100%',
+            px: 2,
+            display: {xs: 'flex', md: 'none'},
+            transform: isBottomBarVisible ? 'translateY(0)' : 'translateY(100%)',
+            transition: 'transform 0.3s ease'
+        }}
+    >
+        <Box 
+            sx={{display: 'flex', flex: '1', justifyContent: 'space-between'}}
+        >
+            <Box
+                onClick={() => navigate('/')}
+                sx={navLinkSx('/')}
+                >
+                <HomeIcon fontSize='small'/>
+                <Typography variant='caption'>Feed</Typography>
+            </Box>
+
+            <Box
+                onClick={() => navigate('/allusers')}
+                sx={navLinkSx('/allusers')}
+                >
+                <PeopleIcon fontSize='small'/>
+                <Typography variant='caption'>Users</Typography>
+            </Box>
+
+            <Box
+                onClick={() => navigate('/allcards')}
+                sx={navLinkSx('/allcards')}
+                >
+                <ExploreIcon fontSize='small'/>
+                <Typography variant='caption'>Posts</Typography>
+            </Box>
+
+            {isLoggedIn && (
+                <Box
+                    sx={navLinkSx('/createnewcard')}
+                    onClick={() => setIsModalOpen(true)}
+                >
+                    <AddBoxIcon fontSize='small'/>
+                    <Typography 
+                        variant='caption'
+                    >
+                        Create
+                    </Typography>
+                </Box>
+            )}
+        </Box>
+    </Box>
+
+    </>
   )
 }

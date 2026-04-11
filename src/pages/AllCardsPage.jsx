@@ -6,11 +6,16 @@ import useDebounce from '../hooks/useDebounce';
 import useFavoriteCards from '../hooks/useFavoriteCards';
 import { CARD_CATEGORIES } from '../constants/cardsCategories';
 import SearchIcon from '@mui/icons-material/Search';
-import { Avatar, Box, Button, Checkbox, Chip, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Checkbox, Chip, Container, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 import CardItem from '../components/CardItem';
 import CardPopupModal from '../components/card/CardPopupModal';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import CloseIcon from '@mui/icons-material/Close';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 
 export default function AllCardsPage() {
 
@@ -33,6 +38,9 @@ export default function AllCardsPage() {
     
     const [openCommentCardId, setOpenCommentCardId] = useState(null);
     const [selectedCardId, setSelectedCardId] = useState(null);
+
+    // Mobile:
+    const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     
 
     // controls the search input for users
@@ -160,22 +168,25 @@ export default function AllCardsPage() {
     const countedRegisterCards = filteredCards.slice(0, count)    
 
   return (
-    <Container maxWidth="lg" sx={{py:3}}>
+    <Container maxWidth="lg" sx={{py:3, pb: {xs: 20, md: 3}}}>
         <Grid container spacing={3}>
             {/* Sidebar */}
             <Grid 
-                size={{md:4}} 
+                size={{xs: 12, md:4}} 
                 sx={{
-                    position: 'sticky',
-                    top: 90,
+                    position: {xs: 'fixed', md: 'sticky'},
+                    top: {xs: 0, md: 90},
+                    left: {xs: 0, md: 'auto'},
+                    width: {xs: '100%', md: 'auto'},
+                    height: {xs: '100vh', md: 'calc(100vh - 94px)'},
                     overflow: 'auto',
-                    height: 'calc(100vh - 94px)',
                     overscrollBehavior: 'contain',
-                    display: 'flex', 
+                    bgcolor: {xs: 'background.default', md: 'transparent'},
+                    zIndex: {xs: 1000, md: 'auto'},
+                    p: {xs: 2, md:0},
+                    display: {xs: isFiltersOpen ? 'flex' : 'none', md: 'flex'}, 
                     flexDirection: 'column',
                     gap: 2,
-                    // py: 3,
-                    // px: 1,
                     
                     // hide scrollbar visually but keep it functional
                     '&::-webkit-scrollbar': {display: 'none'}
@@ -288,7 +299,16 @@ export default function AllCardsPage() {
                         )
                     })}
                     <Button 
+                        sx={{
+                            border: '1px solid',
+                            borderColor: 'primary',
+                            borderRadius: 5,
+                            fontSize: 11,
+                            px: 2
+                        }}
+                        size='small'
                         onClick={() => setShowAllCategories(!showAllCategories)}
+                        endIcon={!showAllCategories ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/>}
                     >
                         {showAllCategories ? 'Show less' : 'Show More..'}
                     </Button>
@@ -450,50 +470,100 @@ export default function AllCardsPage() {
                     </Box>
                 </Paper>
 
+                <Box sx={{display: {xs: 'flex', md: 'none'}, gap: 1}}>
+                    <Button
+                        variant='contained'
+                        fullWidth
+                        onClick={() => setIsFiltersOpen(false)}
+                        sx={{
+                            display: {xs: 'flex', md: 'none'},
+                            borderRadius: 5,
+                        }}
+                        startIcon={<FilterListIcon/>}
+                    >
+                        Apply Filters
+                    </Button>
+
+                    <IconButton
+                        sx={{
+                            display: {xs: 'flex', md: 'none'},
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            borderRadius: 5,
+                        }} 
+                        variant='contained'
+                        size='small'
+                        onClick={() => setIsFiltersOpen(!isFiltersOpen)}    
+                    >
+                        <CloseIcon color='divider'/>
+                    </IconButton>
+                </Box>
+
             </Grid>
+
 
             <Grid size={{md:8}}>
                 {/* main */}
-                <TextField
-                    fullWidth
-                    size='small'
-                    placeholder='Search Post..'
-                    value={searchCard}
-                    onChange={(e) => setSearchCard(e.target.value)}
-                    slotProps={{
-                        input: {
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            )
-                        }
-                    }}
-                    sx={{
-                        '& .MuiOutlinedInput-root':{
+                <Box sx={{display: 'flex', gap:1}}>
+
+                    <TextField
+                        fullWidth
+                        size='small'
+                        placeholder='Search Post..'
+                        value={searchCard}
+                        onChange={(e) => setSearchCard(e.target.value)}
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                )
+                            }
+                        }}
+                        sx={{
+                            '& .MuiOutlinedInput-root':{
+                                borderRadius: 5,
+                                fontSize: 13
+                            }
+                        }}
+                    />
+                    <IconButton
+                        sx={{
+                            display: {xs: 'flex', md: 'none'},
+                            border: '1px solid',
+                            borderColor: 'divider',
                             borderRadius: 5,
-                            fontSize: 13
-                        }
-                    }}
-                />
+                            mb:1
+                        }} 
+                        variant='contained'
+                        size='small'
+                        onClick={() => setIsFiltersOpen(!isFiltersOpen)}    
+                    >
+                        <FilterListIcon color='divider'/>
+                    </IconButton>
+                </Box>
+                <Typography 
+                    color='text.secondary'
+                    fontSize={15}
+                    mx={{sx: 1, md: 1}}
+                    mt={{sx: 0, md: 1}}
+                >
+                    {filteredCards.length} Results
+                </Typography>
 
                 <Box 
                     sx={{
                         display: 'flex', 
                         justifyContent: 'space-between', 
-                        p:1,
+                        py:1,
                     }}>
-                    <Typography 
-                        color='text.secondary'
-                        fontSize={15}
-                    >
-                        {filteredCards.length} Results
-                    </Typography>
 
                     <Box sx={{
                         display: 'flex', 
+                        justifyContent: 'start',
+                        alignItems: {xs: 'flex-start', md: 'center'},
                         gap: 1, 
-                        alignItems: 'center', 
                         flexWrap: 'wrap'
                     }}>
 
@@ -506,19 +576,19 @@ export default function AllCardsPage() {
                             />
                         ))}
 
-                        {activeFilters.length > 0 && (
-                            <Button
-                                size='small'
-                                onClick={handleClearAllFilters}
-                                sx={{p:1, borderRadius: 5, fontSize: 11}}
-                                variant='outlined'
-                            >
-                                Clear All Filters
-                            </Button>
-                        )}
 
                     </Box>
                 </Box>
+                {activeFilters.length > 0 && (
+                    <Button
+                        size='small'
+                        onClick={handleClearAllFilters}
+                        sx={{borderRadius: 5, fontSize: 11, mx: 0}}
+                        variant='outlined'
+                    >
+                        Clear All Filters
+                    </Button>
+                )}
 
                 {countedRegisterCards.map((card) => (
                     <CardItem
