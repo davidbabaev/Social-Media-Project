@@ -3,13 +3,17 @@ import useDebounce from '../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
 import useUsers from '../hooks/useUsers';
 import useSelectedUsers from '../hooks/useSelectedUsers';
-import { Box, Button, Checkbox, Chip, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Chip, Container, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 import UsersPageSorts from '../components/UsersPageSorts';
 import SearchIcon from '@mui/icons-material/Search';
 import UserReusableCard from '../components/UserReusableCard';
 import { useCardsProvider } from '../providers/CardsProvider';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import OnLoadingSkeletonBox from '../components/OnLoadingSkeletonBox';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import CloseIcon from '@mui/icons-material/Close';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 
 function UsersPage() {
@@ -28,6 +32,9 @@ function UsersPage() {
     // filters
     const [genderFilter, setGenderFilter] = useState('');
     const [countriesFilter, setCountriesFilter] = useState([]);
+
+    // Mobile:
+    const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     
     const navigateToUser = useNavigate();
 
@@ -172,18 +179,24 @@ function UsersPage() {
     
 
     return(
-        <Container maxWidth='lg' sx={{py:3}}>
+        <Container maxWidth='lg' sx={{py:3, pb: 3}}>
             <Grid container spacing={3}>
 
                 {/* Side Bar */}
                 <Grid 
-                    size={{md: 4}}
+                    size={{xs: 12, md: 4}}
                     sx={{
-                        position: 'sticky',
-                        top: 64,
+                        position: {xs: 'fixed', md: 'sticky'},
+                        top: {xs: 0, md: 64},
+                        left: {xs: 0, md: 'auto'},
+                        width:{xs: '100%', md: 'auto'},
+                        height: {xs: '100vh', md: 'calc(100vh - 64px)'},
                         overflow: 'auto',
-                        maxHeight: 'calc(100vh - 64px)',
-                        display: 'flex', 
+                        overscrollBehavior: 'contain',
+                        bgcolor: {xs: 'background.default', md: 'transparent'},
+                        zIndex: {xs: 1000, md:'auto'},
+                        p: {xs: 2, md:0},
+                        display: {xs: isFiltersOpen ? 'flex' : 'none', md: 'flex'}, 
                         flexDirection: 'column',
                         gap: 2,
                         
@@ -288,33 +301,89 @@ function UsersPage() {
                         })}
                     </Paper>
                     
+                    <Box sx={{display: {xs: 'flex', md: 'none'}, gap: 1}}>
+                        <Button
+                            variant='contained'
+                            fullWidth
+                            onClick={() => setIsFiltersOpen(false)}
+                            disabled={activeFilters.length === 0}
+                            sx={{
+                                display: {xs: 'flex', md: 'none'},
+                                borderRadius: 5,
+                            }}
+                            startIcon={<FilterListIcon/>}
+                        >
+                            Apply Filters
+                        </Button>
+
+                        <IconButton
+                            sx={{
+                                display: {xs: 'flex', md: 'none'},
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                borderRadius: 5,
+                            }} 
+                            variant='contained'
+                            size='small'
+                            onClick={() => setIsFiltersOpen(!isFiltersOpen)}    
+                        >
+                            <CloseIcon color='divider'/>
+                        </IconButton>
+                    </Box>
                 </Grid>
                 
                 
 
                 <Grid size={{md:8}}>
-                    <TextField
-                        fullWidth
-                        size='small'
-                        placeholder='Search People..'
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        slotProps={{
-                            input: {
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                )
-                            }
-                        }}
-                        sx={{
-                            '& .MuiOutlinedInput-root':{
+
+                    <Box sx={{display: 'flex', gap:1}}>
+                        <TextField
+                            fullWidth
+                            size='small'
+                            placeholder='Search People..'
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <SearchIcon />
+                                        </InputAdornment>
+                                    )
+                                }
+                            }}
+                            sx={{
+                                '& .MuiOutlinedInput-root':{
+                                    borderRadius: 5,
+                                    fontSize: 13
+                                }
+                            }}
+                        />
+
+                        <IconButton
+                            sx={{
+                                display: {xs: 'flex', md: 'none'},
+                                border: '1px solid',
+                                borderColor: 'divider',
                                 borderRadius: 5,
-                                fontSize: 13
-                            }
-                        }}
-                    />
+                                mb:1
+                            }} 
+                            variant='contained'
+                            size='small'
+                            onClick={() => setIsFiltersOpen(!isFiltersOpen)}    
+                        >
+                            <FilterListIcon color='divider'/>
+                        </IconButton>
+                    </Box>
+
+                    <Typography 
+                        color='text.secondary'
+                        fontSize={15}
+                        mx={{xs: 1, md: 1}}
+                        mt={{xs: 0, md: 1}}
+                    >
+                        {filtred.length} Results
+                    </Typography>
 
                     <Box
                         sx={{
@@ -323,13 +392,6 @@ function UsersPage() {
                             p:1, 
                         }}
                     >
-                        <Typography 
-                            color='text.secondary'
-                            fontSize={15}
-                        >
-                            {filtred.length} Results
-                        </Typography>
-
                         <Box
                             sx={{
                                 display: 'flex', 
@@ -347,18 +409,19 @@ function UsersPage() {
                                 />
                             ))}
 
-                            {activeFilters.length > 0 && (
-                                <Button
-                                    size='small'
-                                    onClick={handleClearAllFilters}
-                                    sx={{p:1, borderRadius: 5, fontSize: 11}}
-                                    variant='outlined'
-                                >
-                                    Clear All Filters
-                                </Button>
-                           )}
                         </Box>
                     </Box>
+
+                    {activeFilters.length > 0 && (
+                        <Button
+                            size='small'
+                            onClick={handleClearAllFilters}
+                            sx={{borderRadius: 5, fontSize: 11, mx:1}}
+                            variant='outlined'
+                        >
+                            Clear All Filters
+                        </Button>
+                    )}
 
                     
                     {/* Users List */}
@@ -367,7 +430,7 @@ function UsersPage() {
                         sx={{
                             display: 'grid', 
                             // flexWrap: 'wrap',
-                            gridTemplateColumns: 'repeat(2, 1fr)',
+                            gridTemplateColumns: {xs: 'repeat(1, 1fr)', md:'repeat(2, 1fr)'},
                             py: 3, 
                             gap: 2,
                             // width: '100%',

@@ -475,6 +475,7 @@ export default function AllCardsPage() {
                         variant='contained'
                         fullWidth
                         onClick={() => setIsFiltersOpen(false)}
+                        disabled={activeFilters.length === 0}
                         sx={{
                             display: {xs: 'flex', md: 'none'},
                             borderRadius: 5,
@@ -543,11 +544,12 @@ export default function AllCardsPage() {
                         <FilterListIcon color='divider'/>
                     </IconButton>
                 </Box>
+
                 <Typography 
                     color='text.secondary'
                     fontSize={15}
-                    mx={{sx: 1, md: 1}}
-                    mt={{sx: 0, md: 1}}
+                    mx={{xs: 1, md: 1}}
+                    mt={{xs: 0, md: 1}}
                 >
                     {filteredCards.length} Results
                 </Typography>
@@ -579,6 +581,7 @@ export default function AllCardsPage() {
 
                     </Box>
                 </Box>
+
                 {activeFilters.length > 0 && (
                     <Button
                         size='small'
