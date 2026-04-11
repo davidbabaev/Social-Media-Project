@@ -27,6 +27,28 @@ export default function NavBar() {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // scroll logic:
+    const [isBottomBarVisible, setIsBottomBarVisible] = useState(true);
+    const lastScrollY = useRef(0);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            if(currentScrollY > lastScrollY.current && currentScrollY > 50){
+                setIsBottomBarVisible(false);
+            }
+            else{
+                setIsBottomBarVisible(true);
+            }
+
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, []);
+
     const {
         notifications,
         handleDeleteNotification,
@@ -63,6 +85,9 @@ export default function NavBar() {
         borderColor: location.pathname === path ? 'primary.main' : 'transparent',
     })
 
+
+
+
   return (
     
     <AppBar 
@@ -84,7 +109,9 @@ export default function NavBar() {
                     <MirageLogo/>
                 </Box>
 
-                <Box sx={{display: 'flex', flex: '1', justifyContent: 'center'}}>
+                <Box 
+                    sx={{display: {xs: 'none', md: 'flex'}, flex: '1', justifyContent: 'center'}}
+                >
                     <Box
                         onClick={() => navigate('/')}
                         sx={navLinkSx('/')}
@@ -139,6 +166,7 @@ export default function NavBar() {
                         display: 'flex',
                         alignItems: 'center',
                         color: 'text.secondary',
+                        ml: 'auto',
                         '&:hover': {
                             color: 'text.primary'
                         }
@@ -228,6 +256,66 @@ export default function NavBar() {
 
             </Toolbar>
         </Container>
+
+        {/* Mobile Bottom navbar */}
+        <Box
+            position={'fixed'}
+            sx={{
+                bgcolor: 'background.paper',
+                boxShadow: 'none',
+                borderBottom: '1px solid',
+                borderColor: 'divider',
+                zIndex: 500,
+                bottom: 0,
+                width:'100%',
+                px: 2,
+                display: {xs: 'flex', md: 'none'},
+                transform: isBottomBarVisible ? 'translateY(0)' : 'translateY(100%)',
+                transition: 'transform 0.3s ease'
+            }}
+        >
+            <Box 
+                sx={{display: 'flex', flex: '1', justifyContent: 'space-between'}}
+            >
+                <Box
+                    onClick={() => navigate('/')}
+                    sx={navLinkSx('/')}
+                    >
+                    <HomeIcon fontSize='small'/>
+                    <Typography variant='caption'>Feed</Typography>
+                </Box>
+
+                <Box
+                    onClick={() => navigate('/allusers')}
+                    sx={navLinkSx('/allusers')}
+                    >
+                    <PeopleIcon fontSize='small'/>
+                    <Typography variant='caption'>Users</Typography>
+                </Box>
+
+                <Box
+                    onClick={() => navigate('/allcards')}
+                    sx={navLinkSx('/allcards')}
+                    >
+                    <ExploreIcon fontSize='small'/>
+                    <Typography variant='caption'>Posts</Typography>
+                </Box>
+
+                {isLoggedIn && (
+                    <Box
+                        sx={navLinkSx('/createnewcard')}
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        <AddBoxIcon fontSize='small'/>
+                        <Typography 
+                            variant='caption'
+                        >
+                            Create
+                        </Typography>
+                    </Box>
+                )}
+            </Box>
+        </Box>
     </AppBar>
 
   )
