@@ -80,10 +80,10 @@ export default function FeedPage() {
     [...new Map(friendsOfFriends.map((u => {return [u._id, u]}))).values()]
 
     return(
-        <Container maxWidth='lg' sx={{py:3}}>
+        <Container maxWidth='lg' sx={{py:{xs: 0, md:3}}}>
             <Grid container spacing={3}>
                 {/* Left column */}
-                <Grid size={{xs:12, md:3}}>
+                <Grid size={{xs:12, md:3}} display={{xs: 'none', md: 'block'}}>
                     <Paper
                         elevation={0}
                         sx={{
@@ -317,12 +317,14 @@ export default function FeedPage() {
                         </Alert>
                     )}
 
-                    <CreateCardTrigger
-                        onOpen={(type) => {
-                            setIsModalOpen(true);
-                            setMediaType(type);
-                        }}
-                    />
+                    <Box display={{xs: 'none', md: 'block'}}>
+                        <CreateCardTrigger
+                            onOpen={(type) => {
+                                setIsModalOpen(true);
+                                setMediaType(type);
+                            }}
+                        />
+                    </Box>
 
                     {isModalOpen && (
                         <CreateCardModal
