@@ -53,7 +53,7 @@ export default function DashboardLayout() {
                 <Box
                     sx={{
                         width: '100%',
-                        height: 230,
+                        height: {xs: 100,md: 230},
                         borderRadius: 4,
                         backgroundImage: `url(${user?.coverImage})`,
                         backgroundSize: 'cover',
@@ -71,20 +71,45 @@ export default function DashboardLayout() {
                     <Avatar
                         src={user?.profilePicture}
                         sx={{
-                            mt: '-100px', 
-                            width: 180,
-                            height: 180,
-                            mx:3,
-                            border: '4px solid',
+                            mt: {xs: '-30px',md: '-100px'}, 
+                            width: {xs: 80,md: 180},
+                            height: {xs: 80,md: 180},
+                            mx:{xs: 1, md:3},
+                            borderStyle: 'solid',
+                            borderWidth: {xs: 2, md: 4},
                             borderColor: 'background.paper',
                             cursor: 'pointer',
                         }}
                     />
+                    
+                    {/* mobile stats and name */}
+                    <Box
+                        sx={{
+                            display:{xs: 'flex', md: 'none'},
+                            flexDirection: 'column',
+                            gap: 0.5,
+                            justifyContent: 'center'
+                        }} 
+                    >
+                        <Typography fontWeight={600} fontSize={18} sx={{cursor: 'pointer', mb: -0.5}}
+                            onClick={() => navigate(`/profiledashboard/${user?._id}/profilemain`)}
+                        >
+                            {user?.name} {user?.lastName}
+                        </Typography>  
+
+                            <Box sx={{display: 'flex', gap: 1}}>
+                                <Typography fontSize={13}><b>{getFollowersCount(user?._id)}</b> <Typography component="span" color="text.secondary" fontSize={13}>followers</Typography></Typography>
+                                <Typography fontSize={13}><b>{(user?.following || []).length}</b> <Typography component="span" color="text.secondary" fontSize={13}>following</Typography></Typography>
+                                <Typography fontSize={13}><b>{postsAmount}</b> <Typography component="span" color="text.secondary" fontSize={13}>posts</Typography></Typography>
+                            </Box>
+                    </Box>
+
+
 
                     {/* Stats row */}
                     <Box sx={{
                         width: '100%',
-                        display: 'flex',
+                        display: {xs: 'none',md:'flex'},
                         justifyContent: 'start',
                         gap: 3,
                         borderBottom: '1px solid',
@@ -171,8 +196,9 @@ export default function DashboardLayout() {
                 
                 <Box sx={{display: 'flex', justifyContent: 'space-between', pr:2 }}>
                     {/* Name, Job, Location */}
-                    <Box sx={{mx: 3, mb:2}}>
+                    <Box sx={{mx: {xs: 1,md:3}, mb:1}}>
                         <Typography 
+                            display={{xs: 'none', md: 'block'}}
                             fontWeight={600} 
                             fontSize={25}
                             onClick={() => navigate(`/profiledashboard/${user?._id}/profilemain`)}
@@ -194,7 +220,7 @@ export default function DashboardLayout() {
                         </Typography>
                     </Box>
                     
-                    <Box sx={{display: 'flex', gap: 1, alignItems: 'center'}}>
+                    <Box sx={{display: {xs: 'none',md:'flex'}, gap: 1, alignItems: 'center'}}>
 
                         <Tooltip title="View your public profile">
                             <IconButton 
@@ -246,6 +272,57 @@ export default function DashboardLayout() {
                     </Box>
                 </Box>
 
+                <Box sx={{display: {xs: 'flex',md:'none'}, gap: 1, alignItems: 'center'}}>
+
+                    <Tooltip title="View your public profile">
+                        <IconButton 
+                            size='small'
+                            onClick={() => navigate(`/profiledashboard/${user._id}/profilemain`)}
+                            sx={{
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                px: 1.4, 
+                                py:1.4,
+                                bgcolor: 'background.paper',
+                                color: 'text.secondary',
+                                // '&:hover':{
+                                //     bgcolor: 'action.hover',
+                                //     borderColor: 'primary.main',
+                                //     color: 'primary.main'
+                                // }
+                            }}
+                        >
+                            <RemoveRedEyeIcon sx={{fontSize: 15}}/>
+                        </IconButton>
+                    </Tooltip>
+
+                    {editMode === false && (
+                        <Button 
+                            variant='contained'
+                            size='small'
+                            sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
+                            endIcon={<EditIcon/>}
+                            onClick={() => navigate(`/dashboard/myprofile`, { state: {editMode: true} })}
+                            
+                        >
+                            Edit Profile
+                        </Button>
+                    )}
+                    
+                    {!user.isAdmin && (
+                        <Button 
+                            variant='outlined'
+                            color='error'
+                            size='small'
+                            sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
+                            endIcon={<DeleteIcon/>}
+                            onClick={() => setConfirmDeleteUser(user)}
+                        >
+                            Delete Profile
+                        </Button>
+                    )}
+                </Box>
+        
             </Paper>
 
             <Tabs sx={{
@@ -253,26 +330,32 @@ export default function DashboardLayout() {
                 borderColor: 'divider',
             }}
                 value={location.pathname}
+                variant='scrollable'
+                scrollButtons={false}
             >
                 <Tab 
+                    sx={{fontSize: {xs: 11, md: 14}}}
                     label='Profile' 
                     value='/dashboard/myprofile'
                     onClick={() => navigate('/dashboard/myprofile')}
                     />
 
                 <Tab 
+                    sx={{fontSize: {xs: 11, md: 14}}}
                     label='My Posts'
                     value='/dashboard/mycards'
                     onClick={() => navigate('/dashboard/mycards')}
                     />
 
                 <Tab 
+                    sx={{fontSize: {xs: 11, md: 14}}}
                     label='Favorite Users' 
                     value='/dashboard/myfavorites'
                     onClick={() => navigate('/dashboard/myfavorites')}
                     />
 
                 <Tab 
+                    sx={{fontSize: {xs: 11, md: 14}}}
                     label='Favorite Posts' 
                     value='/dashboard/myfavoritescards'
                     onClick={() => navigate('/dashboard/myfavoritescards')}

@@ -34,6 +34,7 @@ export default function FavoriteCards() {
                         sx={{
                             display: 'flex',
                             width: '100%', 
+                            flexDirection: {xs: 'column', md: 'row'},
                             borderRadius: 3,
                             border: '0.5px solid',
                             borderColor: 'divider',
@@ -43,16 +44,18 @@ export default function FavoriteCards() {
                             gap: 2,
                         }}
                     >
-                        <MediaDisplay
-                            mediaUrl={favCard.mediaUrl}
-                            mediaType={favCard.mediaType}
-                            style={{
-                                maxWidth: 250, 
-                                height: '100%', 
-                                objectFit: 'cover',
-                                borderRadius: 10
-                            }}
-                        />
+                        <Box sx={{maxWidth: {xs: '100%', md: 250}}}>
+                            <MediaDisplay
+                                mediaUrl={favCard.mediaUrl}
+                                mediaType={favCard.mediaType}
+                                style={{
+                                    width: '100%',
+                                    height: '100%', 
+                                    objectFit: 'cover',
+                                    borderRadius: 10
+                                }}
+                            />
+                        </Box>
 
                         <Box flex={1}>
 

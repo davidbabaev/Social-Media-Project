@@ -100,6 +100,7 @@ export default function UserProfileLayout() {
                       borderColor: 'background.paper',
                   }}
               />
+                {/* mobile stats */}
               <Box 
                 display={{xs: 'flex', md: 'none'}} 
                 sx={{
@@ -287,9 +288,7 @@ export default function UserProfileLayout() {
                             posts
                         </Typography>
                     </Box>
-                </Box>
-                      
-                
+                </Box>      
           </Box>
           
           <Box sx={{display: 'flex', justifyContent: 'space-between', pr:2 }}>

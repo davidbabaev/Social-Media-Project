@@ -8,7 +8,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
-export default function Notifications({notificationsValue, handleDeleteNotificationValue}) {
+export default function Notifications({
+  notificationsValue, 
+  handleDeleteNotificationValue,
+  onClose
+}) {
 
   const {users} = useUsers();
   const navigate = useNavigate();
@@ -75,7 +79,10 @@ export default function Notifications({notificationsValue, handleDeleteNotificat
                 '&:last-child': {borderBottom: 'none'},
                 '&:hover': {bgcolor: 'action.hover'}
               }}
-              onClick={() => navigate(`/profiledashboard/${notificationSenderUser?._id}/profilemain`)}
+              onClick={() => {
+                navigate(`/profiledashboard/${notificationSenderUser?._id}/profilemain`)
+                onClose()
+              }}
             >
               <ListItemAvatar sx={{maxWidth: 44}}
                 onClick={() => navigate(`/profiledashboard/${notificationSenderUser?._id}/profilemain`)}

@@ -215,6 +215,7 @@ export default function NavBar() {
                                         countValue = {unreadCount}
                                         notificationsValue = {notifications}
                                         handleDeleteNotificationValue = {handleDeleteNotification}
+                                        onClose={() => setIsNotificationsOpen(false)}
                                     />
                                 )}  
                             </Box>

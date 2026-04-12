@@ -17,7 +17,7 @@ export default function SelectedPage() {
         maxWidth='lg' 
         sx={{
             display: 'grid', 
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: {xs: 'repeat(1, 1fr)', md:'repeat(3, 1fr)'},
             py: 3, 
             gap: 2,
             py: 3, 

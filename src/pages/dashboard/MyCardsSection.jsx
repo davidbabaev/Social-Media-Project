@@ -50,7 +50,8 @@ return (
             <Box 
                 sx={{
                     width: '100%', 
-                    display: 'flex', 
+                    display: 'flex',
+                    flexDirection: {xs: 'column', md: 'row'},
                     borderRadius: 3,
                     border: '0.5px solid',
                     borderColor: 'divider',
@@ -60,16 +61,18 @@ return (
                     gap: 2
                 }}
             >
-                <MediaDisplay
-                    mediaUrl={card.mediaUrl}
-                    mediaType={card.mediaType}
-                    style={{
-                        maxWidth: 250, 
-                        height: '100%', 
-                        objectFit: 'cover',
-                        borderRadius: 10
-                    }}
-                />
+                <Box sx={{maxWidth: {xs: '100%', md: 250}}}>
+                    <MediaDisplay
+                        mediaUrl={card.mediaUrl}
+                        mediaType={card.mediaType}
+                        style={{
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'cover',
+                            borderRadius: 10
+                        }}
+                    />
+                </Box>
 
                 <Box flex={1}>
                     {/* Title */}
