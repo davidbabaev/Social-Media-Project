@@ -226,7 +226,7 @@ export default function NavBar() {
                                 sx={{cursor: 'pointer'}} 
                                 src={user?.profilePicture}
                                 onClick={() => setIsProfileAvaterOpen(!isProfileAvaterOpen)}
-                                />
+                            />
 
                             {isProfileAvaterOpen && (
                                 <ProfileSettingsPopup

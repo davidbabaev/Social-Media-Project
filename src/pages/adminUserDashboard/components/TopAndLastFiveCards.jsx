@@ -13,7 +13,7 @@ export default function TopAndLastFiveCards() {
     const {users} = useUsers();
 
   return (
-    <Box sx={{display: 'flex', gap: 2}}>
+    <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'} ,gap: 2}}>
         <Box
             sx={{
                 flex: 1,

@@ -15,6 +15,7 @@ export default function MostPopular() {
   return (
     <Box sx={{
       display: 'flex', 
+      flexDirection: {xs:'column', md: 'row'},
       justifyContent: 'start', 
       alignItems: 'start', 
       gap: 2

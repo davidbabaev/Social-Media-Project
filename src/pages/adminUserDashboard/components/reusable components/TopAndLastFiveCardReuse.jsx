@@ -33,7 +33,8 @@ export default function TopAndLastFiveCardReuse({
                         <Box
                             sx={{
                                 display: 'flex',
-                                width: '100%', 
+                                width: '100%',
+                                flexDirection: {xs: 'column', md: 'row'},
                                 borderBottom: '0.5px solid',
                                 borderColor: 'divider',
                                 bgcolor: 'background.paper',
@@ -42,17 +43,20 @@ export default function TopAndLastFiveCardReuse({
                                 gap: 2,
                             }}
                         >
-                            <MediaDisplay
-                                mediaUrl={card.mediaUrl}
-                                mediaType={card.mediaType}
-                                style={{
-                                    width: 180, 
-                                    height: 130, 
-                                    objectFit: 'cover',
-                                    borderRadius: 10,
-                                    flexShrink: 0
-                                }}
-                            />
+                            <Box sx={{maxWidth: {xs: '100%', md: 250}}}>
+                                <MediaDisplay
+                                    mediaUrl={card.mediaUrl}
+                                    mediaType={card.mediaType}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        borderRadius: 10,
+                                        flexShrink: 0
+                                    }}
+                                />
+
+                            </Box>
 
                             <Box flex={1}>
 

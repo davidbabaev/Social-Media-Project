@@ -88,7 +88,7 @@ export default function DashboardLayout() {
                             display:{xs: 'flex', md: 'none'},
                             flexDirection: 'column',
                             gap: 0.5,
-                            justifyContent: 'center'
+                            justifyContent: 'center',
                         }} 
                     >
                         <Typography fontWeight={600} fontSize={18} sx={{cursor: 'pointer', mb: -0.5}}
@@ -196,7 +196,7 @@ export default function DashboardLayout() {
                 
                 <Box sx={{display: 'flex', justifyContent: 'space-between', pr:2 }}>
                     {/* Name, Job, Location */}
-                    <Box sx={{mx: {xs: 1,md:3}, mb:1}}>
+                    <Box sx={{mx: {xs: 1,md:3}, px:1, pb:1}}>
                         <Typography 
                             display={{xs: 'none', md: 'block'}}
                             fontWeight={600} 
@@ -272,7 +272,7 @@ export default function DashboardLayout() {
                     </Box>
                 </Box>
 
-                <Box sx={{display: {xs: 'flex',md:'none'}, gap: 1, alignItems: 'center'}}>
+                <Box sx={{display: {xs: 'flex',md:'none'}, gap: 1, px:1, pb:1 ,alignItems: 'center'}}>
 
                     <Tooltip title="View your public profile">
                         <IconButton 

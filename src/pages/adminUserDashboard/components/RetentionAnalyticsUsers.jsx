@@ -26,6 +26,8 @@ export default function RetentionAnalyticsUsers() {
   return (
     <Box sx={{
         display: 'flex',
+        flexDirection: {xs: 'column', md: 'row'},
+        // width: {xs: '100%', md:'auto'},
         gap: 2,
         alignItems: 'start',
         flexWrap: 'wrap',

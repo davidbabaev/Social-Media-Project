@@ -31,7 +31,7 @@ export default function TenMostPopularCategories() {
         borderColor: 'divider',
         p: 2,
         bgcolor: 'background.paper',
-        width: '50%'
+        width: {xs: '100%',md: '50%'}
       }}
     >
       <Typography fontWeight={700} fontSize={15}>
@@ -39,7 +39,7 @@ export default function TenMostPopularCategories() {
       </Typography>
 
 
-      <Box sx={{display: 'flex', alignItems: 'center', gap: 3}}>
+      <Box sx={{display: 'flex', alignItems: 'center',flexDirection: {xs: 'column', md: 'row'} ,gap: 3}}>
           {/* Donut */}
           <Box sx={{position: 'relative'}}>
             <PieChart  width={250} height={250} style={{outline: 'none'}}>

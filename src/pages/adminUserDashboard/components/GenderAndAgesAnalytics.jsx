@@ -12,7 +12,7 @@ export default function GenderAndAgesAnalytics() {
     const ICONS = { Male: <MaleIcon sx={{color:'#3B82F6', fontSize: 28}}/>, Female: <FemaleIcon sx={{color:'#EC4899', fontSize: 28}}/> };
 
   return (
-    <Box sx={{display: 'flex', gap:2, width: '100%'}}>
+    <Box sx={{display: 'flex',flexDirection: {xs: 'column', md: 'row'}, gap:2, width: '100%'}}>
     
     {/* Left:  Gender Distribution*/}
     <Box

@@ -42,10 +42,8 @@ export default function UserProfileMain() {
     }, [])
     
     const {toggleFollow, isFollowByMe, getFollowersCount} = useFollowUser();
-
     
     const userProfile = users.find(u => u._id === id);
-
     
     if(!userProfile){
         return <OnLoadingSkeletonBox/>
@@ -55,7 +53,6 @@ export default function UserProfileMain() {
         user?.following?.includes(u._id) &&
         userProfile?.following?.includes(u._id)
     )
-
 
     // people that this user follow on,
     // and me not following

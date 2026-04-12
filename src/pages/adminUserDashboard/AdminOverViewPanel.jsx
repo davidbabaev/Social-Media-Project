@@ -15,7 +15,7 @@ import { Box, Typography } from '@mui/material';
 
 export default function AdminOverViewPanel() {
   return (
-    <Box sx={{p:3, maxWidth: '100%'}}>
+    <Box sx={{p:{xs: 0,md:3}, maxWidth: '100%'}}>
 
       {/* Page header */}
       <Box mb={3}>
@@ -26,11 +26,11 @@ export default function AdminOverViewPanel() {
       </Box>
 
       {/* Row 1: stat cards + 30 day cahrt */}
-      <Box sx={{mb: 3, display: 'flex', gap:2}}>
+      <Box sx={{mb: 3, display: 'flex', flexDirection:{xs: 'column', md: 'row'}, gap:2}}>
         <TotalAnalytics/>
 
-        <Box sx={{display:'grid', gap:2, flex: 1}}>
-          <Box sx={{display: 'grid', gridTemplateColumns: '1fr 1fr' ,gap: 2}}>
+        <Box sx={{display:'grid',gap:2, flex: 1}}>
+          <Box sx={{display: 'grid', gridTemplateColumns: {xs: '1fr',md:'1fr 1fr'} ,gap: 2}}>
             <UserRegistrationByMonths/>
             <Box sx={{display: 'flex', flexDirection: 'column',gap: 2}}>
               <MostPopular/>
@@ -50,14 +50,14 @@ export default function AdminOverViewPanel() {
           Welcome back. Here's what's happening with your platform.
         </Typography>
       </Box>
-      <Box sx={{display: 'flex', gap: 2, mb: 2}}>
+      <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'} ,gap: 2, mb: 2}}>
         <LastFiveJoinedUsers/>
         <TopTenActiveUsers/>
         <CountriesAnalytics/>
       </Box>
 
 
-      <Box sx={{display: 'flex', gap: 2}}>
+      <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, gap: 2}}>
         <TenMostPopularCategories/>
         <CountPostsByCategoriesList/>
         <GenderAndAgesAnalytics/>

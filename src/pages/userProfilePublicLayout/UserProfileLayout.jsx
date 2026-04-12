@@ -456,7 +456,7 @@ export default function UserProfileLayout() {
               </Box>
           </Box>
 
-        <Box sx={{display: {xs: 'flex',md:'none'}, gap: 1, alignItems: 'center'}}>
+        <Box sx={{display: {xs: 'flex',md:'none'}, gap: 1, px:1, pb: 1, alignItems: 'center'}}>
 
             {user?._id !== userProfile._id && (
             <>

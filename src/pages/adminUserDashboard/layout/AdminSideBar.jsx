@@ -44,7 +44,7 @@ export default function AdminSideBar({isOpen}) {
 
   return (
     <Box sx={{
-        width: isOpen ? 210 : 90,
+        width: {xs: isOpen ? 180 : 0,md: isOpen ? 210 : 90},
         transition: 'width 0.3s',
         overflow: 'hidden',
         bgcolor: 'action.selected',
@@ -52,7 +52,7 @@ export default function AdminSideBar({isOpen}) {
         borderRight: '1px solid', 
         borderColor: 'divider',
         position: 'sticky',
-        top: 64,
+        top: {xs: 0,md:64},
         height: 'calc(100vh - 64px)'
     }}>
 

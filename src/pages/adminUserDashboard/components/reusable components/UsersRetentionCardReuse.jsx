@@ -25,6 +25,7 @@ export default function UsersRetentionCardReuse({
             borderColor: 'divider',
             borderRadius: 3,
             flex: 1,
+            width: {xs:'100%', md: 'auto'},
             minHeight: 250,
             bgcolor: 'background.paper'
         }}

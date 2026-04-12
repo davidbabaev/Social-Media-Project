@@ -22,7 +22,7 @@ export default function TotalAnalytics() {
   return (
     <Box sx={{
       display: 'grid ', 
-      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridTemplateColumns: {xs: 'repeat(2, 1fr)',md:'repeat(2, 1fr)'},
       gap: 2
     }}>
         <StatCardReuse 

@@ -23,7 +23,7 @@ export default function RetentionUserRegisterLoginLastTwoWeeks() {
             border: '1px solid',
             borderColor: 'divider',
             borderRadius: 3,
-            minWidth: 300,
+            minWidth: {xs: '100%', md:300},
             minHeight: 250,
             bgcolor: 'background.paper'
         }}

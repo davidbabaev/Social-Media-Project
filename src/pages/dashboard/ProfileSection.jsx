@@ -238,7 +238,7 @@ return (
                 elevation={0}
                 sx={{
                     mt: 2,
-                    p: 3,
+                    p: {xs: 1, md:3},
                     borderRadius: 3,
                     border: '1px solid',
                     borderColor: 'divider'
@@ -355,7 +355,7 @@ return (
                 <Paper
                     elevation={0}
                     sx={{
-                        p: 2,
+                        p: {xs: 1, md:2},
                         borderRadius: 3,
                         border: '1px solid',
                         borderColor: 'divider'
@@ -365,7 +365,8 @@ return (
                     <TextField 
                         fullWidth
                         multiline
-                        rows={13}
+                        minRows={6}
+                        maxRows={13}
                         placeholder='About me...'
                         value={editAboutMe}
                         onChange={(e) => setEditAboutMe(e.target.value)}
@@ -389,10 +390,14 @@ return (
                         slotProps={{
                             input : {
                                 endAdornment: (
-                                    <InputAdornment position='end' sx={{alignSelf: 'flex-end'}}>
-                                        <IconButton onClick={() => setIsEmojiOpen(!isEmojiOpen)}>
-                                            <EmojiEmotionsIcon/>
-                                        </IconButton>
+                                    <InputAdornment 
+                                        position='end' sx={{alignSelf: 'flex-end'}}>
+                                        <Box display={{xs: 'none', md: 'flex'}}>
+                                            <IconButton 
+                                                onClick={() => setIsEmojiOpen(!isEmojiOpen)}>
+                                                <EmojiEmotionsIcon/>
+                                            </IconButton>
+                                        </Box>
                                     </InputAdornment>
                                 )
                             }
@@ -410,7 +415,7 @@ return (
                 }
 
                 {/* Name Row */}
-                <Stack direction='row' spacing={2} sx={{ mt: 3, mb: 2}}>
+                <Stack direction={{xs: 'column',md:'row'}} spacing={2} sx={{ mt: 3, mb: 2}}>
                     <TextField
                         fullWidth
                         variant='outlined'
@@ -444,7 +449,7 @@ return (
                 />
             
 
-                <Stack direction='row' spacing={2} sx={{mb: 2}}>
+                <Stack direction={{xs: 'column',md:'row'}} spacing={2} sx={{mb: 2}}>
                     <TextField
                         fullWidth
                         select
@@ -469,7 +474,7 @@ return (
                     </TextField>
                 </Stack>
 
-                <Stack direction='row' spacing={2} sx={{mb:2}}>
+                <Stack direction={{xs: 'column',md:'row'}} spacing={2} sx={{mb:2}}>
                 <TextField
                     fullWidth
                     select
@@ -494,7 +499,7 @@ return (
                 </TextField>
                 </Stack>
 
-                <Stack direction='row' spacing={2} sx={{mb:2}}>
+                <Stack direction={{xs: 'column',md:'row'}} spacing={2} sx={{mb:2}}>
                     <Box sx={{flex: 1}}>
                         <DatePicker
                             label='Birth Date'
