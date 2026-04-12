@@ -189,7 +189,7 @@ function UsersPage() {
                         position: {xs: 'fixed', md: 'sticky'},
                         top: {xs: 0, md: 64},
                         left: {xs: 0, md: 'auto'},
-                        width:{xs: '100%', md: 'auto'},
+                        width: '100%',
                         height: {xs: '100vh', md: 'calc(100vh - 64px)'},
                         overflow: 'auto',
                         overscrollBehavior: 'contain',
@@ -197,6 +197,7 @@ function UsersPage() {
                         zIndex: {xs: 1000, md:'auto'},
                         p: {xs: 2, md:0},
                         display: {xs: isFiltersOpen ? 'flex' : 'none', md: 'flex'}, 
+                        // justifyContent: 'center', 
                         flexDirection: 'column',
                         gap: 2,
                         
@@ -334,7 +335,7 @@ function UsersPage() {
                 
                 
 
-                <Grid size={{md:8}}>
+                <Grid size={{xs: 12, md:8}}>
 
                     <Box sx={{display: 'flex', gap:1}}>
                         <TextField
@@ -425,7 +426,6 @@ function UsersPage() {
 
                     
                     {/* Users List */}
-
                     <Box
                         sx={{
                             display: 'grid', 

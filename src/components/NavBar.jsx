@@ -102,7 +102,7 @@ export default function NavBar() {
             zIndex: 500
         }}
     >
-        <Container maxWidth="lg">
+        <Container maxWidth='lg'>
             <Toolbar disableGutters>
                 <Box 
                     onClick={() => navigate('/')} 

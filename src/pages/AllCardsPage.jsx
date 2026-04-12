@@ -177,7 +177,7 @@ export default function AllCardsPage() {
                     position: {xs: 'fixed', md: 'sticky'},
                     top: {xs: 0, md: 90},
                     left: {xs: 0, md: 'auto'},
-                    width: {xs: '100%', md: 'auto'},
+                    width: '100%',
                     height: {xs: '100vh', md: 'calc(100vh - 94px)'},
                     overflow: 'auto',
                     overscrollBehavior: 'contain',
