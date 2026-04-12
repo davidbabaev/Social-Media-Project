@@ -22,18 +22,21 @@ export default function Notifications({notificationsValue, handleDeleteNotificat
 
   return (
     <Box sx={{
-      position: 'absolute',
-      top: '48px',
+      position: {xs: 'fixed',md:'absolute'},
+      top: {xs: 56, md: '48px'},
+      left: {xs: 0, md: 'auto'},
       right: 0,
-      width: 380,
-      bgcolor: 'background.paper',
-      borderRadius: 2,
-      border: '0.5px solid',
-      borderColor: 'divider',
-      zIndex: 1000,
-      maxHeight: 400,
+      bottom: {xs: 0, md: 'auto'},
+      width: {xs:'100%', md:380},
+      maxHeight: {xs:'100vh', md: 400},
       overflow: 'auto',
-      overscrollBehavior: 'contain'
+      overscrollBehavior: 'contain',
+      bgcolor: 'background.paper',
+      border: {xs: 'none', md: '1px solid'},
+      borderRadius: {xs: 0, md: 2},
+      // border: '1px solid',
+      borderColor: 'divider',
+      zIndex: 100,
     }}>
       <Box sx={{
         px: 2,

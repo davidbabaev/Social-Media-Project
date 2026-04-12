@@ -41,9 +41,30 @@ export default function UserProfileFollowers() {
           {currentUserFollowers.length === 0 && (<Typography color='text.secondary'>No followers yet</Typography>)}
         </Box>
 
-        <Box sx={{ p: 2, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+        <Box 
+          sx={{ 
+            p: 2, 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            justifyContent: 'space-between',
+            gap: {xs: 2, md: 0},
+            flexDirection: {xs: 'column',md: 'row'}
+          }}
+        >
           {currentUserFollowers.map((follower) => (
-              <Box sx={{display: 'flex', gap: 1.5, py: 1, width: '48%', alignItems: 'center', p: 1, borderBottom: '1px solid', borderColor: 'divider', mx:1}}>
+              <Box 
+                sx={{
+                  display: 'flex', 
+                  gap: 1.5, 
+                  width: {xs: '100%',md:'48%'}, 
+                  alignItems: 'center', 
+                  px: {xs: 0 ,md:1},
+                  pt: {xs: 0 ,md:1},
+                  pb: 2,
+                  borderBottom: '1px solid', 
+                  borderColor: 'divider', 
+                  mx:{xs: 0, md:1},
+                }}>
                   <Avatar
                       src={follower?.profilePicture}
                       sx={{cursor: 'pointer', width: 48, height: 48}}

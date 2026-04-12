@@ -78,7 +78,7 @@ export default function UserProfileMain() {
 
 return (
     <Grid container spacing={2}>
-        <Grid size={7}>
+        <Grid size={{xs: 12, md:7}}>
             {countedRegisterCards.map((card) => (
                 <CardItem
                     key={card._id}
@@ -102,7 +102,8 @@ return (
         </Grid>
 
         <Grid 
-            size={5}
+            size={{xs:12, md:5}}
+            display={{xs: 'none',md:'block'}}
             sx={{
                 position: 'sticky',
                 top: 64,

@@ -36,13 +36,24 @@ export default function UserProfileFollowing() {
         borderRadius: 3,
       }}
     >
-        <Box sx={{display: 'flex', textAlign: 'center', pt:3,justifyContent: 'center'}}>
+        <Box sx={{display: 'flex', textAlign: 'center', justifyContent: 'center'}}>
           {currentUserFollowing.length === 0 && (<Typography color='text.secondary'>No following yet</Typography>)}
         </Box>
 
-        <Box sx={{ p: 2, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+        <Box sx={{ p: 2, gap: {xs: 2, md: 0},display: 'flex', flexDirection: {xs: 'column',md: 'row'},flexWrap: 'wrap', justifyContent: 'space-between'}}>
           {currentUserFollowing.map((following) => (
-              <Box sx={{display: 'flex', gap: 1.5, py: 1, width: '48%', alignItems: 'center', p: 1, borderBottom: '1px solid', borderColor: 'divider', mx:1}}>
+              <Box sx={{
+                display: 'flex', 
+                gap: 1.5, 
+                width: {xs: '100%',md:'48%'}, 
+                alignItems: 'center', 
+                px: {xs: 0 ,md:1},
+                pt: {xs: 0 ,md:1},
+                pb: 2, 
+                borderBottom: '1px solid', 
+                borderColor: 'divider', 
+                mx:{xs: 0, md:1},
+            }}>
                   <Avatar
                       src={following?.profilePicture}
                       sx={{cursor: 'pointer', width: 48, height: 48}}
@@ -92,6 +103,7 @@ export default function UserProfileFollowing() {
                   )}
           </Box>
           ))}
+      
       </Box>
     </Paper>
   )

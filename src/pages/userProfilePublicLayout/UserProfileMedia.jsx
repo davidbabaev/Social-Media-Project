@@ -40,7 +40,7 @@ export default function UserProfileMedia() {
             elevation={0}
             sx={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(5,1fr)',
+                gridTemplateColumns: {xs: 'repeat(3,1fr)',md:'repeat(5,1fr)'},
                 gap: 1,
                 borderRadius: 3,
                 p:2,
