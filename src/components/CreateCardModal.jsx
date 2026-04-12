@@ -30,12 +30,14 @@ export default function CreateCardModal({card, onClose, onCardPosted, mediaButto
         <Box
           sx={{
             bgcolor: 'background.paper',
-            borderRadius: 3,
-            p: 3,
-            width: 560,
-            maxHeight: '90vh',
-            overflowY: 'auto',
-            position: 'relative'
+            borderRadius: {xs:0, md:3},
+            p: 1,
+            width: {xs: '100%' ,md: 560},
+            height: {xs: '100vh', md: 'auto'},
+            maxHeight: {xs: '100vh',md: '90vh'},
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
             <IconButton 

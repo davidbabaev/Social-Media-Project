@@ -269,7 +269,7 @@ export default function NavBar() {
             boxShadow: 'none',
             borderBottom: '1px solid',
             borderColor: 'divider',
-            zIndex: 500,
+            zIndex: 100,
             bottom: 0,
             width:'100%',
             px: 2,
