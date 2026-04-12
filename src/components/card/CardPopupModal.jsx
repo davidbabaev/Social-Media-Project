@@ -31,13 +31,13 @@ export default function CardPopupModal({cardId, onClose}) {
         <Box
           sx={{
             bgcolor: 'background.paper',
-            borderRadius: 3,
-            // p:0,
-            width: '90vw',
-            maxWidth: 900,
-            maxHeight: 'min(85vh, 680px)',
-            overflow: 'hidden',
-            position: 'relative'
+            width: {xs:'100%', md:'90vw'},
+            maxWidth: {xs:'100%', md: 900},
+            height: {xs: '100vh', md: 'auto'},
+            maxHeight: {xs: '100vh',md:'min(85vh, 680px)'},
+            borderRadius: {xs: 0, md:3},
+            overflow: {xs: 'auto', md: 'hidden'},
+            position: 'relative',
           }}
         >
           <Box sx={{position: 'relative', height: '100%'}}>
@@ -48,7 +48,10 @@ export default function CardPopupModal({cardId, onClose}) {
                 top: 9,
                 right: 3,
                 // m: 1,
-                bgcolor: 'background.paper',
+                  bgcolor: 'rgba(0,0,0,0.5)',
+                  color: 'white',
+                  p:0.5,
+                  '&:hover': {bgcolor: 'rgba(0,0,0,0.7)'}
                 // zIndex: 1100,
                 // '&:hover':{
                 //   bgcolor: 'background.paper'

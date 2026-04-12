@@ -187,9 +187,16 @@ export default function CardsComments({card, users, addComment, removeComment, f
 
             {commentsCount <= (card?.comments || []).length && (
                     <Button 
+                        size='small'
+                        sx={{
+                            fontSize: 11,
+                            border: '1px solid',
+                            borderRadius: 5,
+                            px:2
+                        }}
                         onClick={() => setCommentsCount(commentsCount + 5)}
                     >
-                        Read More
+                        Read More..
                     </Button>
             )}
         </Box>

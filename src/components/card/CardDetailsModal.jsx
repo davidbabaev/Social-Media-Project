@@ -59,12 +59,17 @@ export default function CardDetailsModal({cardId, onClose}) {
   return (
     <Box sx={{
         display: 'flex', 
-        minHeight: 'min(60vh, 400px)', 
-        maxHeight: 'min(75vh, 680px)'
+        flexDirection: {xs: 'column',md: 'row'},
+        minHeight: {xs: 'auto',md:'min(60vh, 400px)'}, 
+        maxHeight: {xs: 'none',md:'min(75vh, 680px)'},
+        overflowY: {xs: 'auto', md: 'hidden'}
     }}>
         {/* Left Media */}
 
-        <Box sx={{flex: 1, bgcolor: 'black'}}>
+        <Box sx={{
+            flex: {xs:'none', md:1}, 
+            bgcolor: 'black',
+        }}>
             {/* Media display */}
             <MediaDisplay
                 mediaUrl={currentCard.mediaUrl}
@@ -72,7 +77,8 @@ export default function CardDetailsModal({cardId, onClose}) {
                 style={{
                     width: '100%', 
                     height: '100%', 
-                    objectFit: 'contain'
+                    objectFit: 'contain',
+                    display: 'block',
                 }}
             />
         </Box>
@@ -80,10 +86,11 @@ export default function CardDetailsModal({cardId, onClose}) {
 
         {/* Right Media */}
         <Box sx={{
-            width: 380, 
+            width: {xs: '100%',md:380}, 
             display: 'flex', 
             flexDirection: 'column', 
-            maxHeight: 'min(75vh, 680px)'
+            maxHeight: {xs: 'none',md: 'min(75vh, 680px)'},
+            overflow: {xs: 'visible', md: 'auto'}
         }}>
             
             
@@ -92,11 +99,11 @@ export default function CardDetailsModal({cardId, onClose}) {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'flex-start',
-                p: 2,
+                py: 2,
+                pr: {xs: 0, md:3.5},
                 borderBottom: '1px solid',
                 borderColor: 'divider',
                 mx:2,
-                width: '88%'
                 }}>
 
                 {/* left avatar + info */}
@@ -152,7 +159,7 @@ export default function CardDetailsModal({cardId, onClose}) {
                 )}
             </Box>
 
-            <Box sx={{overflow: 'auto', p:2, flex: 1}} >
+            <Box sx={{overflow: 'auto', p:2, flex: 1, pb:{xs:2, md:0}}} >
                 {/* Title */}
                 {currentCard.title && (
                     <Typography component='div' fontWeight={600} fontSize={20} mb={1}>
