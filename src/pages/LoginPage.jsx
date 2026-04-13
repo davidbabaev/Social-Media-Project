@@ -43,14 +43,15 @@ export default function LoginPage() {
   return (
     <Box sx={{
       display: 'flex',
+      flexDirection: {xs: 'column',md: 'row'},
       minHeight: '100vh',
       width: '100%'
     }}>
 
-      {/* Lest side image */}
+      {/* Left side image */}
       <Box sx={{
         flex: 1,
-        minHeight: '100vh',
+        minHeight: {xs: '30vh', md:'100vh'},
         backgroundImage: `url(${bgcImg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -59,12 +60,12 @@ export default function LoginPage() {
       {/* Right side form */}
       <Box sx={{
         flex: 0.8,
-        minHeight: '100vh',
+        minHeight: {xs: '70vh',md: '100vh'},
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         bgcolor: 'background.paper',
-        borderRadius: '24px 0 0 24px',
+        borderRadius: {xs: 0,md: '24px 0 0 24px'},
         ml: '-24px',
         zIndex: 1
       }}>

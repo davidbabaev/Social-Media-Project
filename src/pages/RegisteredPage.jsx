@@ -122,16 +122,17 @@ export default function RegisteredPage() {
 
 
   return (
-        <Box sx={{
+    <Box sx={{
       display: 'flex',
+      flexDirection: {xs: 'column', md:'row'},
       minHeight: '100vh',
       width: '100%'
     }}>
 
-      {/* Lest side image */}
+      {/* Left side image */}
       <Box sx={{
         flex: 1,
-        minHeight: '100vh',
+        minHeight: {xs: '30vh', md:'100vh'},
         backgroundImage: `url(${bgcImg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
