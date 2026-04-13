@@ -2,7 +2,6 @@ import RetentionAnalyticsUsers from './components/RetentionAnalyticsUsers';
 import MostPopular from './components/MostPopular';
 import TotalAnalytics from './components/TotalAnalytics';
 import LoggedInThirtyDays from './components/LoggedInThirtyDays';
-import RetentionUserRegisterLoginLastTwoWeeks from './components/RetentionUserRegisterLoginLastTwoWeeks';
 import TopAndLastFiveCards from './components/TopAndLastFiveCards';
 import LastFiveJoinedUsers from './components/LastFiveJoinedUsers';
 import CountPostsByCategoriesList from './components/CountPostsByCategoriesList';
@@ -15,7 +14,7 @@ import { Box, Typography } from '@mui/material';
 
 export default function AdminOverViewPanel() {
   return (
-    <Box sx={{p:{xs: 0,md:3}, maxWidth: '100%'}}>
+    <Box sx={{p:{xs: 2,md:3}, maxWidth: '100%'}}>
 
       {/* Page header */}
       <Box mb={3}>

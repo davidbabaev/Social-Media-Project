@@ -167,11 +167,20 @@ export default function AdminUsersPanel() {
   
   
   return(
-    <Box sx={{my: 2, mr: 2,}}>
+    <Box sx={{my: 2, m: {xs: 1,md:2}}}>
+        {/* Page Header */}
+        <Box mb={3}>
+            <Typography fontSize={25} fontWeight={700}>Users Management</Typography>
+            <Typography fontSize={14} color='text.secondary'>
+                {filtred.length} users found
+            </Typography>
+        </Box>
+
         {/* Filters */}
         <Box sx={{
             display: 'flex',
-            gap: 2,
+            flexDirection: {xs: 'column', md: 'flex'},
+            gap: {xs:1, md:2},
             flexWrap: 'wrap',
             alignItems: 'center',
             mb: 3,
@@ -199,7 +208,7 @@ export default function AdminUsersPanel() {
                     }
                 }}
                 sx={{
-                    minWidth: 200,
+                    minWidth: {xs: '100%',md: 200},
                     '& .MuiOutlinedInput-root': {
                         borderRadius: 5,
                         fontSize: 13
@@ -222,7 +231,7 @@ export default function AdminUsersPanel() {
                     renderValue: (value) => value === '' ? 'All Ages' : value === 'low' ? 'Low → High' : 'High → Low'
                   }
                 }}
-                sx={{minWidth: 130, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+                sx={{minWidth: {xs: '100%',md: 130}, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
             >
                 <MenuItem value="">All Ages</MenuItem>
                 <MenuItem value="low">Low → High</MenuItem>
@@ -244,7 +253,7 @@ export default function AdminUsersPanel() {
                     renderValue: (value) => value === '' ? 'A/Z Mixed' : value === 'az' ? 'A → Z' : 'Z → A'
                   }
                 }}
-                sx={{minWidth: 130, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+                sx={{minWidth: {xs: '100%',md:130}, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
             >
                 <MenuItem value="">A/Z Mixed</MenuItem>
                 <MenuItem value="az">A → Z</MenuItem>
@@ -265,7 +274,7 @@ export default function AdminUsersPanel() {
                     renderValue: (value) => value === '' ? 'All Genders' : value === 'Male' ? 'Male' : 'Female'
                   }
                 }}
-                sx={{minWidth: 130, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+                sx={{minWidth: {xs: '100%',md: 130}, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
             >
                 <MenuItem value="">All Genders</MenuItem>
                 <MenuItem value="Male">Male</MenuItem>
@@ -286,7 +295,7 @@ export default function AdminUsersPanel() {
                     renderValue: (value) => value === '' ? 'All Roles' : value === 'admin' ? 'admin' : 'user'
                   }
                 }}
-                sx={{minWidth: 130, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+                sx={{minWidth: {xs: '100%',md: 130}, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
             >
                 <MenuItem value="">All Roles</MenuItem>
                 <MenuItem value="admin">Admin</MenuItem>
@@ -307,7 +316,7 @@ export default function AdminUsersPanel() {
                     renderValue: (value) => value || 'All Countries'
                   }
                 }}
-                sx={{minWidth: 150, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+                sx={{minWidth: {xs: '100%',md: 150}, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
             >
                 <MenuItem value="">All Countries</MenuItem>
                 {countries.map((c) => (
@@ -509,6 +518,8 @@ export default function AdminUsersPanel() {
     {/* Paigination */}
     <Box sx={{
       display: 'flex',
+      flexDirection: {xs: 'column-reverse',md: 'row'},
+      gap: {xs: 1, md: 0},
       alignItems: 'center',
       justifyContent: 'space-between',
       mt: 2,

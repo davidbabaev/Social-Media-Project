@@ -154,7 +154,7 @@ export default function AdminCardsPanel() {
   if(loading) return <OnLoadingSkeletonBox/>
 
   return(
-    <Box sx={{p: 3}}>
+    <Box sx={{my: 2, m: {xs: 1,md:2}}}>
 
       {/* Page Header */}
       <Box mb={3}>
@@ -167,7 +167,8 @@ export default function AdminCardsPanel() {
       {/* Filters */}
       <Box sx={{
           display: 'flex',
-          gap: 2,
+          flexDirection: {xs: 'column', md: 'flex'},
+          gap: {xs:1, md:2},
           flexWrap: 'wrap',
           alignItems: 'center',
           mb: 3,
@@ -194,7 +195,7 @@ export default function AdminCardsPanel() {
                       )
                   }
               }}
-              sx={{minWidth: 200, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+              sx={{minWidth: {xs: '100%', md:200}, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
           />
 
           <TextField
@@ -215,7 +216,7 @@ export default function AdminCardsPanel() {
                       }
                   }
               }}
-              sx={{minWidth: 150, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+              sx={{minWidth: {xs: '100%', md:150}, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
           >
               <MenuItem value="">All Users</MenuItem>
               {users.map((userM) => (
@@ -237,7 +238,7 @@ export default function AdminCardsPanel() {
                       renderValue: (value) => value || 'All Categories'
                   }
               }}
-              sx={{minWidth: 150, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+              sx={{minWidth: {xs: '100%', md:150}, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
           >
               <MenuItem value="">All Categories</MenuItem>
               {CARD_CATEGORIES.map((category, index) => (
@@ -259,7 +260,7 @@ export default function AdminCardsPanel() {
                       renderValue: (value) => value === 'myFavorites' ? 'My Favorites' : 'All Posts'
                   }
               }}
-              sx={{minWidth: 140, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
+              sx={{minWidth: {xs: '100%', md:140}, '& .MuiOutlinedInput-root': {borderRadius: 5, fontSize: 13}}}
           >
               <MenuItem value="">All Posts</MenuItem>
               <MenuItem value="myFavorites">My Favorites</MenuItem>
@@ -449,6 +450,8 @@ export default function AdminCardsPanel() {
       {/* Pagination */}
       <Box sx={{
           display: 'flex',
+          flexDirection: {xs: 'column-reverse',md: 'row'},
+          gap: {xs: 1, md: 0},
           alignItems: 'center',
           justifyContent: 'space-between',
           mt: 2,
