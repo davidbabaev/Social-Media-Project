@@ -20,6 +20,7 @@ import PaginationDiagram from '../codes backups/Paigination'
 import PublicOnlyRoute from './components/PublicOnlyRoute'
 import { Box } from '@mui/material'
 import socket from './services/socketService';
+import ChatPage from './pages/chat/ChatPage'
 
 export default function App(){
 
@@ -73,6 +74,11 @@ export default function App(){
               }/>
               <Route path='/allcards' element ={<AllCardsPage/>}/>
               <Route path='/carddetails/:id' element ={<CardDetailsPage/>}/>
+              <Route path='chat' element={
+                  <ProtectedRoute>
+                  <ChatPage/>
+                </ProtectedRoute>
+              }/>
             </Routes>
           </Box>
         </CardsProvider>
