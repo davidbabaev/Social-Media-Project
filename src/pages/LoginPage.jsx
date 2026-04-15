@@ -55,7 +55,8 @@ export default function LoginPage() {
         backgroundImage: `url(${bgcImg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-      }}/>
+      }}
+      />
 
       {/* Right side form */}
       <Box sx={{
