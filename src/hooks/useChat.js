@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import socket from '../services/socketService';
+import { useAuth } from '../providers/AuthProvider';
 
 function useChat() {
     // states:
@@ -8,6 +9,7 @@ function useChat() {
     // the chat window
     const [chatMessages, setChatMessages] = useState([]);
 
+    const {user} = useAuth();
 
     // functions:
     // open the chat page
@@ -24,13 +26,20 @@ function useChat() {
     }
 
     useEffect(() => {
-        socket.on('recieve-chats', (chats) => {
-            // what state do you update here?
-            setConversationsList(chats)
-        });
+        const userId = user?._id;
+
+        if(userId){
+            socket.emit('register-user', userId)
+        }
 
         socket.on('recieve-messages', (messages) => {
             setChatMessages(messages)
+        });
+
+        socket.on('recieve-chats', (chats) => {
+            // what state do you update here?
+            console.log('received chats:', chats)
+            setConversationsList(chats)
         });
 
         socket.on('recieve-message', (newMessage) => {
@@ -42,7 +51,7 @@ function useChat() {
             socket.off('recieve-messages');
             socket.off('recieve-message');
         }
-    }, []);
+    }, [user?._id]); // <- re-runs when the actual ID changes.
 
   return{
     handleOpenChatList, 
@@ -50,7 +59,7 @@ function useChat() {
     handleSendNewMessage,
     conversationsList,
     chatMessages
-}
+  }
 }
 
 export default useChat;

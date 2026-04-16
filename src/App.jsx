@@ -74,7 +74,7 @@ export default function App(){
               }/>
               <Route path='/allcards' element ={<AllCardsPage/>}/>
               <Route path='/carddetails/:id' element ={<CardDetailsPage/>}/>
-              <Route path='chat' element={
+              <Route path='/chat' element={
                   <ProtectedRoute>
                   <ChatPage/>
                 </ProtectedRoute>
