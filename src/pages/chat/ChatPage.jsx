@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import useChat from '../../hooks/useChat'
 import { useAuth } from '../../providers/AuthProvider';
-import { Avatar, Box, Button, Container, Grid, Typography } from '@mui/material';
+import { Avatar, Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import useUsers from '../../hooks/useUsers';
 
 export default function ChatPage() {
 
     const [selectedChat, setSelectedChat] = useState(null);
+    const [messageText, setMessageText] = useState('')
 
     const {
         handleOpenChatList, 
+        handleOpenConversation,
+        handleSendNewMessage,
         conversationsList, 
-        handleOpenConversation
+        chatMessages,
     } = useChat();
 
     const {user} = useAuth();
@@ -42,7 +45,7 @@ export default function ChatPage() {
                                 src={otherUser?.profilePicture}
                             />
                             <Typography>
-                                {otherUser?.name}
+                                {otherUser?.name} {otherUser?.lastName}
                             </Typography>
 
                             <Button 
@@ -66,22 +69,50 @@ export default function ChatPage() {
                 <Grid size={{md:8}}>
                     <Box
                         sx={{
-                            position: {xs: 'fixed', md: 'sticky'},
-                            top: {xs: 0, md: 90},
-                            left: {xs: 0, md: 'auto'},
-                            width: '100%',
-                            height: {xs: '100vh', md: 'calc(100vh - 94px)'},
-                            overflow: 'auto',
-                            overscrollBehavior: 'contain',
-                            bgcolor: {xs: 'background.default', md: 'transparent'},
-                            zIndex: {xs: 1000, md: 'auto'},
-                            p: {xs: 2, md:0},
-                            flexDirection: 'column',
-                            gap: 2,
-                            
-                            // hide scrollbar visually but keep it functional
+                            border: '2px dashed red',
+                            height: '80vh',
+                            display: 'flex',
+                            flexDirection: 'column'
                         }}
                     >
+                        {/* Top: header with the other user's name */}
+                        <Box sx={{border: '1px dashed blue', p: 2}}>
+                            HEADER — chatting with: {selectedChat.otherUser?.name}
+                        </Box>
+
+                        {/* Middle: scrollable list of messages */}
+                        <Box sx={{border: '1px dashed green', flex: 1, p: 2, overflowY: 'auto'}}>
+                            {chatMessages.map((message) => (
+                                <Box key={message._id}>
+                                    <Typography>{message.text}</Typography>
+                                </Box>
+                            ))}
+                        </Box>
+
+                        {/* Bottom: text input + send button */}
+                        <Box sx={{border: '1px dashed orange', p: 2, display: 'flex', gap: 1}}>
+                            <TextField
+                                fullWidth
+                                size='small'
+                                placeholder='Write a message...'
+                                onChange={(e) => setMessageText(e.target.value)}
+                                value={messageText}
+                            />
+                            <Button 
+                                variant='contained'
+                                onClick={() => {
+                                    handleSendNewMessage({
+                                        text: messageText,
+                                        toUser: selectedChat.otherUser._id
+                                    },
+                                    user._id
+                                )
+                                    setMessageText('')
+                                }}
+                            >
+                                SEND
+                            </Button>
+                        </Box>
                     </Box>
                 </Grid>
             )}
