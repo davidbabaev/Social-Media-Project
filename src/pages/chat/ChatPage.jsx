@@ -3,6 +3,7 @@ import useChat from '../../hooks/useChat'
 import { useAuth } from '../../providers/AuthProvider';
 import { Avatar, Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import useUsers from '../../hooks/useUsers';
+import { useSearchParams } from 'react-router-dom';
 
 export default function ChatPage() {
 
@@ -27,6 +28,43 @@ export default function ChatPage() {
             
         }
     }, [user?._id]);
+
+    const [searchParams] = useSearchParams();
+    const toUserId = searchParams.get('to')
+
+    useEffect(() => {
+        if(!toUserId){
+            return;
+        }
+
+        const conversation = conversationsList.find(c => 
+            (c.fromUser === user._id && c.toUser === toUserId) ||
+            (c.fromUser === toUserId && c.toUser === user._id)
+        )
+
+        if(conversation){
+            const otherUserTo = users.find(u => u._id === toUserId)
+
+            setSelectedChat({
+                conversationId: conversation._id,
+                otherUser: otherUserTo
+            })
+
+            handleOpenConversation(conversation._id)
+        }
+        else{
+            const otherNewUserTo = users.find(u => u._id === toUserId);
+            // console.log('toUserId from URL:', toUserId)
+            // console.log('users array length:', users.length)
+            // console.log('found other user:', otherNewUserTo)
+
+            setSelectedChat({
+                conversationId: null,
+                otherUser: otherNewUserTo
+            })
+        }
+
+    }, [toUserId, conversationsList, user, users])
 
   return (
     <Container maxWidth='lg' sx={{py:3, pb: {xs: 20, md: 3}}}>
@@ -108,6 +146,9 @@ export default function ChatPage() {
                                     user._id
                                 )
                                     setMessageText('')
+                                    setTimeout(() => {
+                                        handleOpenChatList(user._id)
+                                    }, 300)
                                 }}
                             >
                                 SEND

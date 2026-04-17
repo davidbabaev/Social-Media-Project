@@ -342,7 +342,7 @@ export default function UserProfileLayout() {
                         sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
                         // onClick={() => navigate(`/dashboard/myprofile`)}
                         startIcon={<ChatIcon/>}
-                        onClick={() => isLoggedIn ? setMessageOpen(!messageOpen) : setIsLoginPopupOpen(true)}
+                        onClick={() => navigate(`/chat?to=${userProfile._id}`)}
                       >
                           Message
                       </Button>

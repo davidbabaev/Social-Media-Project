@@ -11,6 +11,7 @@ function useChat() {
 
     const {user} = useAuth();
 
+
     // functions:
     // open the chat page
     const handleOpenChatList = (userId) => {
