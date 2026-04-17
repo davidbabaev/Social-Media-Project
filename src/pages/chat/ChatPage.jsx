@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import useChat from '../../hooks/useChat'
 import { useAuth } from '../../providers/AuthProvider';
-import { Avatar, Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 import useUsers from '../../hooks/useUsers';
 import { useSearchParams } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
 
 export default function ChatPage() {
 
@@ -72,34 +73,88 @@ export default function ChatPage() {
         <Grid container spacing={3}>
             {/* Chats left side */}
             <Grid size={{xs: 12, md:4}}>
-                {conversationsList.map((chat) => {
-                    // const toUserId = users.find(u => u._id === chat.toUser)
-                    const otherUserId = chat.fromUser === user._id ? chat.toUser : chat.fromUser
-                    const otherUser = users.find(u => u._id === otherUserId)
+                <Paper
+                    elevation={0}
+                    sx={{
+                        border: '0.5px solid',
+                        borderColor: 'divider',
+                        borderRadius: 3,
+                        overflow: 'hidden',
+                        height: '80vh',
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}
+                >
 
-                    return(
-                        <Box key={chat._id}>
-                            <Avatar
-                                src={otherUser?.profilePicture}
-                            />
-                            <Typography>
-                                {otherUser?.name} {otherUser?.lastName}
-                            </Typography>
+                    {/* Header with title + search */}
+                    <Box sx={{
+                        p: 2,
+                        borderBottom: '0.5px solid',
+                        borderColor: 'divider'
+                    }}>
+                        <Typography fontWeight={500} fontSize={18} mb={1.5}>
+                            Messages
+                        </Typography>
+                        <TextField
+                            fullWidth
+                            size='small'
+                            placeholder='Search chat'
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position='start'>
+                                            <SearchIcon fontSize='small'/>
+                                        </InputAdornment>
+                                    )
+                                }
+                            }}
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: 5,
+                                    fontSize: 13,
+                                    bgcolor: 'action.hover'
+                                }
+                            }}
+                        />
+                    </Box>
 
-                            <Button 
-                                onClick={() => {
-                                    setSelectedChat({
-                                        conversationId: chat._id,
-                                        otherUser: otherUser
-                                    })
-                                    handleOpenConversation(chat._id)
-                                }}
-                            >
-                                Open
-                            </Button>
-                        </Box>
-                    )
-                })}
+
+                    <Box sx={{
+                        flex: 1,
+                        overflowY: 'auto'
+                    }}>
+                        {/* conversation list */}
+                        {conversationsList.map((chat) => {
+                            // const toUserId = users.find(u => u._id === chat.toUser)
+                            const otherUserId = chat.fromUser === user._id ? chat.toUser : chat.fromUser
+                            const otherUser = users.find(u => u._id === otherUserId)
+                            const isActive = selectedChat?.conversationId === chat._id;
+
+                            return(
+                                <Box key={chat._id}>
+                                    <Avatar
+                                        src={otherUser?.profilePicture}
+                                    />
+                                    <Typography>
+                                        {otherUser?.name} {otherUser?.lastName}
+                                    </Typography>
+
+                                    <Button 
+                                        onClick={() => {
+                                            setSelectedChat({
+                                                conversationId: chat._id,
+                                                otherUser: otherUser
+                                            })
+                                            handleOpenConversation(chat._id)
+                                        }}
+                                    >
+                                        Open
+                                    </Button>
+                                </Box>
+                            )
+                        })}
+                    </Box>
+                </Paper>
             </Grid>
 
             {/* chat messages - right side */}
