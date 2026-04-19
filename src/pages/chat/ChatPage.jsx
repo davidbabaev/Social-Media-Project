@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import useChat from '../../hooks/useChat'
 import { useAuth } from '../../providers/AuthProvider';
-import { Avatar, Box, Button, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Container, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 import useUsers from '../../hooks/useUsers';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
+import getTimeAgo from '../../utils/getTimeAgo';
+import MessageIcon from '@mui/icons-material/Message';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import getMessageTime from '../../utils/getMessageTime';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import ImageIcon from '@mui/icons-material/Image';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import SendIcon from '@mui/icons-material/Send';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 export default function ChatPage() {
 
@@ -19,8 +28,50 @@ export default function ChatPage() {
         chatMessages,
     } = useChat();
 
+    const navigate = useNavigate();
+
     const {user} = useAuth();
     const {users} = useUsers();
+
+    // chat display settings
+    const [isChatReady, setIsChatReady] = useState(false)
+    const messageContainerRef = useRef(null);
+    const messageEndRef = useRef(null);
+
+    useEffect(() => {
+        if(chatMessages.length === 0) return;
+
+        // jump to bottom (still invisible because isChatReady is false)
+        messageEndRef.current?.scrollIntoView({behavior: 'auto'})
+
+        // wait one paint frame, then reveal
+        requestAnimationFrame(() => {
+            setIsChatReady(true)
+        })
+
+    }, [chatMessages])
+
+/*     useEffect(() => {
+        const container = messageContainerRef.current;
+        if(!container) return;
+
+        // how far from the bottom is the user right now?
+        const distanceFromBottom =
+            container.scrollHeight - container.scrollTop - container.clientHeight;
+
+            // if they're within 150px of the bottom, auto-scroll
+            // otherwise leave them alone (they're reading old messages)
+            if(distanceFromBottom  < 800){
+                messageEndRef.current?.scrollIntoView({behavior: 'smooth'})
+            }
+            
+        }, [chatMessages,]) */
+        
+/*         useEffect(() =>  {
+            setTimeout(()=> {
+                messageEndRef?.current?.scrollIntoView({behavior: 'auto'})
+            }, 200)
+        }, [selectedChat]) */
 
     useEffect(() => {
         if(user?._id){
@@ -46,11 +97,13 @@ export default function ChatPage() {
         if(conversation){
             const otherUserTo = users.find(u => u._id === toUserId)
 
+            setIsChatReady(false);
+            
             setSelectedChat({
                 conversationId: conversation._id,
                 otherUser: otherUserTo
             })
-
+            
             handleOpenConversation(conversation._id)
         }
         else{
@@ -131,25 +184,50 @@ export default function ChatPage() {
                             const isActive = selectedChat?.conversationId === chat._id;
 
                             return(
-                                <Box key={chat._id}>
+                                <Box 
+                                    key={chat._id}
+                                    onClick={() => {
+                                        setIsChatReady(false);
+                                        setSelectedChat({
+                                            conversationId: chat._id,
+                                            otherUser: otherUser
+                                        })
+                                        handleOpenConversation(chat._id)
+                                    }}
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 1.5,
+                                        p: 1.5,
+                                        cursor: 'pointer',
+                                        bgcolor: isActive ? 'action.selected' : 'transparent',
+                                        borderLeft: isActive ? '3px solid' : "3px solid transparent",
+                                        borderLeftColor: isActive && 'primary.main',
+                                        '&:hover': {bgcolor : isActive ? 'action.selected' : 'action.hover'}
+                                    }}
+                                >
                                     <Avatar
                                         src={otherUser?.profilePicture}
-                                    />
-                                    <Typography>
-                                        {otherUser?.name} {otherUser?.lastName}
-                                    </Typography>
-
-                                    <Button 
-                                        onClick={() => {
-                                            setSelectedChat({
-                                                conversationId: chat._id,
-                                                otherUser: otherUser
-                                            })
-                                            handleOpenConversation(chat._id)
+                                        sx={{
+                                            width: 44,
+                                            height: 44,
                                         }}
-                                    >
-                                        Open
-                                    </Button>
+                                    />
+
+                                    <Box sx={{flex: 1, minWidth: 0, flexWrap: 'nowrap'}}>
+                                        <Typography>
+                                            {otherUser?.name} {otherUser?.lastName}
+                                        </Typography>
+                                        <Typography
+                                            fontSize={11} color='text.secondary'
+                                        >
+                                            last message here..
+                                        </Typography>
+                                    </Box>
+
+                                    <Typography fontSize={11} color='text.secondary'>
+                                        {getTimeAgo(chat.updatedAt)}
+                                    </Typography>
                                 </Box>
                             )
                         })}
@@ -158,60 +236,266 @@ export default function ChatPage() {
             </Grid>
 
             {/* chat messages - right side */}
-            {selectedChat && (
-                <Grid size={{md:8}}>
-                    <Box
-                        sx={{
-                            border: '2px dashed red',
-                            height: '80vh',
-                            display: 'flex',
-                            flexDirection: 'column'
-                        }}
-                    >
-                        {/* Top: header with the other user's name */}
-                        <Box sx={{border: '1px dashed blue', p: 2}}>
-                            HEADER — chatting with: {selectedChat.otherUser?.name}
-                        </Box>
-
-                        {/* Middle: scrollable list of messages */}
-                        <Box sx={{border: '1px dashed green', flex: 1, p: 2, overflowY: 'auto'}}>
-                            {chatMessages.map((message) => (
-                                <Box key={message._id}>
-                                    <Typography>{message.text}</Typography>
+            <Grid size={{md:8}}>
+                {selectedChat ? (
+                        <Box
+                            sx={{
+                                height: '80vh',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                // borderRadius: 3,
+                            }}
+                        >
+                            {/* Top: header with the other user's name */}
+                            <Box sx={{
+                                borderBottom: '1px solid',
+                                borderColor: 'divider',
+                                p:2,
+                                bgcolor: 'background.paper',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1.5,
+                            }}>
+                                <Avatar
+                                    src= {selectedChat.otherUser?.profilePicture}
+                                    onClick={() => navigate(`/profiledashboard/${selectedChat.otherUser?._id}/profilemain`)}
+                                    sx={{
+                                        height: 48,
+                                        width: 48,
+                                        cursor: 'pointer'
+                                    }}
+                                />
+                                <Box sx={{ flex: 1}}>
+                                    <Typography>
+                                        {selectedChat.otherUser?.name}
+                                        {' '}
+                                        {selectedChat.otherUser?.lastName}
+                                    </Typography>
+                                    <Typography fontSize={12} color='text.secondary'>
+                                        {selectedChat.otherUser?.job}
+                                        󠁯{' ' + '󠁯ㆍ' + ' '}
+                                        {selectedChat.otherUser?.address.city}
+                                    </Typography>
                                 </Box>
-                            ))}
-                        </Box>
 
-                        {/* Bottom: text input + send button */}
-                        <Box sx={{border: '1px dashed orange', p: 2, display: 'flex', gap: 1}}>
-                            <TextField
-                                fullWidth
-                                size='small'
-                                placeholder='Write a message...'
-                                onChange={(e) => setMessageText(e.target.value)}
-                                value={messageText}
-                            />
-                            <Button 
-                                variant='contained'
-                                onClick={() => {
-                                    handleSendNewMessage({
-                                        text: messageText,
-                                        toUser: selectedChat.otherUser._id
-                                    },
-                                    user._id
-                                )
-                                    setMessageText('')
-                                    setTimeout(() => {
-                                        handleOpenChatList(user._id)
-                                    }, 300)
+                                <Box>
+                                    <IconButton>
+                                        <MoreHorizIcon/>
+                                    </IconButton>
+                                </Box>
+                            </Box>
+
+                            {/* Middle: scrollable list of messages */}
+                            <Box 
+                                ref={messageContainerRef}
+                                sx={{
+                                    flex: 1, 
+                                    p: 2, 
+                                    overflowY: 'auto',
+                                    visibility: isChatReady ? 'visible' : 'hidden'
                                 }}
                             >
-                                SEND
-                            </Button>
+                                {chatMessages.map((message) => {
+
+                                    const isSent = user._id === message.userId;
+                            // isSent === true → purple bubble, right side, no avatar
+                            // isSent === false → dark bubble, left side, with the other user's avatar
+                                    
+                                    return(
+                                        <Box key={message._id}
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: isSent ? 'flex-end' : 'flex-start',
+                                                alignItems: 'flex-end',
+                                                gap: 1,
+                                                mb: 1.5
+                                            }}
+                                        >
+                                            {!isSent && (
+                                                <Avatar
+                                                    src={selectedChat.otherUser?.profilePicture}
+                                                    sx={{
+                                                        width: 32,
+                                                        height: 32
+                                                    }}
+                                                />
+                                            )}
+
+                                            <Box
+                                                sx={{
+                                                    bgcolor: isSent ? 'primary.main' : 'action.hover',
+                                                    color: isSent ? 'white' : 'text.primary',
+                                                    px: 2,
+                                                    py: 1.5,
+                                                    borderRadius: 4,
+                                                    maxWidth: '70%',
+                                                    // the tail
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    borderBottomLeftRadius: isSent ? 15 : 3,
+                                                    borderBottomRightRadius: !isSent ? 15 : 3,
+                                                    wordBreak: 'break-word'
+                                                }}
+                                            >
+                                                <Typography 
+                                                    fontSize={15}
+                                                    lineHeight={1.4}
+                                                    sx={{
+                                                        whiteSpace: 'pre-wrap'
+                                                    }}
+                                                >
+                                                    {message.text}
+                                                </Typography>
+
+                                                <Typography
+                                                    fontSize={12}
+                                                    sx={{
+                                                        alignSelf: 'flex-end',
+                                                        color: isSent ? 'rgba(255, 255, 255, 0.69)' : 'text.secondary'
+                                                    }}
+                                                >
+                                                    {getMessageTime(message.createdAt)}
+                                                </Typography>
+                                            </Box>
+                                            
+                                        </Box>
+                                    )
+                                })}
+                                <IconButton 
+                                    sx={{
+                                        position: 'sticky', 
+                                        bottom: 0
+                                    }}>
+                                    <KeyboardArrowDownIcon/>
+                                </IconButton>
+                                {/* invisble market at the bottom */}
+                                <Box ref={messageEndRef}/>
+                            </Box>
+
+                            {/* Bottom: text input + send button */}
+                            <Box 
+                                sx={{
+                                    p: 2, 
+                                    display: 'flex', 
+                                    gap: 1, 
+                                    alignItems: 'end',
+                                    borderTop: '0.5px solid',
+                                    borderColor: 'divider'
+                                }}
+                            >
+                                <ImageIcon sx={{color: 'text.secondary', mb: 1, cursor: 'pointer'}}/>
+                                <VideocamIcon sx={{color: 'text.secondary', mb: 1, cursor: 'pointer'}}/>
+
+                                <TextField
+                                    fullWidth
+                                    size='small'
+                                    multiline
+                                    maxRows={10}
+                                    placeholder='Write a message...'
+                                    onChange={(e) => setMessageText(e.target.value)}
+                                    value={messageText}
+                                    onKeyDown={(e) => {
+                                        if(e.key === 'Enter' && !e.shiftKey && messageText.trim()){
+                                            e.preventDefault()
+                                            handleSendNewMessage({
+                                                text: messageText,
+                                                toUser: selectedChat.otherUser._id
+                                            },
+                                                user._id
+                                            )
+                                                setMessageText('')
+                                            }}
+                                        }
+                                    slotProps={{
+                                        input: {
+                                            startAdornment: (
+                                                <InputAdornment 
+                                                    position='start'
+                                                    sx={{
+                                                        alignSelf: 'flex-end',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                >
+                                                    <EmojiEmotionsIcon/>
+                                                </InputAdornment>
+                                            )
+                                        }
+                                    }}
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            borderRadius: 5,
+                                            fontSize: 15,
+                                            bgcolor: 'action.hover',
+                                            '& fieldset': {border: 'none'}
+                                        }
+                                    }}
+                                />
+                                <IconButton 
+                                    disabled={!messageText.trim()}
+                                    onClick={() => {
+                                        handleSendNewMessage({
+                                            text: messageText,
+                                            toUser: selectedChat.otherUser._id
+                                        },
+                                        user._id
+                                    )
+                                        setMessageText('')
+                                    }}
+                                    sx={{
+                                        bgcolor: 'primary.main',
+                                        color: 'white',
+                                        flexShrink: 0,
+                                        '&:hover': {
+                                            bgcolor: 'primary.dark'
+                                        },
+                                        '&.Mui-disabled': {bgcolor: 'action.disabledBackground'}
+                                    }}
+                                >
+                                    <SendIcon/>
+                                </IconButton>
+                            </Box>
                         </Box>
+                ): (
+                    <Box
+                        sx={{
+                            height: '80vh',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 1,
+                            p: 4
+                        }}
+                    >
+                        <Box sx={{
+                            borderRadius: '50%',
+                            bgcolor: '#7F77DD20',
+                            width: 90,
+                            height: 90,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+                            <MessageIcon sx={{
+                                fontSize: 50,
+                                color: 'primary.main'
+                            }}/>    
+                        </Box>
+                        <Typography fontWeight={700} fontSize={20}>Your Messages</Typography>
+                        <Typography 
+                            fontSize={14} 
+                            textAlign={'center'} 
+                            maxWidth={320}
+                            lineHeight={1.2}
+                            color='text.secondary'
+                        >
+                            Select a conversation to start chatting, or message someone new from their profile.
+                        </Typography>
                     </Box>
-                </Grid>
-            )}
+                )}
+            </Grid>
         </Grid>
     </Container>
   )

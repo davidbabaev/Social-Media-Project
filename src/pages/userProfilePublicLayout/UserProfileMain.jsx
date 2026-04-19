@@ -36,7 +36,7 @@ export default function UserProfileMain() {
     const [openCommentCardId, setOpenCommentCardId] = useState(null);
     
     
-    // addidng window scroll 0
+    // adding window scroll 0
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])

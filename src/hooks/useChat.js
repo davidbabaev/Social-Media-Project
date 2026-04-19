@@ -45,6 +45,10 @@ function useChat() {
 
         socket.on('recieve-message', (newMessage) => {
             setChatMessages(prev => [...prev, newMessage])
+            if(user?._id){
+                handleOpenChatList(user._id);
+            }
+            
         });
 
         return () => {
