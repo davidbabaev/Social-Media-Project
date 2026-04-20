@@ -15,6 +15,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import CreateCardModal from './CreateCardModal';
 import MirageLogo from '../assets/MirageLogo';
+import MessageIcon from '@mui/icons-material/Message';
 
 export default function NavBar() {
 
@@ -130,14 +131,6 @@ export default function NavBar() {
                         <Typography variant='caption'>Users</Typography>
                     </Box>
 
-                    <Box
-                        onClick={() => navigate('/allcards')}
-                        sx={navLinkSx('/allcards')}
-                        >
-                        <ExploreIcon fontSize='small'/>
-                        <Typography variant='caption'>Explore Posts</Typography>
-                    </Box>
-
                     {isLoggedIn && (
                         <Box
                             sx={navLinkSx('/createnewcard')}
@@ -151,6 +144,25 @@ export default function NavBar() {
                             </Typography>
                         </Box>
                     )}
+
+                    <Box
+                        onClick={() => navigate('/allcards')}
+                        sx={navLinkSx('/allcards')}
+                        >
+                        <ExploreIcon fontSize='small'/>
+                        <Typography variant='caption'>Explore Posts</Typography>
+                    </Box>
+
+                    {isLoggedIn && (
+                        <Box
+                            onClick={() => navigate('/chat')}
+                            sx={navLinkSx('/chat')}
+                            >
+                            <MessageIcon fontSize='small'/>
+                            <Typography variant='caption'>Messages</Typography>
+                        </Box>
+                    )}
+
                 </Box>
 
                 {isModalOpen && (
@@ -297,6 +309,7 @@ export default function NavBar() {
                 <PeopleIcon fontSize='small'/>
                 <Typography variant='caption'>Users</Typography>
             </Box>
+            
 
             <Box
                 onClick={() => navigate('/allcards')}
