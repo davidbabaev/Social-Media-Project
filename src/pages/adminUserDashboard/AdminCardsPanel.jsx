@@ -167,7 +167,7 @@ export default function AdminCardsPanel() {
       {/* Filters */}
       <Box sx={{
           display: 'flex',
-          flexDirection: {xs: 'column', md: 'flex'},
+          flexDirection: {xs: 'column', md: 'row'},
           gap: {xs:1, md:2},
           flexWrap: 'wrap',
           alignItems: 'center',
