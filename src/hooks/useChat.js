@@ -1,70 +1,61 @@
 import React, { useEffect, useState } from 'react'
 import socket from '../services/socketService';
 import { useAuth } from '../providers/AuthProvider';
+import { getChats, getSingleChatMessages } from '../services/apiService';
 
-function useChat() {
-    // states:
-    // the chat list
+function useChat(selectedConversationId) {
     const [conversationsList, setConversationsList] = useState([]);
-    // the chat window
     const [chatMessages, setChatMessages] = useState([]);
 
     const {user} = useAuth();
 
+    const handleOpenChatList = async () => {
+        try{
+            const response = await getChats();
+            setConversationsList(response);
+        }   
+        catch(err){
+           console.log(err.message);
+            
+        }
+    }
 
-    // functions:
-    // open the chat page
-    const handleOpenChatList = (userId) => {
-        socket.emit('get-chats', userId)
+    const handleOpenConversation = async (id) => {
+        try{
+            const response = await getSingleChatMessages(id);
+            setChatMessages(response);
+        }   
+        catch(err){
+           console.log(err.message);
+        }
     }
-    // click a conversation
-    const handleOpenConversation = (conversationId) => {
-        socket.emit('get-messages', conversationId)
-    }
-    // hit send on message
-    const handleSendNewMessage = (message, userId) => {
-        socket.emit('send-message', message, userId)
+
+    const handleSendNewMessage = (message) => {
+        socket.emit('send-message', message)
     }
 
     useEffect(() => {
-        const userId = user?._id;
+        socket.on('receive-message', (newMessage) => {
 
-        if(userId){
-            socket.emit('register-user', userId)
-        }
-
-        socket.on('recieve-messages', (messages) => {
-            setChatMessages(messages)
-        });
-
-        socket.on('recieve-chats', (chats) => {
-            // what state do you update here?
-            console.log('received chats:', chats)
-            setConversationsList(chats)
-        });
-
-        socket.on('recieve-message', (newMessage) => {
-            setChatMessages(prev => [...prev, newMessage])
-            if(user?._id){
-                handleOpenChatList(user._id);
+            if(newMessage.conversationId === selectedConversationId){
+                setChatMessages(prev => [...prev, newMessage])
             }
-            
+            handleOpenChatList();
         });
 
         return () => {
-            socket.off('recieve-chats');
-            socket.off('recieve-messages');
-            socket.off('recieve-message');
+            socket.off('receive-message');
         }
-    }, [user?._id]); // <- re-runs when the actual ID changes.
 
-  return{
-    handleOpenChatList, 
-    handleOpenConversation, 
-    handleSendNewMessage,
-    conversationsList,
-    chatMessages
-  }
+    }, [user?._id, selectedConversationId]); // <- re-runs when the actual ID changes.
+
+    return{
+        handleOpenChatList, 
+        handleOpenConversation, 
+        handleSendNewMessage,
+        conversationsList,
+        chatMessages
+    }
 }
 
 export default useChat;

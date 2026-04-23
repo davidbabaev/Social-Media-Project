@@ -26,7 +26,7 @@ export default function ChatPage() {
         handleSendNewMessage,
         conversationsList, 
         chatMessages,
-    } = useChat();
+    } = useChat(selectedChat?.conversationId);
 
     const navigate = useNavigate();
 
@@ -50,6 +50,10 @@ export default function ChatPage() {
         })
 
     }, [chatMessages])
+
+    useEffect(() => {
+        setMessageText('');
+    }, [selectedChat?.conversationId])
 
 /*     useEffect(() => {
         const container = messageContainerRef.current;
@@ -75,8 +79,8 @@ export default function ChatPage() {
 
     useEffect(() => {
         if(user?._id){
-            handleOpenChatList(user._id)
-            console.log('requesting chats for:', user._id);
+            handleOpenChatList();
+            console.log('requesting chats for:', user?._id);
             
         }
     }, [user?._id]);
@@ -88,7 +92,6 @@ export default function ChatPage() {
         if(!toUserId){
             return;
         }
-
         const conversation = conversationsList.find(c => 
             (c.fromUser === user._id && c.toUser === toUserId) ||
             (c.fromUser === toUserId && c.toUser === user._id)
@@ -402,9 +405,7 @@ export default function ChatPage() {
                                             handleSendNewMessage({
                                                 text: messageText,
                                                 toUser: selectedChat.otherUser._id
-                                            },
-                                                user._id
-                                            )
+                                            })
                                                 setMessageText('')
                                             }}
                                         }
@@ -438,9 +439,7 @@ export default function ChatPage() {
                                         handleSendNewMessage({
                                             text: messageText,
                                             toUser: selectedChat.otherUser._id
-                                        },
-                                        user._id
-                                    )
+                                        })
                                         setMessageText('')
                                     }}
                                     sx={{

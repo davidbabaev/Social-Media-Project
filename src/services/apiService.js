@@ -86,3 +86,8 @@ export const banCard = (id) => httpRequest(`/cards/${id}/ban`, 'PATCH');
 export const getNotifications = () => httpRequest(`/notifications`, 'GET');
 export const markNotificationsAsRead = () => httpRequest(`/notifications`, 'PATCH');
 export const deleteOneNotification = (id) => httpRequest(`/notifications/${id}`, 'DELETE');
+
+
+// chat requests
+export const getChats = () => httpRequest(`/chats`, 'GET');
+export const getSingleChatMessages = (id) => httpRequest(`/messages/${id}`, 'GET');
