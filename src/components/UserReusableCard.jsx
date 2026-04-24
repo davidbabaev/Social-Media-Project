@@ -241,8 +241,13 @@ export default function UserReusableCard({
                 variant={isFollowByMe(userObject._id) ? 'outlined' : 'outlined'}
                 startIcon={isFollowByMe(userObject._id) ? <CheckIcon/> : <PersonAddIcon/>}
                 onClick={async () => {
-                    isLoggedIn ? await toggleFollow(userObject._id) && await refreshFeed()
-                    : setIsLoginPopupOpen(true)
+                    if(!isLoggedIn){
+                        setIsLoginPopupOpen(true)
+                        return;
+                    }
+                    await toggleFollow(userObject._id)
+                    await refreshFeed()
+                    
                 }}
                 fullWidth
                 sx={{

@@ -327,10 +327,13 @@ export default function UserProfileLayout() {
                         size='small'
                         sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
                         onClick={async() => {
-                            isLoggedIn ? 
-                          await toggleFollow(userProfile._id) &&
-                          await refreshFeed()
-                          : setIsLoginPopupOpen(true)
+                            if(!isLoggedIn){
+                                setIsLoginPopupOpen(true)
+                                return;
+                            } 
+                            await toggleFollow(userProfile._id)
+                            await refreshFeed()
+                          
                         }}
                         color={isFollowByMe(userProfile._id) ? 'inherit' : 'primary'}
                       >
@@ -471,10 +474,12 @@ export default function UserProfileLayout() {
                     fontSize: {xs: 10, md: 12}
                 }}
                 onClick={async() => {
-                    isLoggedIn ? 
-                    await toggleFollow(userProfile._id) &&
+                    if(!isLoggedIn){
+                        setIsLoginPopupOpen(true)
+                        return;
+                    }
+                    await toggleFollow(userProfile._id)
                     await refreshFeed()
-                    : setIsLoginPopupOpen(true)
                 }}
                 color={isFollowByMe(userProfile._id) ? 'inherit' : 'primary'}
                 >
