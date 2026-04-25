@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { followUnfollowUser, loginUser, registerUser, updateUser, getSingleUser } from '../services/apiService';
 import { jwtDecode } from 'jwt-decode';
-// import { useCardsProvider } from './CardsProvider';
+import { connectSocket, disconnectSocket } from '../services/socketService';
 
 const UseAuthCheck = createContext();
-// const {refreshFeed} = useCardsProvider();
 
 export function AuthProvider({children}) {
 
@@ -27,15 +26,17 @@ export function AuthProvider({children}) {
                 console.log(userGoogle);
                 
                 setIsLoggedIn(true);
-                window.history.replaceState({}, document.title, '/')
+                connectSocket();
+                window.history.replaceState({}, document.title, '/');
             }
             else{
                 // existing code stays here exactly as it is
                 const savedLoggedInUser = JSON.parse(localStorage.getItem('loggedInUser'))
-    
+                
                 if(savedLoggedInUser){
                     setUser(savedLoggedInUser)
                     setIsLoggedIn(true) 
+                    connectSocket();
                 } else{
                     setIsLoggedIn(false) 
                 }
@@ -56,6 +57,8 @@ export function AuthProvider({children}) {
             localStorage.setItem('auth-token', response.token);
             setUser(response.safeUser);
             setIsLoggedIn(true);
+            connectSocket();
+
             return{
                 success: true,
                 message: 'registered successfully'
@@ -75,6 +78,7 @@ export function AuthProvider({children}) {
             localStorage.setItem('auth-token', response.token)
             setUser(response.safeUser)
             setIsLoggedIn(true);
+            connectSocket();
 
             return{
                 success: true,
@@ -111,6 +115,9 @@ export function AuthProvider({children}) {
         localStorage.removeItem('auth-token');
         setIsLoggedIn(false);
         setUser(null);
+        // closes the scoket
+        // (so the server forgets this user's conenction)
+        disconnectSocket();
     }
 
     const editUser = async (userId, updatedFields) => {

@@ -1,10 +1,5 @@
 import { io } from "socket.io-client";
 const SERVER_URL = 'http://localhost:8181';
-/* const socket = io(SERVER_URL, {
-    auth: (cb) => {
-        cb({token: localStorage.getItem('auth-token')})
-    }
-}); */
 
 let socket = null;
 
@@ -21,14 +16,20 @@ export function connectSocket(){
         console.log('Connected to server:', socket.id);
     })
 
+    socket.on('connect_error', (error) => {
+        console.log('Connection error:', error.message);
+    })
 
     return socket
 }
 
+export function disconnectSocket(){
+    if(!socket) return;
 
+    socket.disconnect();
+    socket = null;
+}
 
-socket.on('connect_error', (error) => {
-    console.log('Connection error:', error.message);
-})
-
-export default socket;
+export function getSocket() {
+    return socket;
+}
