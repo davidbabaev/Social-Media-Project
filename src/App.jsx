@@ -19,7 +19,6 @@ import AdminProtectedRoute from './components/AdminProtectedRoute'
 import PaginationDiagram from '../codes backups/Paigination'
 import PublicOnlyRoute from './components/PublicOnlyRoute'
 import { Box } from '@mui/material'
-import socket from './services/socketService';
 import ChatPage from './pages/chat/ChatPage'
 
 export default function App(){

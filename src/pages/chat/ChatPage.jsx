@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import useChat from '../../hooks/useChat'
 import { useAuth } from '../../providers/AuthProvider';
-import { Avatar, Box, Button, Container, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Container, Grid, IconButton, InputAdornment, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import useUsers from '../../hooks/useUsers';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
@@ -14,6 +14,8 @@ import ImageIcon from '@mui/icons-material/Image';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import SendIcon from '@mui/icons-material/Send';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import PersonIcon from '@mui/icons-material/Person';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function ChatPage() {
 
@@ -26,12 +28,23 @@ export default function ChatPage() {
         handleSendNewMessage,
         conversationsList, 
         chatMessages,
+        handleDeleteChat
     } = useChat(selectedChat?.conversationId);
 
     const navigate = useNavigate();
 
     const {user} = useAuth();
     const {users} = useUsers();
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    // open the menu - store the clicked element
+    const handleOpen = (e) => setAnchorEl(e.currentTarget);
+
+    // close the menu - clear the element
+    // the menu is open when anchorEl is not null
+    const handleClose = () => setAnchorEl(null);
+
 
     // chat display settings
     const [isChatReady, setIsChatReady] = useState(false)
@@ -278,16 +291,38 @@ export default function ChatPage() {
                                     </Typography>
                                     <Typography fontSize={12} color='text.secondary'>
                                         {selectedChat.otherUser?.job}
-                                        󠁯{' ' + '󠁯ㆍ' + ' '}
+                                        {' ' + '󠁯ㆍ' + ' '}
                                         {selectedChat.otherUser?.address.city}
                                     </Typography>
                                 </Box>
 
                                 <Box>
-                                    <IconButton>
+                                    <IconButton onClick={handleOpen}>
                                         <MoreHorizIcon/>
                                     </IconButton>
                                 </Box>
+                                
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    open={Boolean(anchorEl)}
+                                    onClose={handleClose}
+                                >
+                                    <MenuItem onClick={() => {
+                                        handleClose()
+                                        navigate(`/profiledashboard/${selectedChat.otherUser?._id}/profilemain`)
+                                    }}>
+                                        <PersonIcon sx={{mr:1}}/> Profile
+                                    </MenuItem>
+
+                                    <MenuItem onClick={() => {
+                                        handleClose();
+                                        handleDeleteChat(selectedChat.conversationId)
+                                        setSelectedChat(null)
+                                    }}>
+                                        <DeleteIcon sx={{mr:1}}/> Delete chat
+                                    </MenuItem>
+                                </Menu>
+
                             </Box>
 
                             {/* Middle: scrollable list of messages */}

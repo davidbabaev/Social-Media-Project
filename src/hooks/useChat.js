@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import socket from '../services/socketService';
+import { getSocket } from '../services/socketService';
 import { useAuth } from '../providers/AuthProvider';
-import { getChats, getSingleChatMessages } from '../services/apiService';
+import { deleteChat, getChats, getSingleChatMessages } from '../services/apiService';
 
 function useChat(selectedConversationId) {
     const [conversationsList, setConversationsList] = useState([]);
@@ -31,20 +31,40 @@ function useChat(selectedConversationId) {
     }
 
     const handleSendNewMessage = (message) => {
-        socket.emit('send-message', message)
+        getSocket().emit('send-message', message)
     }
 
+    const handleDeleteChat = async (conversationId) => {
+        try{
+            const response = await deleteChat(conversationId)
+            // set the list to a new list without this id of deleted chat
+            setConversationsList(prev => prev.filter(c => c._id !== conversationId))
+        }
+        catch(err){
+            console.log(err.message);
+        }
+    }
+    
     useEffect(() => {
+        const socket = getSocket();
+        if(!socket) return;
+        
         socket.on('receive-message', (newMessage) => {
-
             if(newMessage.conversationId === selectedConversationId){
                 setChatMessages(prev => [...prev, newMessage])
             }
             handleOpenChatList();
         });
+        
+        socket.on('deleted-conversation', (deletedId) => {
+            console.log('deleted conversation received:', deletedId);
+            
+            setConversationsList(prev => prev.filter(c => c._id !== deletedId))
+        })
 
         return () => {
             socket.off('receive-message');
+            socket.off('deleted-conversation');
         }
 
     }, [user?._id, selectedConversationId]); // <- re-runs when the actual ID changes.
@@ -54,7 +74,8 @@ function useChat(selectedConversationId) {
         handleOpenConversation, 
         handleSendNewMessage,
         conversationsList,
-        chatMessages
+        chatMessages,
+        handleDeleteChat
     }
 }
 
