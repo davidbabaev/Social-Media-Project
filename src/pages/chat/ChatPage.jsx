@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import useChat from '../../hooks/useChat'
 import { useAuth } from '../../providers/AuthProvider';
 import { Avatar, Box, Button, Container, Grid, IconButton, InputAdornment, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material';
@@ -20,7 +20,16 @@ import DeleteIcon from '@mui/icons-material/Delete';
 export default function ChatPage() {
 
     const [selectedChat, setSelectedChat] = useState(null);
-    const [messageText, setMessageText] = useState('')
+    const [messageText, setMessageText] = useState('');
+
+    const handleConversationDeleted = useCallback((deletedId) => {
+        setSelectedChat(prev => {
+            if(prev?.conversationId === deletedId){
+                return null;
+            }
+            return prev
+        })
+    }, [])
 
     const {
         handleOpenChatList, 
@@ -29,7 +38,7 @@ export default function ChatPage() {
         conversationsList, 
         chatMessages,
         handleDeleteChat
-    } = useChat(selectedChat?.conversationId);
+    } = useChat(selectedChat?.conversationId, handleConversationDeleted);
 
     const navigate = useNavigate();
 
@@ -98,13 +107,17 @@ export default function ChatPage() {
         }
     }, [user?._id]);
 
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const toUserId = searchParams.get('to')
 
     useEffect(() => {
         if(!toUserId){
             return;
         }
+
+        // wait until we have data before deciding
+        if(users.length === 0) return;
+
         const conversation = conversationsList.find(c => 
             (c.fromUser === user._id && c.toUser === toUserId) ||
             (c.fromUser === toUserId && c.toUser === user._id)
@@ -133,6 +146,8 @@ export default function ChatPage() {
                 otherUser: otherNewUserTo
             })
         }
+
+        setSearchParams({}, {replace: true})
 
     }, [toUserId, conversationsList, user, users])
 

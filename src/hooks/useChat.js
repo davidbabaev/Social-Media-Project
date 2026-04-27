@@ -3,7 +3,7 @@ import { getSocket } from '../services/socketService';
 import { useAuth } from '../providers/AuthProvider';
 import { deleteChat, getChats, getSingleChatMessages } from '../services/apiService';
 
-function useChat(selectedConversationId) {
+function useChat(selectedConversationId, onConversationDeleted) {
     const [conversationsList, setConversationsList] = useState([]);
     const [chatMessages, setChatMessages] = useState([]);
 
@@ -58,8 +58,13 @@ function useChat(selectedConversationId) {
         
         socket.on('deleted-conversation', (deletedId) => {
             console.log('deleted conversation received:', deletedId);
-            
+
             setConversationsList(prev => prev.filter(c => c._id !== deletedId))
+
+            // tell the page about it (if it wants to know)
+            if(onConversationDeleted){
+                onConversationDeleted(deletedId)
+            }
         })
 
         return () => {
@@ -67,7 +72,7 @@ function useChat(selectedConversationId) {
             socket.off('deleted-conversation');
         }
 
-    }, [user?._id, selectedConversationId]); // <- re-runs when the actual ID changes.
+    }, [user?._id, selectedConversationId, onConversationDeleted]); // <- re-runs when the actual ID changes.
 
     return{
         handleOpenChatList, 
