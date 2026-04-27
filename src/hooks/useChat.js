@@ -3,7 +3,7 @@ import { getSocket } from '../services/socketService';
 import { useAuth } from '../providers/AuthProvider';
 import { deleteChat, getChats, getSingleChatMessages } from '../services/apiService';
 
-function useChat(selectedConversationId, onConversationDeleted) {
+function useChat(selectedConversationId, onConversationDeleted, onMessageReceived) {
     const [conversationsList, setConversationsList] = useState([]);
     const [chatMessages, setChatMessages] = useState([]);
 
@@ -50,9 +50,23 @@ function useChat(selectedConversationId, onConversationDeleted) {
         if(!socket) return;
         
         socket.on('receive-message', (newMessage) => {
-            if(newMessage.conversationId === selectedConversationId){
+            // if(newMessage.conversationId === selectedConversationId){
+            //     setChatMessages(prev => [...prev, newMessage])
+            // }
+            // handleOpenChatList();
+
+            if(onMessageReceived){
+                onMessageReceived(newMessage)   
+            }
+
+            const isOurOpenChat = 
+                newMessage.conversationId === selectedConversationId ||
+                selectedConversationId === null;
+
+            if(isOurOpenChat){
                 setChatMessages(prev => [...prev, newMessage])
             }
+
             handleOpenChatList();
         });
         
@@ -72,7 +86,7 @@ function useChat(selectedConversationId, onConversationDeleted) {
             socket.off('deleted-conversation');
         }
 
-    }, [user?._id, selectedConversationId, onConversationDeleted]); // <- re-runs when the actual ID changes.
+    }, [user?._id, selectedConversationId, onConversationDeleted, onMessageReceived]); // <- re-runs when the actual ID changes.
 
     return{
         handleOpenChatList, 

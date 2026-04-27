@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-const SERVER_URL = 'http://localhost:8181';
+const SERVER_URL = import.meta.env.VITE_API_URL;
 
 let socket = null;
 

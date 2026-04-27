@@ -21,6 +21,9 @@ export default function ChatPage() {
 
     const [selectedChat, setSelectedChat] = useState(null);
     const [messageText, setMessageText] = useState('');
+    const navigate = useNavigate();
+    const {user} = useAuth();
+    const {users} = useUsers();
 
     const handleConversationDeleted = useCallback((deletedId) => {
         setSelectedChat(prev => {
@@ -31,6 +34,25 @@ export default function ChatPage() {
         })
     }, [])
 
+    const handleMessageReceived = useCallback((newMessage) => {
+        setSelectedChat(prev => {
+            if(!prev) return prev;
+            if(prev.conversationId !== null) return prev;
+
+            const isMatch =
+                newMessage.userId === prev.otherUser?._id ||
+                newMessage.userId === user._id;
+
+                if(isMatch) {
+                    return{
+                        ...prev,
+                        conversationId: newMessage.conversationId
+                    }
+                }
+            return prev;
+        })
+    }, [user?._id])
+
     const {
         handleOpenChatList, 
         handleOpenConversation,
@@ -38,12 +60,7 @@ export default function ChatPage() {
         conversationsList, 
         chatMessages,
         handleDeleteChat
-    } = useChat(selectedChat?.conversationId, handleConversationDeleted);
-
-    const navigate = useNavigate();
-
-    const {user} = useAuth();
-    const {users} = useUsers();
+    } = useChat(selectedChat?.conversationId, handleConversationDeleted, handleMessageReceived);
 
     const [anchorEl, setAnchorEl] = useState(null);
 
