@@ -33,7 +33,7 @@ export default function CreateCardModal({card, onClose, onCardPosted, mediaButto
             borderRadius: {xs:0, md:3},
             p: 1,
             width: {xs: '100%' ,md: 560},
-            height: {xs: '100vh', md: 'auto'},
+            height: {xs: '100dvh', md: 'auto'},
             maxHeight: {xs: '100vh',md: '90vh'},
             position: 'relative',
             display: 'flex',
