@@ -34,7 +34,7 @@ export default function CreateCardModal({card, onClose, onCardPosted, mediaButto
             p: 1,
             width: {xs: '100%' ,md: 560},
             height: {xs: '100dvh', md: 'auto'},
-            maxHeight: {xs: '100vh',md: '90vh'},
+            maxHeight: {xs: '100dvh',md: '90vh'},
             position: 'relative',
             display: 'flex',
             flexDirection: 'column',
