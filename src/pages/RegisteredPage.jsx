@@ -356,7 +356,7 @@ export default function RegisteredPage() {
             fullWidth
             variant='outlined'
             startIcon={<GoogleIcon/>}
-            href='/auth/google'
+            href={`${import.meta.env.VITE_API_URL}/auth/google`}
             sx={{mb: 3}}
           >
             Continue with Google
