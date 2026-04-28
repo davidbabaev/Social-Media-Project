@@ -181,7 +181,7 @@ export default function ChatPage() {
                         borderColor: 'divider',
                         borderRadius: 3,
                         overflow: 'hidden',
-                        height: '80vh',
+                        height: {xs: '80dvh', md: '80vh'},
                         display: 'flex',
                         flexDirection: 'column'
                     }}

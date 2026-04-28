@@ -32,7 +32,7 @@ export default function Notifications({
       right: 0,
       bottom: {xs: 0, md: 'auto'},
       width: {xs:'100%', md:380},
-      maxHeight: {xs:'100vh', md: 400},
+      maxHeight: {xs:'100dvh', md: 400},
       overflow: 'auto',
       overscrollBehavior: 'contain',
       bgcolor: 'background.paper',

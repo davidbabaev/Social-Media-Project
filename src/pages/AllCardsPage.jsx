@@ -178,7 +178,7 @@ export default function AllCardsPage() {
                     top: {xs: 0, md: 90},
                     left: {xs: 0, md: 'auto'},
                     width: '100%',
-                    height: {xs: '100vh', md: 'calc(100vh - 94px)'},
+                    height: {xs: '100dvh', md: 'calc(100vh - 94px)'},
                     overflow: 'auto',
                     overscrollBehavior: 'contain',
                     bgcolor: {xs: 'background.default', md: 'transparent'},
@@ -187,7 +187,7 @@ export default function AllCardsPage() {
                     display: {xs: isFiltersOpen ? 'flex' : 'none', md: 'flex'}, 
                     flexDirection: 'column',
                     gap: 2,
-                    
+                    pb: {xs: 4, md: 0},
                     // hide scrollbar visually but keep it functional
                     '&::-webkit-scrollbar': {display: 'none'}
                 }}>

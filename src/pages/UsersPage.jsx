@@ -190,7 +190,7 @@ function UsersPage() {
                         top: {xs: 0, md: 64},
                         left: {xs: 0, md: 'auto'},
                         width: '100%',
-                        height: {xs: '100vh', md: 'calc(100vh - 64px)'},
+                        height: {xs: '100dvh', md: 'calc(100vh - 64px)'},
                         overflow: 'auto',
                         overscrollBehavior: 'contain',
                         bgcolor: {xs: 'background.default', md: 'transparent'},
@@ -200,6 +200,7 @@ function UsersPage() {
                         // justifyContent: 'center', 
                         flexDirection: 'column',
                         gap: 2,
+                        pb: {xs: 4, md: 0},
                         
                         // hide scrollbar visually but keep it functional
                         '&::-webkit-scrollbar': {display: 'none'}

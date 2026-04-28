@@ -300,7 +300,7 @@ export default function DashboardLayout() {
                         <Button 
                             variant='contained'
                             size='small'
-                            sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
+                            sx={{borderRadius: 5, px: 1, py:1, fontSize: 10}}
                             endIcon={<EditIcon/>}
                             onClick={() => navigate(`/dashboard/myprofile`, { state: {editMode: true} })}
                             
@@ -314,7 +314,7 @@ export default function DashboardLayout() {
                             variant='outlined'
                             color='error'
                             size='small'
-                            sx={{borderRadius: 5, px: 2, py:1, fontSize: 12}}
+                            sx={{borderRadius: 5, px: 2, py:1, fontSize: 10}}
                             endIcon={<DeleteIcon/>}
                             onClick={() => setConfirmDeleteUser(user)}
                         >
