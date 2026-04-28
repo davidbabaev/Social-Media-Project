@@ -123,7 +123,7 @@ export default function ProfileSection({editMode ,onEditMode, onCloseEdit}) {
             setEditJob(user.job);
             setEditAge(user.age)
             setEditGender(user.gender);
-            setEditBirthDate(user.birthDate.split("T")[0]);
+            setEditBirthDate(user.birthDate?.split("T")[0]);
             setEditPhone(user.phone);
             setEditAboutMe(user.aboutMe);
         }

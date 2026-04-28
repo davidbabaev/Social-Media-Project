@@ -294,7 +294,7 @@ export default function FeedPage() {
                             navigate(`/dashboard/myprofile`, { state: {editMode: true} })}
                                     sx={{
                                         bgcolor: '#f188322b', 
-                                        fontSize: 10, 
+                                        fontSize: {xs:10, md: 10}, 
                                         p:1, 
                                         borderRadius: 2,
                                     }}
@@ -303,10 +303,12 @@ export default function FeedPage() {
                                 </Button>
                             }
                             sx={{
+                                mt: 2,
                                 mb: 2,
                                 bgcolor: 'background.paper',
                                 borderRadius: 3,
-                                alignItems: 'center',
+                                fontSize: {xs: 12, md: 13},
+                                lineHeight: {xs: 1.2, md: 1.2},
                                 '& .MuiAlert-action': {
                                     alignItems: 'center',
                                     padding: 0
