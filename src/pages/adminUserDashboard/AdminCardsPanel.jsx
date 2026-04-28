@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react'
-import useUsers from '../../hooks/useUsers'
 import { useCardsProvider } from '../../providers/CardsProvider';
 import useDebounce from '../../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
@@ -17,12 +16,13 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import CardPopupModal from '../../components/card/CardPopupModal';
 import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
+import { useUsersProvider } from '../../providers/UsersProvider';
 
 
 
 export default function AdminCardsPanel() {
 
-  const {loading, getUsers} = useUsers();
+  const {loading, getUsers} = useUsersProvider();
   const {registeredCards, refreshFeed, fetchCards, handleDeleteCard, handleBanCard} = useCardsProvider();
   const [selectedCardId, setSelectedCardId] = useState(null);
   

@@ -11,14 +11,14 @@ import { Avatar, Box, Button, Container, IconButton, Paper, Tab, Tabs, Toolbar, 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmationDialog from '../../components/ConfirmationDialog'
-import useUsers from '../../hooks/useUsers'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox'
+import { useUsersProvider } from '../../providers/UsersProvider'
 
 export default function DashboardLayout() {
 
     const {user, handleLogout} = useAuth();
-    const {handleDeleteUser, getUsers} = useUsers();  
+    const {handleDeleteUser, getUsers} = useUsersProvider();  
     const [confirmDeleteUser, setConfirmDeleteUser] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const navigate = useNavigate();

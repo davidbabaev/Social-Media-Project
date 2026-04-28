@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import useUsers from '../../hooks/useUsers';
 import { useCardsProvider } from '../../providers/CardsProvider';
 import { useAuth } from '../../providers/AuthProvider';
 import CardItem from '../../components/CardItem';
@@ -12,12 +11,13 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LoginPopup from '../../components/LoginPopup';
 import useFavoriteCards from '../../hooks/useFavoriteCards';
 import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
+import { useUsersProvider } from '../../providers/UsersProvider';
 
 
 export default function UserProfileMain() {
 
     const {id} = useParams();
-    const {users} = useUsers();
+    const {users} = useUsersProvider();
     const {registeredCards} = useCardsProvider();
     const {user, isLoggedIn} = useAuth();
     const navigate = useNavigate();

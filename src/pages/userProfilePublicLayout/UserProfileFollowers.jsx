@@ -1,18 +1,18 @@
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import useUsers from '../../hooks/useUsers';
 import { useAuth } from '../../providers/AuthProvider';
 import useFollowUser from '../../hooks/useFollowUser';
 import { useCardsProvider } from '../../providers/CardsProvider';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Avatar, Box, Button, Paper, Typography } from '@mui/material';
 import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
+import { useUsersProvider } from '../../providers/UsersProvider';
 
 
 export default function UserProfileFollowers() {
 
   const {id} = useParams();
-  const {users} = useUsers();
+  const {users} = useUsersProvider();
   const {user} = useAuth();
   const {toggleFollow, isFollowByMe, getFollowersCount} = useFollowUser();
   const navigate = useNavigate();

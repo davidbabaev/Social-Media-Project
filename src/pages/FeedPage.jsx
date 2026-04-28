@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import CardItem from '../components/CardItem'
 import { useCardsProvider } from '../providers/CardsProvider';
 import { useAuth } from '../providers/AuthProvider';
-import useUsers from '../hooks/useUsers';
 import useFollowUser from '../hooks/useFollowUser';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
@@ -15,6 +14,7 @@ import CreateCardTrigger from '../components/CreateCardTrigger';
 import CardPopupModal from '../components/card/CardPopupModal';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import useFavoriteCards from '../hooks/useFavoriteCards';
+import { useUsersProvider } from '../providers/UsersProvider';
 
 
 export default function FeedPage() {
@@ -22,7 +22,7 @@ export default function FeedPage() {
     const {feedCards} = useCardsProvider();
     const [count, setCount] = useState(10);
     const {user} = useAuth();
-    const {users} = useUsers();
+    const {users} = useUsersProvider();
     const{getFollowingCount, getFollowersCount, toggleFollow, isFollowByMe} = useFollowUser();
     const navigate = useNavigate();
     const debounceFollowing = useDebounce(user?.following, 3000);

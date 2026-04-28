@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react'
 import useFavoriteCards from '../hooks/useFavoriteCards';
-import useUsers from '../hooks/useUsers';
 import { useAuth } from '../providers/AuthProvider';
 import useLikedCards from '../hooks/useLikedCards';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +18,7 @@ import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { useUsersProvider } from '../providers/UsersProvider';
 
 export default function CardItem({
     card, 
@@ -45,7 +45,7 @@ export default function CardItem({
     const navigate = useNavigate();
     const {toggleLike, isLikeByMe, getLikeCount} = useLikedCards()
     const {user, isLoggedIn} = useAuth();
-    const {users} = useUsers(); 
+    const {users} = useUsersProvider(); 
     // const {favoriteCards ,handleFavoriteCards} = useFavoriteCards();
 
     const creator = users.find(u => u._id === card.userId);

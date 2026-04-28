@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import useChat from '../../hooks/useChat'
 import { useAuth } from '../../providers/AuthProvider';
 import { Avatar, Box, Button, Container, Grid, IconButton, InputAdornment, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material';
-import useUsers from '../../hooks/useUsers';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import getTimeAgo from '../../utils/getTimeAgo';
@@ -16,6 +15,7 @@ import SendIcon from '@mui/icons-material/Send';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import PersonIcon from '@mui/icons-material/Person';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useUsersProvider } from '../../providers/UsersProvider';
 
 export default function ChatPage() {
 
@@ -23,7 +23,7 @@ export default function ChatPage() {
     const [messageText, setMessageText] = useState('');
     const navigate = useNavigate();
     const {user} = useAuth();
-    const {users} = useUsers();
+    const {users} = useUsersProvider();
 
     const handleConversationDeleted = useCallback((deletedId) => {
         setSelectedChat(prev => {

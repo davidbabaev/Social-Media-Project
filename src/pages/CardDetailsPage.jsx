@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom'
 import { useCardsProvider } from '../providers/CardsProvider';
-import useUsers from '../hooks/useUsers';
 
 import { useAuth } from '../providers/AuthProvider';
 import useFavoriteCards from '../hooks/useFavoriteCards';
@@ -14,13 +13,14 @@ import useCommentsCards from '../hooks/useCommentsCards';
 import getTimeAgo from '../utils/getTimeAgo';
 import MediaDisplay from '../components/MediaDisplay';
 import OnLoadingSkeletonBox from '../components/OnLoadingSkeletonBox';
+import { useUsersProvider } from '../providers/UsersProvider';
 
 export default function CardDetailsPage() {
 
     const {id} = useParams();
     const {registeredCards} = useCardsProvider()
     const {favoriteCards, handleFavoriteCards} = useFavoriteCards();
-    const {users} = useUsers();
+    const {users} = useUsersProvider();
     const {user} = useAuth();
 
     const [isOpen, setIsOpen] = useState(false);

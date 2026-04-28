@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import useDebounce from '../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
-import useUsers from '../hooks/useUsers';
 import useSelectedUsers from '../hooks/useSelectedUsers';
 import { Box, Button, Checkbox, Chip, Container, Grid, IconButton, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 import UsersPageSorts from '../components/UsersPageSorts';
@@ -14,11 +13,12 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { useUsersProvider } from '../providers/UsersProvider';
 
 
 function UsersPage() {
 
-    const {users, loading} = useUsers();
+    const {users, loading} = useUsersProvider();
     const {selectedUsers ,selectHandleUser, handleRemoveUser} = useSelectedUsers();
     const [count, setCount] = useState(10);
     const [search, setSearch] = useState('')

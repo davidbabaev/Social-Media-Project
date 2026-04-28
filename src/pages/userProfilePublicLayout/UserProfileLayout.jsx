@@ -1,5 +1,4 @@
 import { Link, Route, Routes, useNavigate, useParams } from 'react-router-dom'
-import useUsers from '../../hooks/useUsers';
 import useFollowUser from '../../hooks/useFollowUser';
 import UserProfileAbout from './UserProfileAbout';
 import UserProfileMain from './UserProfileMain';
@@ -20,11 +19,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import UserProfileMedia from './UserProfileMedia';
 import LoginPopup from '../../components/LoginPopup';
 import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
+import { useUsersProvider } from '../../providers/UsersProvider';
 
 export default function UserProfileLayout() {
 
     const {id} = useParams();
-    const{users} = useUsers();
+    const{users} = useUsersProvider();
     const {user, isLoggedIn} = useAuth();
     const {refreshFeed, registeredCards} = useCardsProvider();
     const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);

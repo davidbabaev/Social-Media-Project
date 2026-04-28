@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import useUsers from '../hooks/useUsers';
 import { useNavigate } from 'react-router-dom';
 import { useCardsProvider } from '../providers/CardsProvider';
 import getTimeAgo from '../utils/getTimeAgo';
 import { Avatar, Box, Button, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useUsersProvider } from '../providers/UsersProvider';
 
 
 export default function Notifications({
@@ -14,7 +14,7 @@ export default function Notifications({
   onClose
 }) {
 
-  const {users} = useUsers();
+  const {users} = useUsersProvider();
   const navigate = useNavigate();
   const {registeredCards} = useCardsProvider();
 

@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react'
 import { useCardsProvider } from '../providers/CardsProvider'
-import useUsers from '../hooks/useUsers';
 
 import useDebounce from '../hooks/useDebounce';
 import useFavoriteCards from '../hooks/useFavoriteCards';
@@ -15,6 +14,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { useUsersProvider } from '../providers/UsersProvider';
 
 
 export default function AllCardsPage() {
@@ -48,7 +48,7 @@ export default function AllCardsPage() {
     
     const {registeredCards} = useCardsProvider();
     const [count, setCount] = useState(10);
-    const {users} = useUsers(); 
+    const {users} = useUsersProvider(); 
     const {favoriteCards ,handleFavoriteCards, handleRemoveCard} = useFavoriteCards();
 
     const [showAllCategories, setShowAllCategories] = useState(false)

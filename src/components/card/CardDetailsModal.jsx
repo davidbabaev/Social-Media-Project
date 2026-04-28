@@ -1,6 +1,4 @@
 import { useCardsProvider } from '../../providers/CardsProvider';
-import useUsers from '../../hooks/useUsers';
-
 import { useAuth } from '../../providers/AuthProvider'; 
 import useFavoriteCards from '../../hooks/useFavoriteCards';
 import CardsComments from '../CardsComments';
@@ -22,12 +20,13 @@ import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import OnLoadingSkeletonBox from '../OnLoadingSkeletonBox';
+import { useUsersProvider } from '../../providers/UsersProvider';
 
 export default function CardDetailsModal({cardId, onClose}) {
 
         const {registeredCards} = useCardsProvider()
         const {favoriteCards, handleFavoriteCards} = useFavoriteCards();
-        const {users} = useUsers();
+        const {users} = useUsersProvider();
         const {user} = useAuth();
         const {toggleFollow, isFollowByMe, getFollowingCount, getFollowersCount} = useFollowUser();
         const [isExpanded, setIsExpanded] = useState(false)

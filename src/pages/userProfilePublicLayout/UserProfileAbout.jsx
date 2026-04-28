@@ -1,12 +1,12 @@
 import React from 'react'
-import useUsers from '../../hooks/useUsers'
 import { useParams } from 'react-router-dom';
 import { Box, Paper, Typography } from '@mui/material';
 import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
+import { useUsersProvider } from '../../providers/UsersProvider';
 
 export default function UserProfileAbout() {
 
-  const {users} = useUsers();
+  const {users} = useUsersProvider();
   const {id} = useParams();
 
   const userProfile = users.find((user) => user._id === id);

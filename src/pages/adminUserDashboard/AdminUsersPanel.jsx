@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react'
-import useUsers from '../../hooks/useUsers'
 import { useCardsProvider } from '../../providers/CardsProvider';
 import useDebounce from '../../hooks/useDebounce';
 import { useNavigate } from 'react-router-dom';
@@ -15,10 +14,11 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
+import { useUsersProvider } from '../../providers/UsersProvider';
 
 export default function AdminUsersPanel() {
 
-  const {users, handleDeleteUser, loading, handleBanUser, handlePromoteUser, getUsers} = useUsers();
+  const {users, handleDeleteUser, loading, handleBanUser, handlePromoteUser, getUsers} = useUsersProvider();
   const {registeredCards, refreshFeed, fetchCards} = useCardsProvider();
   const {apiCountriesList} = useCountries(); 
   const [search, setSearch] = useState('');

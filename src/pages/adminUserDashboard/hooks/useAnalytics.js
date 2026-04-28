@@ -1,12 +1,12 @@
 import { useCardsProvider } from '../../../providers/CardsProvider';
-import useUsers from '../../../hooks/useUsers';
 import useCountries from '../../../hooks/useCountries';
+import { useUsersProvider } from '../../../providers/UsersProvider';
 
 function useAnalytics() {
 
   const {apiCountriesList} = useCountries(); 
   const {registeredCards} = useCardsProvider();
-  const {users} = useUsers();
+  const {users} = useUsersProvider();
 
   const registeredCardsLength = registeredCards.length;
   const usersLength = users.length;

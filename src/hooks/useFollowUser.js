@@ -1,10 +1,10 @@
 import { useAuth } from "../providers/AuthProvider";
-import useUsers from "./useUsers";
+import { useUsersProvider } from "../providers/UsersProvider";
 
 function useFollowUser() {
 
   const{ handleToggleFollow, user} = useAuth(); 
-  const {users, getUsers} = useUsers();
+  const {users, getUsers} = useUsersProvider();
 
     // toggle Follow
 

@@ -1,18 +1,18 @@
 import useFavoriteCards from '../../hooks/useFavoriteCards';
 import { useNavigate } from 'react-router-dom';
-import useUsers from '../../hooks/useUsers';
 import getTimeAgo from '../../utils/getTimeAgo';
 import MediaDisplay from '../../components/MediaDisplay';
 import React, { useState } from 'react'
 import { Avatar, Box, Button, Chip, Typography, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
+import { useUsersProvider } from '../../providers/UsersProvider';
 
 
 export default function FavoriteCards() {
 
     const {favoriteCards, handleRemoveCard} = useFavoriteCards();
-    const {users} = useUsers()
+    const {users} = useUsersProvider()
     const navigate = useNavigate();
     
     const [count, setCount] = useState(5);

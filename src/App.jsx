@@ -16,10 +16,10 @@ import UsersPage from './pages/UsersPage'
 import FeedPage from './pages/FeedPage'
 import AdminDashboardLayout from './pages/adminUserDashboard/layout/AdminDashboardLayout'
 import AdminProtectedRoute from './components/AdminProtectedRoute'
-import PaginationDiagram from '../codes backups/Paigination'
 import PublicOnlyRoute from './components/PublicOnlyRoute'
 import { Box } from '@mui/material'
 import ChatPage from './pages/chat/ChatPage'
+import { UsersProvider } from './providers/UsersProvider'
 
 export default function App(){
 
@@ -29,57 +29,58 @@ export default function App(){
     <AuthProvider>
       <ThemeProvider>
         <CardsProvider>
-          {!(
-            location.pathname.includes('/admindashboard') ||
-            location.pathname.includes('/login') ||
-            location.pathname.includes('/register')
-          ) && (
-            <NavBar/>
-          )}
-          <Box sx={{minHeight: '100vh', bgcolor: 'Background.default'}}>
-            <Routes>
-              <Route path='/' element={
-                <ProtectedRoute>
-                  <FeedPage/>
-                </ProtectedRoute>
-              }/>
-              <Route path='/admindashboard/*' element={
-                <AdminProtectedRoute> 
-                  <AdminDashboardLayout/>
-                </AdminProtectedRoute>
-              }/>
-              <Route path='/login' element={
-                <PublicOnlyRoute>
-                  <LoginPage/>
-                </PublicOnlyRoute>
-              }/>
-              <Route path='/dashboard/*' element={
-                <ProtectedRoute>
-                  <DashboardLayout/>
-                </ProtectedRoute>
-              }/>
-              <Route path='/profiledashboard/:id/*' element={<UserProfileLayout/>}/>
-              <Route path='/createnewcard' element={
-                <ProtectedRoute>
-                  <CardsRegisterPage/>
-                </ProtectedRoute>
-              }/>
-              <Route path='/allusers' element ={<UsersPage/>}/>
-              <Route path='/recall' element ={<PaginationDiagram/>}/>
-              <Route path='/registered' element ={
-                <PublicOnlyRoute>
-                  <RegisteredPage/>
-                </PublicOnlyRoute>
-              }/>
-              <Route path='/allcards' element ={<AllCardsPage/>}/>
-              <Route path='/carddetails/:id' element ={<CardDetailsPage/>}/>
-              <Route path='/chat' element={
+          <UsersProvider>
+            {!(
+              location.pathname.includes('/admindashboard') ||
+              location.pathname.includes('/login') ||
+              location.pathname.includes('/register')
+            ) && (
+              <NavBar/>
+            )}
+            <Box sx={{minHeight: '100vh', bgcolor: 'Background.default'}}>
+              <Routes>
+                <Route path='/' element={
                   <ProtectedRoute>
-                  <ChatPage/>
-                </ProtectedRoute>
-              }/>
-            </Routes>
-          </Box>
+                    <FeedPage/>
+                  </ProtectedRoute>
+                }/>
+                <Route path='/admindashboard/*' element={
+                  <AdminProtectedRoute> 
+                    <AdminDashboardLayout/>
+                  </AdminProtectedRoute>
+                }/>
+                <Route path='/login' element={
+                  <PublicOnlyRoute>
+                    <LoginPage/>
+                  </PublicOnlyRoute>
+                }/>
+                <Route path='/dashboard/*' element={
+                  <ProtectedRoute>
+                    <DashboardLayout/>
+                  </ProtectedRoute>
+                }/>
+                <Route path='/profiledashboard/:id/*' element={<UserProfileLayout/>}/>
+                <Route path='/createnewcard' element={
+                  <ProtectedRoute>
+                    <CardsRegisterPage/>
+                  </ProtectedRoute>
+                }/>
+                <Route path='/allusers' element ={<UsersPage/>}/>
+                <Route path='/registered' element ={
+                  <PublicOnlyRoute>
+                    <RegisteredPage/>
+                  </PublicOnlyRoute>
+                }/>
+                <Route path='/allcards' element ={<AllCardsPage/>}/>
+                <Route path='/carddetails/:id' element ={<CardDetailsPage/>}/>
+                <Route path='/chat' element={
+                    <ProtectedRoute>
+                    <ChatPage/>
+                  </ProtectedRoute>
+                }/>
+              </Routes>
+            </Box>
+          </UsersProvider>
         </CardsProvider>
       </ThemeProvider>
     </AuthProvider>  

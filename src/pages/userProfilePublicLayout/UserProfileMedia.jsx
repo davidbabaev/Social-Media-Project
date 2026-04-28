@@ -2,16 +2,16 @@ import { Box, Container, Paper } from '@mui/material'
 import React, { useState } from 'react'
 import { useCardsProvider } from '../../providers/CardsProvider';
 import { useParams } from 'react-router-dom';
-import useUsers from '../../hooks/useUsers';
 import CardPopupModal from '../../components/card/CardPopupModal';
 import { useAuth } from '../../providers/AuthProvider';
 import LoginPopup from '../../components/LoginPopup';
 import OnLoadingSkeletonBox from '../../components/OnLoadingSkeletonBox';
+import { useUsersProvider } from '../../providers/UsersProvider';
 
 export default function UserProfileMedia() {
 
     const [count, setCount] = useState(10);
-    const {users} = useUsers();
+    const {users} = useUsersProvider();
     const {registeredCards} = useCardsProvider();
     const {id} = useParams();
     const [selectedCardId, setSelectedCardId] = useState(null);

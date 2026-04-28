@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { banUser, deleteUser, getAllUsers, promoteUser} from "../services/apiService";
 
- function useUsers() {
+const UsersContext = createContext();
 
-    const [users, setUsers] = useState([])
+export function UsersProvider({children}) {
+
+    // state and handlers go here
+        const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(false)
 
 
@@ -87,8 +90,21 @@ import { banUser, deleteUser, getAllUsers, promoteUser} from "../services/apiSer
     useEffect(() => {
         getUsers();
     }, [])
-
-  return {users, loading, getUsers, handleDeleteUser, handleBanUser, handlePromoteUser}
+  
+    return(
+        <UsersContext.Provider value={{
+            users, 
+            loading, 
+            getUsers, 
+            handleDeleteUser, 
+            handleBanUser, 
+            handlePromoteUser
+        }}>
+            {children}
+        </UsersContext.Provider>
+    ) 
 }
 
-export default useUsers;
+export function useUsersProvider(){
+    return useContext(UsersContext);
+}

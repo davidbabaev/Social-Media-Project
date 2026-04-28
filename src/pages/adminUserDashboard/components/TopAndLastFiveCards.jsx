@@ -1,8 +1,8 @@
 import React from 'react'
 import TopAndLastFiveCardReuse from './reusable components/TopAndLastFiveCardReuse'
 import useAnalytics from '../hooks/useAnalytics'
-import useUsers from '../../../hooks/useUsers';
 import { Box, Divider, Typography } from '@mui/material';
+import { useUsersProvider } from '../../../providers/UsersProvider';
 
 export default function TopAndLastFiveCards() {
 
@@ -10,7 +10,7 @@ export default function TopAndLastFiveCards() {
         topFiveCards,
         lastFiveCards,
     } = useAnalytics();
-    const {users} = useUsers();
+    const {users} = useUsersProvider();
 
   return (
     <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'} ,gap: 2}}>
