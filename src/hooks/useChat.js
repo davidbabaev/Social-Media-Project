@@ -3,7 +3,11 @@ import { getSocket } from '../services/socketService';
 import { useAuth } from '../providers/AuthProvider';
 import { deleteChat, getChats, getSingleChatMessages } from '../services/apiService';
 
-function useChat(selectedConversationId, onConversationDeleted, onMessageReceived) {
+function useChat(
+    selectedConversationId, 
+    onConversationDeleted, 
+    onMessageReceived
+) {
     const [conversationsList, setConversationsList] = useState([]);
     const [chatMessages, setChatMessages] = useState([]);
 
@@ -86,7 +90,11 @@ function useChat(selectedConversationId, onConversationDeleted, onMessageReceive
             socket.off('deleted-conversation');
         }
 
-    }, [user?._id, selectedConversationId, onConversationDeleted, onMessageReceived]); // <- re-runs when the actual ID changes.
+    }, [
+        user?._id, selectedConversationId, 
+        onConversationDeleted, 
+        onMessageReceived
+    ]); // <- re-runs when the actual ID changes.
 
     return{
         handleOpenChatList, 

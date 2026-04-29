@@ -60,7 +60,11 @@ export default function ChatPage() {
         conversationsList, 
         chatMessages,
         handleDeleteChat
-    } = useChat(selectedChat?.conversationId, handleConversationDeleted, handleMessageReceived);
+    } = useChat(
+        selectedChat?.conversationId, 
+        handleConversationDeleted, 
+        handleMessageReceived
+    );
 
     const [anchorEl, setAnchorEl] = useState(null);
 

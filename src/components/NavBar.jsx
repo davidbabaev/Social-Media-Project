@@ -309,15 +309,6 @@ export default function NavBar() {
                 <PeopleIcon fontSize='small'/>
                 <Typography variant='caption'>Users</Typography>
             </Box>
-            
-
-            <Box
-                onClick={() => navigate('/allcards')}
-                sx={navLinkSx('/allcards')}
-                >
-                <ExploreIcon fontSize='small'/>
-                <Typography variant='caption'>Posts</Typography>
-            </Box>
 
             {isLoggedIn && (
                 <Box
@@ -329,6 +320,29 @@ export default function NavBar() {
                         variant='caption'
                     >
                         Create
+                    </Typography>
+                </Box>
+            )}
+
+            <Box
+                onClick={() => navigate('/allcards')}
+                sx={navLinkSx('/allcards')}
+                >
+                <ExploreIcon fontSize='small'/>
+                <Typography variant='caption'>Posts</Typography>
+            </Box>
+
+            {isLoggedIn && (
+                <Box
+                    onClick={() => navigate('/chat')}
+                    sx={navLinkSx('/chat')}
+                    // onClick={() => setIsModalOpen(true)}
+                >
+                    <MessageIcon fontSize='small'/>
+                    <Typography 
+                        variant='caption'
+                    >
+                        Messages
                     </Typography>
                 </Box>
             )}
