@@ -1,6 +1,7 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 const getToken = () => localStorage.getItem('auth-token');
+export const FORCE_LOGOUT_EVENT = 'auth:force-logout'
 
 const httpRequest = async (endpoint, method, body) => {
     const token = getToken();
@@ -27,14 +28,14 @@ const httpRequest = async (endpoint, method, body) => {
     if(!response.ok){
         const message = await response.text()
 
-        if(response.status === 401 && 'User not found :('){
-            window.dispatchEvent(new CustomEvent('auth:force-logout', {
+        if(response.status === 401 && message === 'User not found :('){
+            window.dispatchEvent(new CustomEvent(FORCE_LOGOUT_EVENT, {
                 detail: {reason: 'deleted'}
             }))
         }
 
         if(response.status === 403 && message === 'You Banned :('){
-            window.dispatchEvent(new CustomEvent('auth:force-logout', {
+            window.dispatchEvent(new CustomEvent(FORCE_LOGOUT_EVENT, {
                 detail: {reason: 'banned'}
             }))
         }
@@ -66,6 +67,19 @@ const httpRequestFormData = async (endpoint, method, body) => {
 
     if(!response.ok){
         const message = await response.text();
+
+        if(response.status === 401 && message === 'User not found :('){
+            window.dispatchEvent(new CustomEvent(FORCE_LOGOUT_EVENT, {
+                detail: {reason: 'deleted'}
+            }))
+        }
+
+        if(response.status === 403 && message === 'You Banned :('){
+            window.dispatchEvent(new CustomEvent(FORCE_LOGOUT_EVENT, {
+                detail: {reason: 'banned'}
+            }))
+        }
+
         throw new Error(message);
     }
     return await response.json();

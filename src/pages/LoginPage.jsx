@@ -21,6 +21,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if(errorParam === 'banned') setError('You Banned :(')
+    if(errorParam === 'deleted') setError('Your account no longer exists')
   },[]);
 
 

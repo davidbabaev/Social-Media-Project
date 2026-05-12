@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { followUnfollowUser, loginUser, registerUser, updateUser, getSingleUser } from '../services/apiService';
+import { followUnfollowUser, loginUser, registerUser, updateUser, getSingleUser, FORCE_LOGOUT_EVENT } from '../services/apiService';
 import { jwtDecode } from 'jwt-decode';
 import { connectSocket, disconnectSocket } from '../services/socketService';
+import { useNavigate } from 'react-router-dom';
 
 const UseAuthCheck = createContext();
 
@@ -9,8 +10,8 @@ export function AuthProvider({children}) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
-    const [logOutReason, setLogOutReason] = useState(null);
-    const [isUserLoaded , setIsUserLoaded] = useState(false)
+    const [isUserLoaded , setIsUserLoaded] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleAuth = async () => {
@@ -73,6 +74,8 @@ export function AuthProvider({children}) {
         }
     }
 
+
+
     const handleLogin = async (email, password) => {
         try{
             const response = await loginUser({email, password});
@@ -124,12 +127,12 @@ export function AuthProvider({children}) {
     useEffect(() => {
         const handler = (event) => {
             const reason = event.detail.reason; // banned or deleted
-            setLogOutReason(reason);
+            navigate(`/login?error=${reason}`)
             handleLogout();
         }
 
-        window.addEventListener('auth:force-layout', handler);
-        return () => window.removeEventListener('auth:force-logout', handler)
+        window.addEventListener(FORCE_LOGOUT_EVENT, handler);
+        return () => window.removeEventListener(FORCE_LOGOUT_EVENT, handler)
     }, [])
 
     const editUser = async (userId, updatedFields) => {
