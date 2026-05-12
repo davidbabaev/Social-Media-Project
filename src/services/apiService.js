@@ -26,6 +26,19 @@ const httpRequest = async (endpoint, method, body) => {
 
     if(!response.ok){
         const message = await response.text()
+
+        if(response.status === 401 && 'User not found :('){
+            window.dispatchEvent(new CustomEvent('auth:force-logout', {
+                detail: {reason: 'deleted'}
+            }))
+        }
+
+        if(response.status === 403 && message === 'You Banned :('){
+            window.dispatchEvent(new CustomEvent('auth:force-logout', {
+                detail: {reason: 'banned'}
+            }))
+        }
+
         throw new Error(message);
     }
     return await response.json();
@@ -71,7 +84,7 @@ export const promoteUser = (id) => httpRequest(`/users/${id}/promote`, 'PATCH');
 
 // Cards Requests
 export const getAllCards = () => httpRequest('/cards', 'GET');
-export const getCard = (id) => httpRequest(`/cards/${id}`, 'GET');
+// export const getCard = (id) => httpRequest(`/cards/${id}`, 'GET');
 export const createCard = (cardData) => httpRequestFormData('/cards', 'POST', cardData);
 export const updateCard = (id ,cardData) => httpRequestFormData(`/cards/${id}`, 'PUT', cardData);
 export const deleteCard = (id) => httpRequest(`/cards/${id}`, 'DELETE');

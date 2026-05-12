@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../providers/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Alert, Box, Button, Divider, TextField, Typography, useTheme } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import MirageLogo from '../assets/MirageLogo';
@@ -16,6 +16,13 @@ export default function LoginPage() {
 
   const {handleLogin} = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const errorParam = searchParams.get('error');
+
+  useEffect(() => {
+    if(errorParam === 'banned') setError('You Banned :(')
+  },[]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

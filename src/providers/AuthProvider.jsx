@@ -9,6 +9,7 @@ export function AuthProvider({children}) {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
+    const [logOutReason, setLogOutReason] = useState(null);
     const [isUserLoaded , setIsUserLoaded] = useState(false)
 
     useEffect(() => {
@@ -119,6 +120,17 @@ export function AuthProvider({children}) {
         // (so the server forgets this user's conenction)
         disconnectSocket();
     }
+
+    useEffect(() => {
+        const handler = (event) => {
+            const reason = event.detail.reason; // banned or deleted
+            setLogOutReason(reason);
+            handleLogout();
+        }
+
+        window.addEventListener('auth:force-layout', handler);
+        return () => window.removeEventListener('auth:force-logout', handler)
+    }, [])
 
     const editUser = async (userId, updatedFields) => {
         try{
