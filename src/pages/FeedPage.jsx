@@ -21,7 +21,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 export default function FeedPage() {
 
     const {feedCards} = useCardsProvider();
-    const [count, setCount] = useState(10);
+    const [count, setCount] = useState(50);
     const {user} = useAuth();
     const {users} = useUsersProvider();
     const{getFollowingCount, getFollowersCount, toggleFollow, isFollowByMe} = useFollowUser();
